@@ -184,7 +184,6 @@
              </tr>
              </table>
 
-           
            </template>
           
           </b-card-text>
@@ -223,10 +222,10 @@ export default {
   watch: {
     
     labels: function () {
-      console.log(this.labels);
+      //console.log(this.labels);
     },
     dashParams: function () {
-      console.log(this.dashParams);
+      //console.log(this.dashParams);
     }
     
   },

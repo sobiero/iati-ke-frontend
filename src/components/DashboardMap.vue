@@ -52,7 +52,7 @@ export default {
   props: {
     countyData: Array,
     dashParams: Object,
-    seloptions: Object,
+    selOptions: Object,
   },
   components: {
     LMap, 

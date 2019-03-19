@@ -23,7 +23,7 @@ export default {
   props: {
     data: Array,
     dashParams: Object,
-    seloptions: Object,
+    selOptions: Object,
 
   },
   components: {
@@ -49,8 +49,6 @@ export default {
   watch: {
 
     data: function () {
-
-      //[ { "trans_ts": 1251676800, "total": 45931 }, { "trans_ts": 1254268800, "total": 7963 }
 
       var chartData = this.$_.map(this.data, function(el) {
           return [ parseInt(el.trans_ts)*1000, el.total ];
