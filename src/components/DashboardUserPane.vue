@@ -29,12 +29,12 @@
 
             <template v-if="selVisualType == 'tbl' " >
 
-                 <table v-if="tableData.rows && tableData.rows.length > 0 " style="width:100%;" class="hover striped">
+                 <!-- <table v-if="tableData.rows && tableData.rows.length > 0 " style="width:100%;" class="hover striped">
                   <thead>
                   <tr>
-                    <td v-if="tableData.header[0]">{{tableData.header[0]}}</td>
-                    <td class="text-left">{{tableData.header[1]}}</td>
-                    <td class="text-right">{{tableData.header[2]}}</td>
+                    <td v-if="tableData.columns[0]">{{tableData.columns[0]}}</td>
+                    <td class="text-left">{{tableData.columns[1]}}</td>
+                    <td class="text-right">{{tableData.columns[2]}}</td>
                   </tr>
                   </thead>
                   <tbody>
@@ -44,7 +44,26 @@
                     <td class="text-right" style="font-size:0.9em;">{{d.col3 | abbreviate}}</td>
                   </tr>
                   </tbody>
-                  </table>
+                  </table>  -->
+
+                  <vue-good-table v-if="tableData.rows && tableData.rows.length > 0 "
+                    :columns="tableData.columns"
+                    :rows="tableData.rows"
+                    :pagination-options="tableData.pagination"
+                    styleClass="vgt-table bordered condensed"
+                    max-height="400px"
+                    :fixed-header="true"
+                    >
+                     
+                     <template slot="table-row" slot-scope="props">
+
+                      <span v-if="props.column.field == 'col3'">
+                        <span>{{props.row.col3 | abbreviate }}</span> 
+                      </span>
+                      
+                     </template>
+                  
+                  </vue-good-table>
 
             </template>
 
@@ -80,6 +99,7 @@ export default {
     return {
 
       breakDownOptions: [
+        
         { value: 1, text: 'View break down by Recepient Counties' },
         { value: 2, text: 'View break down by Recepient SDGs' },
         { value: 3, text: 'View break down by Contributing Organizations' },
@@ -87,12 +107,27 @@ export default {
         { value: 5, text: 'View break down by Years' },
 
       ],
-      selBreakDown: 2,
+      selBreakDown: 1,
       selVisualType: 'tbl',
 
       tableData: {
-        header: [],
-        rows: {},
+        columns: [],
+        rows: [],
+        pagination: {
+            enabled: true,
+            mode: 'records',
+            perPage: 10,
+            position: 'bottom',
+            perPageDropdown: [5, 10, 15, 20, 50],
+            dropdownAllowAll: true,
+            setCurrentPage: 1,
+            nextLabel: 'next',
+            prevLabel: 'prev',
+            rowsPerPageLabel: 'Rows per page',
+            ofLabel: 'of',
+            pageLabel: 'page', // for 'pages' mode
+            allLabel: 'All',
+          },
       },
 
       barChart: {
@@ -142,26 +177,26 @@ export default {
       switch (this.selBreakDown) {
         case 1:
 
-          this.tableData.header = ['Code', 'County', 'Amount'];
+          this.tableData.columns = [{label: 'Code', field: 'col1', type: 'number',  }, { label:'County', field: 'col2', }, {label: 'Amount', field: 'col3', type: 'number' } ];
           this.tableData.rows = this.$_.map(this.data.totalAmtByCounty, item => ({ col1: item.county_code, col2: item.county_name, col3: item.total }));
 
           break;
         case 2:
-          this.tableData.header = ['No', 'SDG', 'Amount'];
+          this.tableData.columns = [{label: 'SDG No', field: 'col1', type: 'number'}, { label:'SDG Name', field: 'col2' }, {label: 'Amount', field: 'col3', type: 'number'} ];
           this.tableData.rows = this.$_.map(this.data.totalAmtBySdg, item => ({ col1: item.sdg_id, col2: item.sdg_name, col3: item.total }));
 
           break;
         case 3:
-          this.tableData.header = [null, 'Contributing organization', 'Amount'];
-          this.tableData.rows = this.$_.map(this.data.totalAmtByPublisher, item => ({ col1: null, col2: item.publisher, col3: item.total }));
+          this.tableData.columns = [{label: 'Contributing organization', field: 'col2'}, {label: 'Amount', field: 'col3', type: 'number'} ];
+          this.tableData.rows = this.$_.map(this.data.totalAmtByPublisher, item => ({ col2: item.publisher, col3: item.total }));
           break;
         case 4:
-          this.tableData.header = [null, 'Transaction Type', 'Amount'];
-          this.tableData.rows = this.$_.map(this.data.summaryByTrxnType, item => ({ col1: null, col2: item.name, col3: item.total }));
+          this.tableData.columns = [{label: 'Transaction Type', field: 'col2'}, {label: 'Amount', field: 'col3', type: 'number'} ];
+          this.tableData.rows = this.$_.map(this.data.summaryByTrxnType, item => ({ col2: item.name, col3: item.total }));
           break;
         case 5:
-          this.tableData.header = [null, 'Year', 'Amount'];
-          this.tableData.rows = this.$_.map(this.data.totalAmtByYear, item => ({ col1: null, col2: item.trans_year, col3: item.total }));
+          this.tableData.columns = [{label: 'Year', field: 'col2', type: 'number'}, {label: 'Amount', field: 'col3', type: 'number'} ];
+          this.tableData.rows = this.$_.map(this.data.totalAmtByYear, item => ({ col2: item.trans_year, col3: item.total }));
           break;
         default:
           // code block
@@ -201,7 +236,7 @@ export default {
     data: {
       handler(val) {
         this.processData();
-        console.log('watch', val);
+        //console.log('watch', val);
       },
       deep: true,
     },
@@ -220,7 +255,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .card-header {
   padding: 0.5rem 1.25rem;
 }
@@ -235,7 +270,7 @@ export default {
  padding: 0;
 }
 
-.custom-select option {
+.xcustom-select option {
     font-weight: bold !important;
 }
 
@@ -247,4 +282,14 @@ svg.text-mute {
   color:#9d9d9d;
 }
 
+table.vgt-table span {
+  font-size:0.95em;
+}
+
+table.vgt-table th {
+  padding: .3em 1.5em .3em .75em
+}
+table.vgt-table.condensed td {
+  padding: .15em 1.5em;
+}
 </style>

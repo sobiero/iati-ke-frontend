@@ -7,31 +7,46 @@
         <h6 slot="header" class="mb-0">Map </h6>
         <b-card-text>
 
-          <l-map :zoom="zoom" :min-zoom="minZoom" :max-zoom="maxZoom"
+          <l-map :zoom="zoom" :min-zoom="minZoom" :max-zoom="maxZoom" ref="dMap"
           :center="center" style="height: 500px; width: 100%">
             <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
 
-            <!-- <l-marker v-if="showMarker" :lat-lng="marker"> opuk </l-marker>-->
+             
+             <template v-for=" l in activeCounty.pointData ">
+
+             <l-marker :lat-lng="l.marker">
+              <l-popup>{{l.location_name}} <br/> {{l.amount | abbreviate}} </l-popup>
+             </l-marker>
+
+             </template>
+
+            
 
             <l-choropleth-layer :data="cleanedCountyData"
                  titleKey="county_name" idKey="county_code" :value="value"
                  geojsonIdKey="COUNTY_COD"
                  :geojson="countyGeojson" :colorScale="colorScale">
 
-              <template slot-scope="props">
+              <template slot-scope="props" v-show="showInfoAndRef" >
                 <l-info-control :item="props.currentItem" :unit="props.unit"
                 title="County" placeholder="Hover over a county"/>
-                <l-reference-chart title="Activities in counties"
+                <l-reference-chart title="Activities in counties" 
                 :colorScale="colorScale" :min="props.min" :max="props.max"
                 position="topright"/>
               </template>
 
             </l-choropleth-layer>
 
+
+            <l-geo-json v-if="activeCounty.geoJson && dashParams.selCounty && dashParams.selCounty != '000' "
+             :geojson="activeCounty.geoJson"
+              >
+           </l-geo-json>
+
           </l-map>
 
         </b-card-text>
-      </b-card>
+      </b-card> 
     </div>
  </div>
 </template>
@@ -43,7 +58,7 @@ import InfoControl from '@/components/vue-choropleth/InfoControl.vue';
 import ReferenceChart from '@/components/vue-choropleth/ReferenceChart.vue';
 import ChoroplethLayer from '@/components/vue-choropleth/ChoroplethLayer.vue';
 
-import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+import { LMap, LTileLayer, LMarker, LGeoJson, LPopup } from 'vue2-leaflet';
 // import {geojson} from '@/data/counties.min.json';
 import countyGeojson from '@/data/counties.min.json';
 
@@ -53,11 +68,14 @@ export default {
     countyData: Array,
     dashParams: Object,
     selOptions: Object,
+    countyLocationData: Array,
   },
   components: {
     LMap,
     LTileLayer,
     LMarker,
+    LGeoJson,
+    LPopup,
     'l-info-control': InfoControl,
     'l-reference-chart': ReferenceChart,
     'l-choropleth-layer': ChoroplethLayer,
@@ -66,12 +84,13 @@ export default {
     return {
       zoom: 6,
       minZoom: 2,
-      maxZoom: 10,
+      maxZoom: 12,
       center: L.latLng(0.3, 38),
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       marker: L.latLng(1, 38),
       showMarker: true,
+      showInfoAndRef: true,
 
       value: {
         key: 'total',
@@ -89,22 +108,62 @@ export default {
 
       cleanedCountyData: [],
 
+      activeCounty: {
+        geoJson: null,
+        pointData: null,
+      },
+
     };
   },
 
   watch: {
 
     countyData() {
-      const vm = this;
 
       const cleanedCountyData = this.$_.map(this.countyData, el => ({ county_code: parseInt(el.county_code), county_name: el.county_name, total: el.total }));
-
       this.cleanedCountyData = cleanedCountyData;
+
+      if (this.dashParams.selCounty != '000' && !this.$_.isEmpty(this.countyData) )
+      {
+          
+          this.showInfoAndRef = false ;
+
+          var tmp = this.$_.find(this.countyGeojson.features, { properties: { COUNTY_COD: parseInt( this.dashParams.selCounty ) }});
+
+          this.activeCounty.geoJson = {type:"FeatureCollection" , features: [tmp] };
+
+          var b = L.geoJson( this.activeCounty.geoJson );
+          this.$refs.dMap.mapObject.fitBounds(b.getBounds());
+
+      } 
+      
+      if (this.dashParams.selCounty == '000' && !this.$_.isEmpty(this.countyData) )
+      {
+      
+         var b = L.geoJson( this.countyGeojson );
+         this.$refs.dMap.mapObject.fitBounds(b.getBounds());
+         this.showInfoAndRef = true ;
+              
+      }
+      
+    },
+
+    'dashParams.selCounty' () {
+      this.activeCounty.geoJson = null ;
+    },
+
+    countyLocationData () {
+
+      var m = this.$_.map(this.countyLocationData, item => ({ location_name: item.location_name, marker: L.latLng(item.location_latitude, item.location_longitude), amount: item.total }));
+      this.activeCounty.pointData = m ;
+
     },
 
   },
 
   methods: {
+
+    // features . properties.COUNTY_COD
 
   },
 

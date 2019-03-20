@@ -30,6 +30,7 @@ import router from './router/router';
 import App from './App.vue';
 
 stockInit(Highcharts);
+
 delete L.Icon.Default.prototype._getIconUrl;
 
 L.Icon.Default.mergeOptions({
