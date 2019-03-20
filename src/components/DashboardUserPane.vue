@@ -1,11 +1,11 @@
 <template>
-  
-  <div class="row">    
+
+  <div class="row">
    <div class="col-md-12">
 
       <b-card header-tag="header" id="userpaneopts"  style="min-height: 540px;" >
-        <span slot="header" class="mb-0" style="width:100%;display:inline-block;"> 
-          
+        <span slot="header" class="mb-0" style="width:100%;display:inline-block;">
+
             <!-- <b-dropdown :text="breakDownOption" class="btn-default" size="sm">
               <b-dropdown-item>View Break down by Counties</b-dropdown-item>
               <b-dropdown-item>View Break down by Contributing Organization</b-dropdown-item>
@@ -13,7 +13,7 @@
               <b-dropdown-item>View Break down by Transaction Type</b-dropdown-item>
             </b-dropdown> -->
 
-        <span class='text-left col-md-10' style="display:inline-block;">  
+        <span class='text-left col-md-10' style="display:inline-block;">
           <b-form-select id="selBreakDown" size="sm" v-model="selBreakDown" :options="breakDownOptions" @change="processData()" style="max-width:350px;background-color:inherit;"> </b-form-select>
         </span>
 
@@ -28,7 +28,7 @@
         <b-card-text>
 
             <template v-if="selVisualType == 'tbl' " >
-           
+
                  <table v-if="tableData.rows && tableData.rows.length > 0 " style="width:100%;" class="hover striped">
                   <thead>
                   <tr>
@@ -44,21 +44,21 @@
                     <td class="text-right" style="font-size:0.9em;">{{d.col3 | abbreviate}}</td>
                   </tr>
                   </tbody>
-                  </table>      
-            
+                  </table>
+
             </template>
 
             <template v-else-if="selVisualType == 'bar' ">
                  <highcharts :options="barChart" key="bar"></highcharts>
             </template>
-              
+
             <template v-else-if="selVisualType == 'pie' ">
                  <highcharts :options="pieChart" key="pie"></highcharts>
             </template>
-  
+
         </b-card-text>
       </b-card>
-    
+
     </div>
  </div>
 </template>
@@ -80,11 +80,11 @@ export default {
     return {
 
       breakDownOptions: [
-      {value: 1, text:'View break down by Recepient Counties'},
-      {value: 2, text:'View break down by Recepient SDGs'},
-      {value: 3, text:'View break down by Contributing Organizations'},
-      {value: 4, text:'View break down by Transaction Types'},
-      {value: 5, text:'View break down by Years'},
+        { value: 1, text: 'View break down by Recepient Counties' },
+        { value: 2, text: 'View break down by Recepient SDGs' },
+        { value: 3, text: 'View break down by Contributing Organizations' },
+        { value: 4, text: 'View break down by Transaction Types' },
+        { value: 5, text: 'View break down by Years' },
 
       ],
       selBreakDown: 2,
@@ -97,137 +97,122 @@ export default {
 
       barChart: {
         chart: {
-          height:440,
+          height: 440,
           type: 'bar',
         },
         title: {
-            text: null
+          text: null,
         },
-        xAxis:{
-            categories: [],
+        xAxis: {
+          categories: [],
         },
         series: [{
           data: [[]],
         }],
         credits: {
-            enabled: false
+          enabled: false,
         },
       },
 
-      pieChart : {
+      pieChart: {
         chart: {
           type: 'pie',
         },
         title: {
-            text: null
+          text: null,
         },
         series: [{
           data: [[]],
         }],
         credits: {
-            enabled: false
+          enabled: false,
         },
       },
 
-    };  
+    };
   },
 
   methods: {
 
-    setVisualType: function (v) {
-        this.selVisualType = v ;
+    setVisualType(v) {
+      this.selVisualType = v;
     },
 
-    processData: function () {
-
-      switch( this.selBreakDown ) {
+    processData() {
+      switch (this.selBreakDown) {
         case 1:
-          
+
           this.tableData.header = ['Code', 'County', 'Amount'];
-          this.tableData.rows   = this.$_.map( this.data.totalAmtByCounty, function(item) { 
-              return { col1: item.county_code, col2: item.county_name, col3: item.total } ;
-           });
+          this.tableData.rows = this.$_.map(this.data.totalAmtByCounty, item => ({ col1: item.county_code, col2: item.county_name, col3: item.total }));
 
           break;
         case 2:
           this.tableData.header = ['No', 'SDG', 'Amount'];
-          this.tableData.rows   = this.$_.map( this.data.totalAmtBySdg, function(item) { 
-              return { col1: item.sdg_id, col2: item.sdg_name, col3: item.total } ;
-           });
-           
+          this.tableData.rows = this.$_.map(this.data.totalAmtBySdg, item => ({ col1: item.sdg_id, col2: item.sdg_name, col3: item.total }));
+
           break;
         case 3:
-          this.tableData.header = [null , 'Contributing organization', 'Amount'];
-          this.tableData.rows   = this.$_.map( this.data.totalAmtByPublisher, function(item) { 
-              return { col1: null, col2: item.publisher, col3: item.total } ;
-           });
+          this.tableData.header = [null, 'Contributing organization', 'Amount'];
+          this.tableData.rows = this.$_.map(this.data.totalAmtByPublisher, item => ({ col1: null, col2: item.publisher, col3: item.total }));
           break;
         case 4:
-          this.tableData.header = [null , 'Transaction Type', 'Amount'];
-          this.tableData.rows   = this.$_.map( this.data.summaryByTrxnType, function(item) { 
-              return { col1: null, col2: item.name, col3: item.total } ;
-           });
+          this.tableData.header = [null, 'Transaction Type', 'Amount'];
+          this.tableData.rows = this.$_.map(this.data.summaryByTrxnType, item => ({ col1: null, col2: item.name, col3: item.total }));
           break;
         case 5:
-          this.tableData.header = [null , 'Year', 'Amount'];
-          this.tableData.rows   = this.$_.map( this.data.totalAmtByYear, function(item) { 
-              return { col1: null, col2: item.trans_year, col3: item.total } ;
-           });
+          this.tableData.header = [null, 'Year', 'Amount'];
+          this.tableData.rows = this.$_.map(this.data.totalAmtByYear, item => ({ col1: null, col2: item.trans_year, col3: item.total }));
           break;
         default:
           // code block
-      }  
-      
-        var xAxis = [];
-        var yAxis = [];
+      }
 
-        _.forOwn( this.tableData.rows, function(val, key) {
-            xAxis.push( val.col2 );
-            yAxis.push( val.col3 );
-        });
+      const xAxis = [];
+      const yAxis = [];
 
-        this.barChart.xAxis.categories = xAxis  ;
-        this.barChart.series = [ {data: yAxis } ] ;
-              
-        var dt = []; var x = 0;
+      _.forOwn(this.tableData.rows, (val, key) => {
+        xAxis.push(val.col2);
+        yAxis.push(val.col3);
+      });
 
-        _.forOwn( this.tableData.rows, function(val, key) {
-          if (x < 5)
-          {
-              dt.push( { name: val.col2, y: val.col3 } );
-          }
-          x++;
-        });
+      this.barChart.xAxis.categories = xAxis;
+      this.barChart.series = [{ data: yAxis }];
 
-        this.pieChart.series = [ {data: dt } ] ;
+      const dt = []; let x = 0;
 
-    
+      _.forOwn(this.tableData.rows, (val, key) => {
+        if (x < 5) {
+          dt.push({ name: val.col2, y: val.col3 });
+        }
+        x++;
+      });
+
+      this.pieChart.series = [{ data: dt }];
     },
-    
+
   },
 
   watch: {
 
-    selBreakDown: function() {
-       this.processData();    
+    selBreakDown() {
+      this.processData();
     },
 
     data: {
-      handler (val) {
+      handler(val) {
         this.processData();
         console.log('watch', val);
       },
       deep: true,
     },
-  
+
   },
 
   mounted() {
-     
-    this.processData(); 
-    //this.selBreakDown = 1;
+    this.processData();
+    // this.selBreakDown = 1;
   },
- 
+
   created() {
 
   },
