@@ -141,12 +141,12 @@
 
            <h6 slot="header" class="mb-0"><strong>Top Receipient SDG</strong></h6>
           
-           <b-card-text>
+           <b-card-text class="top-org">
           
            <template v-if="data.totalAmtBySdg && data.totalAmtBySdg[0]">
           
-             <span style="font-size:0.9em;">{{data.totalAmtBySdg[0].sdg_id }} {{data.totalAmtBySdg[0].sdg_name }}</span>
-            <br />
+            <span style="font-size:0.9em;">{{data.totalAmtBySdg[0].sdg_id }} {{data.totalAmtBySdg[0].sdg_name }}</span>
+            <br /><br />
             <span class="text-info" style="font-size:2.7em;">{{data.totalAmtBySdg[0].total | abbreviate }}</span>
 
            </template>

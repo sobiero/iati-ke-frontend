@@ -17,6 +17,7 @@ L.Icon.Default.mergeOptions({
 
 import * as Vue2Leaflet from 'vue2-leaflet';
 import vueNumeralFilterInstaller from 'vue-numeral-filter';
+import VueGoodTablePlugin from 'vue-good-table';
 
 import App from './App.vue';
 import router from './router/router';
@@ -26,6 +27,8 @@ import './registerServiceWorker';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'leaflet/dist/leaflet.css';
+
+import 'vue-good-table/dist/vue-good-table.css'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faChartPie, faChartBar, faTable } from '@fortawesome/free-solid-svg-icons'
@@ -38,6 +41,8 @@ Vue.component('fa-icon', FontAwesomeIcon);
 Vue.use(BootstrapVue);
 Vue.use(HighchartsVue);
 Vue.use(vueNumeralFilterInstaller);
+Vue.use(VueGoodTablePlugin);
+
 Vue.config.productionTip = false;
 
 import _ from 'lodash';

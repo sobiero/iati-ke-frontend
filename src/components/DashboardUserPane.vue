@@ -14,13 +14,13 @@
             </b-dropdown> -->
 
         <span class='text-left col-md-10' style="display:inline-block;">  
-          <b-form-select id="selBreakDown" size="sm" v-model="selBreakDown" :options="breakDownOptions" @change="processData()" style="max-width:362px;background-color:inherit;"> </b-form-select>
+          <b-form-select id="selBreakDown" size="sm" v-model="selBreakDown" :options="breakDownOptions" @change="processData()" style="max-width:350px;background-color:inherit;"> </b-form-select>
         </span>
 
         <span class='text-default col-md-2' style="display:inline-block">
-          <fa-icon :class=" selVisualType == 'tbl' ? 'text-success' : 'text-mute' " @click="setVisualType('tbl')" icon="table"> </fa-icon>&nbsp; &nbsp;
-          <fa-icon :class=" selVisualType == 'bar' ? 'text-success' : 'text-mute' " @click="setVisualType('bar')" icon="chart-bar"> </fa-icon>&nbsp; &nbsp;
-          <fa-icon :class=" selVisualType == 'pie' ? 'text-success' : 'text-mute' " @click="setVisualType('pie')" icon="chart-pie"> </fa-icon>&nbsp;
+          <fa-icon :class=" selVisualType == 'tbl' ? 'text-success' : 'text-mute' " @click="setVisualType('tbl')" icon="table"> </fa-icon>&nbsp;
+          <fa-icon :class=" selVisualType == 'bar' ? 'text-success' : 'text-mute' " @click="setVisualType('bar')" icon="chart-bar"> </fa-icon>&nbsp;
+          <fa-icon :class=" selVisualType == 'pie' ? 'text-success' : 'text-mute' " @click="setVisualType('pie')" icon="chart-pie"> </fa-icon>
         </span>
 
         </span>
@@ -29,7 +29,7 @@
 
             <template v-if="selVisualType == 'tbl' " >
            
-                 <table style="width:100%;" class="hover striped">
+                 <table v-if="tableData.rows && tableData.rows.length > 0 " style="width:100%;" class="hover striped">
                   <thead>
                   <tr>
                     <td v-if="tableData.header[0]">{{tableData.header[0]}}</td>

@@ -82,7 +82,7 @@ export default {
         key: "amount_m",
         metric: "% boys"
       }],*/
-     
+
       countyGeojson,
       //colorScale: ["e7d090", "e9ae7b", "de7062"],
       colorScale: ["ddbb60", "de893d", "b73826"],
@@ -90,7 +90,7 @@ export default {
       cleanedCountyData: [],
 
     };
-  
+
   },
 
   watch: {
@@ -103,15 +103,17 @@ export default {
       });
 
       this.cleanedCountyData = cleanedCountyData ;
-      
-    }
-  
+
+    },
+
   },
 
   methods: {
+
   },
  
   created() {
+
   },
 
 };

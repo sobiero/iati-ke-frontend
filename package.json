@@ -28,6 +28,7 @@
     "register-service-worker": "^1.5.2",
     "vue": "^2.6.9",
     "vue-choropleth": "^0.2.1",
+    "vue-good-table": "^2.16.3",
     "vue-numeral-filter": "^1.1.1",
     "vue-router": "^3.0.1",
     "vue2-leaflet": "^2.0.2",

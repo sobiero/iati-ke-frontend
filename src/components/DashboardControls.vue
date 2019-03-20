@@ -208,10 +208,6 @@ export default {
 
   methods: {
 
-    generateDashboardHeader: function () {
-        
-    },
-
     loadCounty: function() {
       var vm = this ;
       
@@ -264,6 +260,8 @@ export default {
 
     loadDateRange: function () {
 
+      this.resetPanels();
+
       this.$axios.get( this.apiUrl + `/iati/date-range`, { params: { params: this.form} })
       .then(res => {
         var tmp = [];
@@ -305,8 +303,7 @@ export default {
 
     loadDashBoardData: function () {
       var vm = this;
-
-      this.generateDashboardHeader();
+      this.resetPanels();
 
       this.$axios.get( this.apiUrl + `/iati/dashboard-data`, { params: { params: this.form} })
       .then(res => {
@@ -324,6 +321,19 @@ export default {
       .catch(e => {
          this.errors.push(e)
       });
+
+    },
+
+    resetPanels: function () {
+       
+        this.dashboard.kpiAndPanel.totalAmt            = {};
+        this.dashboard.kpiAndPanel.totalAmtByYear      = {};
+        this.dashboard.kpiAndPanel.totalAmtByPublisher = {};
+        this.dashboard.kpiAndPanel.totalAmtBySdg       = {};
+        this.dashboard.kpiAndPanel.totalAmtByCounty    = [];
+        this.dashboard.totalAmtByYearMonth             = {};
+        this.dashboard.totalAmtByTimeStamp             = [];
+        this.dashboard.kpiAndPanel.summaryByTrxnType   = {};
 
     },
 
@@ -351,5 +361,4 @@ export default {
   position: initial !important;
   }
 }
-
 </style>
