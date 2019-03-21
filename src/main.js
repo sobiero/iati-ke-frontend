@@ -49,7 +49,7 @@ Vue.use(HighchartsVue);
 Vue.use(vueNumeralFilterInstaller);
 Vue.use(VueGoodTablePlugin);
 Vue.use(UUID);
-
+ 
 Vue.config.productionTip = false;
 Object.defineProperty(Vue.prototype, '$_', { value: _ });
 Object.defineProperty(Vue.prototype, '$axios', { value: axios });

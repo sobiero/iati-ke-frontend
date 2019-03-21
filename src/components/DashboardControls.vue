@@ -129,7 +129,7 @@ export default {
         },
         currency: 'USD',
       },
-
+ 
       labels: {
         selCounty: '',
         selSdg: '',
