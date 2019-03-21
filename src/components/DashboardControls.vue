@@ -82,7 +82,7 @@
 
         <div class="col-md-7">
 
-           <dashboard-map :dash-params="form" :sel-options="selOptions" :labels="labels" :county-data="dashboard.kpiAndPanel.totalAmtByCounty" 
+           <dashboard-map :dash-params="form" :sel-options="selOptions" :labels="labels" :county-data="dashboard.kpiAndPanel.totalAmtByCounty"
            :county-location-data="dashboard.countyLocationData" class="mt-2"></dashboard-map>
 
         </div>
@@ -238,7 +238,7 @@ export default {
         });
     },
 
-    loadTrxnType() { 
+    loadTrxnType() {
       this.$axios.get(`${this.apiUrl}/iati/trans-type`)
         .then((res) => {
           const tmp = [];
@@ -306,20 +306,15 @@ export default {
           this.errors.push(e);
         });
 
-        if ( this.form.selCounty != '000' )
-        {
-          
-            this.$axios.get(`${this.apiUrl}/iati/county-location-data`, { params: { params: this.form } })
-            .then((res) => {
-
-              vm.dashboard.countyLocationData = res.data.data;
-
-            })
-            .catch((e) => {
-              this.errors.push(e);
-            });
-        }
-
+      if (this.form.selCounty != '000') {
+        this.$axios.get(`${this.apiUrl}/iati/county-location-data`, { params: { params: this.form } })
+          .then((res) => {
+            vm.dashboard.countyLocationData = res.data.data;
+          })
+          .catch((e) => {
+            this.errors.push(e);
+          });
+      }
     },
 
     resetPanels() {

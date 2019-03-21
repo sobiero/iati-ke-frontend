@@ -6,6 +6,7 @@ import Highcharts from 'highcharts';
 import stockInit from 'highcharts/modules/stock';
 
 import L from 'leaflet';
+import UUID from 'vue-uuid';
 
 import * as Vue2Leaflet from 'vue2-leaflet';
 import vueNumeralFilterInstaller from 'vue-numeral-filter';
@@ -47,6 +48,7 @@ Vue.use(BootstrapVue);
 Vue.use(HighchartsVue);
 Vue.use(vueNumeralFilterInstaller);
 Vue.use(VueGoodTablePlugin);
+Vue.use(UUID);
 
 Vue.config.productionTip = false;
 Object.defineProperty(Vue.prototype, '$_', { value: _ });
