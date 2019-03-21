@@ -117,7 +117,7 @@ export default {
   },
   data() {
     return {
-      apiUrl: 'http://iati-ke.webserver.net/api',
+      apiUrl: '/api',
 
       form: {
         selCounty: '000',
