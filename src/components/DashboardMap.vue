@@ -9,8 +9,8 @@
 
           <l-map :zoom="zoom" :min-zoom="minZoom" :max-zoom="maxZoom" ref="dMap"
           :center="center" style="height: 500px; width: 100%">
-            <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
 
+             <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
 
              <template v-for=" l in activeCounty.pointData ">
 
@@ -18,7 +18,7 @@
               <l-popup>
                   <table class="table bordered">
                   <tr>
-                    <td><strong>Point Name</strong></td>
+                    <td><strong>Location Name</strong></td>
                     <td>{{l.location_name}}</td>
                   </tr>
                   <tr>
@@ -80,7 +80,7 @@ export default {
     dashParams: Object,
     selOptions: Object,
     countyLocationData: Array,
-    labels:Object,     
+    labels:Object,
   },
   components: {
     LMap,
@@ -126,7 +126,7 @@ export default {
       },
 
     };
-  }, 
+  },
 
   watch: {
 

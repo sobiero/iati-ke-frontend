@@ -8,6 +8,7 @@
 
 import {LGeoJson} from "vue2-leaflet"
 import { getMin, getMax, normalizeValue, getColor, validNumber } from "../choropleth-util"
+import EventBus from '../../eventBus';
 
 function mouseover({ target }) {
   target.setStyle({
@@ -45,6 +46,17 @@ function mouseout({ target }) {
     dashArray: ""
   })
   this.currentItem = { name: "", value: 0 }
+}
+
+function mouseclick({ target }) {
+
+  let geojsonItem = target.feature.properties;
+  //console.log( geojsonItem.COUNTY_COD );
+  //this.$root.$emit('countyClicked', geojsonItem.COUNTY_COD );
+
+  EventBus.$emit('countyClicked', geojsonItem.COUNTY_COD )
+
+
 }
 
 export default {
@@ -107,7 +119,8 @@ export default {
         onEachFeature: (feature, layer) => {
           layer.on({
             mouseover: mouseover.bind(this),
-            mouseout: mouseout.bind(this)
+            mouseout: mouseout.bind(this),
+            click: mouseclick.bind(this)
           })
         }
       }

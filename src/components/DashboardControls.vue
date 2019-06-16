@@ -82,7 +82,7 @@
 
         <div class="col-md-7">
 
-           <dashboard-map :dash-params="form" :sel-options="selOptions" :labels="labels" :county-data="dashboard.kpiAndPanel.totalAmtByCounty"
+           <dashboard-map @countyClicked="onCountyClicked" :dash-params="form" :sel-options="selOptions" :labels="labels" :county-data="dashboard.kpiAndPanel.totalAmtByCounty"
            :county-location-data="dashboard.countyLocationData" class="mt-2"></dashboard-map>
 
         </div>
@@ -95,7 +95,6 @@
 
     <dashboard-trend :dash-params="form" :sel-options="selOptions" :labels="labels" :data="dashboard.totalAmtByTimeStamp" class="mt-2"></dashboard-trend>
 
-
  </div>
 </template>
 
@@ -105,6 +104,8 @@ import DashboardKpis from '@/components/DashboardKpis.vue';
 import DashboardTrend from '@/components/DashboardTrend.vue';
 import DashboardMap from '@/components/DashboardMap.vue';
 import DashboardUserPane from '@/components/DashboardUserPane.vue';
+import EventBus from '../eventBus';
+
 
 export default {
   name: 'DashboardControls',
@@ -129,7 +130,7 @@ export default {
         },
         currency: 'USD',
       },
- 
+
       labels: {
         selCounty: '',
         selSdg: '',
@@ -285,6 +286,9 @@ export default {
         .catch((e) => {
           this.errors.push(e);
         });
+
+      //console.log( this.form.selCounty );
+
     },
 
     loadDashBoardData() {
@@ -328,6 +332,12 @@ export default {
       this.dashboard.kpiAndPanel.summaryByTrxnType = {};
     },
 
+    onCountyClicked( value ) {
+
+      console.log( value );
+
+    },
+
   },
 
   created() {
@@ -336,6 +346,26 @@ export default {
     this.loadTrxnType();
     this.loadDateRange();
   },
+
+  mounted() {
+
+    EventBus.$on('countyClicked', (payload) => {
+
+        var clickedCountyCode = this.$_.padStart(payload, 3, '0');
+        this.form.selCounty = clickedCountyCode ;
+
+    })
+
+  },
+
+  watch: {
+
+    'form.selCounty': function () {
+        this.loadDateRange();
+    },
+
+  },
+
 
 };
 </script>

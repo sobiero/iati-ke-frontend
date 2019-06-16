@@ -61,6 +61,10 @@
                         <span>{{props.row.col3 | abbreviate }}</span>
                       </span>
 
+                      <!-- <span v-if="props.column.label == 'SDG No'">
+                         <span>{{props.row.label + 'opuk' }}</span>
+                      </span> -->
+
                      </template>
 
                   </vue-good-table>
