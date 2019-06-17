@@ -80,7 +80,7 @@ export default {
     dashParams: Object,
     selOptions: Object,
     countyLocationData: Array,
-    labels:Object,
+    labels: Object,
   },
   components: {
     LMap,

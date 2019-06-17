@@ -64,7 +64,7 @@
 
                 </div>
 
-               <div class="row ml-2" style="width:100%;margin-top:-25px;margin-bottom:-5px">
+               <div class="row ml-2" style="width:100%;margin-top:-35px;margin-bottom:-5px">
                 <div class="col-md-12 text-center">
                     <hr />
                     <h5 v-html="dashboardHeader"></h5>

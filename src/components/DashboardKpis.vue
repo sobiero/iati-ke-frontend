@@ -14,7 +14,7 @@
       <b-card-text>
 
       <template v-if="data.totalAmt && data.totalAmt.total">
-      <span class="text-info" style="font-size:3.3em;">{{data.totalAmt.total | abbreviate }} </span>
+      <span class="text-info" style="font-size:2.2em;">{{data.totalAmt.total | abbreviate }} </span>
       </template>
 
       </b-card-text>
@@ -38,9 +38,9 @@
 
            <template v-if="data.totalAmtByCounty && data.totalAmtByCounty[0]">
 
-             <span class="text-default" style="font-size:1.5em;">{{data.totalAmtByCounty[0].county_name }}</span>
+             <span class="text-default" style="font-size:1.2em;">{{data.totalAmtByCounty[0].county_name }}</span>
             <br />
-            <span style="font-size:2.7em;color:#d1412c;"> {{data.totalAmtByCounty[0].total | abbreviate }}</span>
+            <span style="font-size:1.8em;color:#d1412c;"> {{data.totalAmtByCounty[0].total | abbreviate }}</span>
 
            </template>
            </b-card-text>
@@ -55,9 +55,9 @@
 
            <template v-if="data.totalAmtBySdg && data.totalAmtBySdg[0]">
 
-            <span style="font-size:0.9em;">{{data.totalAmtBySdg[0].sdg_id }} {{data.totalAmtBySdg[0].sdg_name }}</span>
+            <span style="font-size:0.75em;">{{data.totalAmtBySdg[0].sdg_id }} {{data.totalAmtBySdg[0].sdg_name }}</span>
             <br />
-            <span style="font-size:2.7em;color:#d1412c;"> {{data.totalAmtBySdg[0].total | abbreviate }}</span>
+            <span style="font-size:1.8em;color:#d1412c;"> {{data.totalAmtBySdg[0].total | abbreviate }}</span>
 
            </template>
            </b-card-text>
@@ -72,7 +72,7 @@
 
             <span class="text-default" style="font-size:1.5em;">{{data.totalAmtByYear[0].trans_year }}</span>
             <br />
-            <span style="font-size:2.7em;color:#d1412c;">{{data.totalAmtByYear[0].total | abbreviate }}</span>
+            <span style="font-size:1.8em;color:#d1412c;">{{data.totalAmtByYear[0].total | abbreviate }}</span>
 
            </template>
 
@@ -96,8 +96,8 @@
 
        <template v-if="data.totalAmtByPublisher && data.totalAmtByPublisher[0]">
 
-       <span style="font-size:0.9em">{{data.totalAmtByPublisher[0].publisher }} </span>
-       <br /><br /><span class="text-success" style="font-size:2.7em"> {{data.totalAmtByPublisher[0].total | abbreviate }} </span>
+       <span style="font-size:0.7em">{{data.totalAmtByPublisher[0].publisher }} </span>
+       <br /><br /><span class="text-success" style="font-size:1.8em"> {{data.totalAmtByPublisher[0].total | abbreviate }} </span>
 
        </template>
 
@@ -124,8 +124,8 @@
 
              <table style="width:100%;">
              <tr v-for="t in data.summaryByTrxnType">
-              <td class="text-left pr-2 " style="font-size:0.9em;">{{t.name}}</td>
-              <td class="text-right"  style="font-size:0.9em;">{{t.total | abbreviate }}</td>
+              <td class="text-left pr-2 " style="font-size:0.7em;">{{t.name}}</td>
+              <td class="text-right"  style="font-size:0.7em;">{{t.total | abbreviate }}</td>
              </tr>
              </table>
 
@@ -144,9 +144,9 @@
 
            <template v-if="data.totalAmtBySdg && data.totalAmtBySdg[0]">
 
-            <span style="font-size:0.9em;">{{data.totalAmtBySdg[0].sdg_id }} {{data.totalAmtBySdg[0].sdg_name }}</span>
+            <span style="font-size:0.75em;">{{data.totalAmtBySdg[0].sdg_id }} {{data.totalAmtBySdg[0].sdg_name }}</span>
             <br /><br />
-            <span class="text-info" style="font-size:2.7em;">{{data.totalAmtBySdg[0].total | abbreviate }}</span>
+            <span class="text-info" style="font-size:1.8em;">{{data.totalAmtBySdg[0].total | abbreviate }}</span>
 
            </template>
 
@@ -164,7 +164,7 @@
 
             <span class="text-default" style="font-size:1.5em;">{{data.totalAmtByYear[0].trans_year }}</span>
             <br />
-            <span class="text-info" style="font-size:2.7em;">{{data.totalAmtByYear[0].total | abbreviate }}</span>
+            <span class="text-info" style="font-size:1.8em;">{{data.totalAmtByYear[0].total | abbreviate }}</span>
 
            </template>
 
@@ -178,8 +178,8 @@
 
              <table style="width:100%;" class="hover striped">
              <tr v-for="t in data.summaryByTrxnType">
-              <td class="text-left pr-2 " style="font-size:0.9em;">{{t.name}}</td>
-              <td class="text-right text-info"  style="font-size:0.9em;"><strong>{{t.total | abbreviate }}</strong></td>
+              <td class="text-left pr-2 " style="font-size:0.7em;">{{t.name}}</td>
+              <td class="text-right text-info"  style="font-size:0.7em;"><strong>{{t.total | abbreviate }}</strong></td>
              </tr>
              </table>
 
@@ -241,10 +241,10 @@ export default {
 
 <style scoped lang="scss">
 .card-header {
-  padding: 0.5rem 1.25rem;
+  padding: 0.2rem 1.25rem;
 }
 .card-body {
-  min-height:7.6em;
+  min-height:6.3em;
   padding-bottom:0;
 }
 p.top-org {
