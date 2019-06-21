@@ -11,6 +11,7 @@ import UUID from 'vue-uuid';
 import * as Vue2Leaflet from 'vue2-leaflet';
 import vueNumeralFilterInstaller from 'vue-numeral-filter';
 import VueGoodTablePlugin from 'vue-good-table';
+import Notifications from 'vue-notification';
 
 import './registerServiceWorker';
 
@@ -21,7 +22,7 @@ import 'leaflet/dist/leaflet.css';
 import 'vue-good-table/dist/vue-good-table.css';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faChartPie, faChartBar, faTable } from '@fortawesome/free-solid-svg-icons';
+import { faChartPie, faChartBar, faTable, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import _ from 'lodash';
@@ -40,7 +41,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
-library.add(faChartPie, faChartBar, faTable);
+library.add(faChartPie, faChartBar, faTable, faSpinner);
 
 Vue.component('fa-icon', FontAwesomeIcon);
 
@@ -49,6 +50,7 @@ Vue.use(HighchartsVue);
 Vue.use(vueNumeralFilterInstaller);
 Vue.use(VueGoodTablePlugin);
 Vue.use(UUID);
+Vue.use(Notifications);
  
 Vue.config.productionTip = false;
 Object.defineProperty(Vue.prototype, '$_', { value: _ });

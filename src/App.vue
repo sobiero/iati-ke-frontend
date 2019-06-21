@@ -6,11 +6,17 @@
       <nav-bar></nav-bar>
     </div>
     
-    <div class="container-fluid"> <div class="col-md-12"> <router-view></router-view> </div> </div>
+    <div class="container-fluid"> 
+      <div class="col-md-12">
+           <router-view></router-view> 
+      </div> 
+    </div>
 
     <footer class="footer fixed-bottom text-center bg-info pt-2 pb-2">
      <small class="text-white">&copy; @obierosimon 2019 </small>
     </footer>
+
+    <notifications group="api-notif"></notifications>
   
   </div>
 </template>

@@ -12,7 +12,7 @@
                   label-align-sm="right"
                   label-for="nestedStreet"
                 >
-                  <b-form-select size="sm" v-model="form.selTrxnType" :options="selOptions.trxnType" @change="loadDateRange"> </b-form-select>
+                  <b-form-select size="sm" v-model="form.selTrxnType" :options="selOptions.trxnType" XXXchange="loadDateRange"> </b-form-select>
                 </b-form-group>
                 </div>
 
@@ -23,7 +23,7 @@
                   label-align-sm="right"
                   label-for="nestedStreet"
                 >
-                  <b-form-select size="sm" v-model="form.selCounty" :options="selOptions.county" @change="loadDateRange"> </b-form-select>
+                  <b-form-select size="sm" v-model="form.selCounty" :options="selOptions.county" XXXchange="loadDateRange"> </b-form-select>
                 </b-form-group>
                 </div>
 
@@ -34,7 +34,7 @@
                   label-align-sm="right"
                   label-for="nestedStreet"
                 >
-                  <b-form-select size="sm" v-model="form.selSdg" :options="selOptions.sdg" @change="loadDateRange"> </b-form-select>
+                  <b-form-select size="sm" v-model="form.selSdg" :options="selOptions.sdg" XXXchange="loadDateRange"> </b-form-select>
                 </b-form-group>
                 </div>
 
@@ -201,7 +201,10 @@ export default {
         yrRangeTxt = ` from ${this.form.selDateRange.from} to ${this.form.selDateRange.to}`;
       }
 
-      return `${trxTypeTxt + ctyText + sdgText + yrRangeTxt} in ${this.form.currency}`;
+      var appendCry = 'opuk'; //= false == this.form.selDateRange.from ? '' : this.form.currency;
+
+      return `${trxTypeTxt + ctyText + sdgText + yrRangeTxt} in ` + appendCry ;
+
     },
 
   },
@@ -256,8 +259,15 @@ export default {
     loadDateRange() {
       this.resetPanels();
 
+      EventBus.$emit('xhr-dashboard', 'req');
+      EventBus.$emit('xhr-daterange', 'req');
+     
       this.$axios.get(`${this.apiUrl}/iati/date-range`, { params: { params: this.form } })
         .then((res) => {
+
+          EventBus.$emit('xhr-dashboard', 'res');
+          EventBus.$emit('xhr-daterange', 'res');
+
           const tmp = [];
 
           if (!this.$_.isNil(res.data.data[0])) {
@@ -265,22 +275,41 @@ export default {
             const max = res.data.data[1].trans_date;
 
             this.form.selDateRange.from = min;
-            this.form.selDateRange.to = max;
+            this.form.selDateRange.to   = max;
 
             for (let y = min; y <= max; y++) {
+            
               tmp.push({ value: y, text: y });
+            
             }
 
             this.selOptions.dateRange.from = tmp;
-            this.selOptions.dateRange.to = tmp;
+            this.selOptions.dateRange.to   = tmp;
+
+            EventBus.$emit('xhr-dashboard', 'req');
 
             this.loadDashBoardData();
+          
           } else {
+
+            this.$notify({
+
+              group: 'api-notif',
+              title: 'Error - No Data',
+              text: 'There is no data for selected parameters!',
+              duration: 8000,
+              max: 1,
+              'animation-type': 'velocity', 
+              type: 'error',
+
+            });
+          
             this.form.selDateRange.from = null;
             this.form.selDateRange.to = null;
 
             this.selOptions.dateRange.from = tmp;
             this.selOptions.dateRange.to = tmp;
+          
           }
         })
         .catch((e) => {
@@ -297,6 +326,9 @@ export default {
 
       this.$axios.get(`${this.apiUrl}/iati/dashboard-data`, { params: { params: this.form } })
         .then((res) => {
+          
+          EventBus.$emit('xhr-dashboard', 'res');
+          
           vm.dashboard.kpiAndPanel.totalAmt = res.data.data.totalAmt[0] ? res.data.data.totalAmt[0] : null;
           vm.dashboard.kpiAndPanel.totalAmtByYear = res.data.data.totalAmtByYear;
           vm.dashboard.kpiAndPanel.totalAmtByPublisher = res.data.data.totalAmtByPublisher;
@@ -319,9 +351,11 @@ export default {
             this.errors.push(e);
           });
       }
+
     },
 
     resetPanels() {
+
       this.dashboard.kpiAndPanel.totalAmt = {};
       this.dashboard.kpiAndPanel.totalAmtByYear = {};
       this.dashboard.kpiAndPanel.totalAmtByPublisher = {};
@@ -354,13 +388,21 @@ export default {
         var clickedCountyCode = this.$_.padStart(payload, 3, '0');
         this.form.selCounty = clickedCountyCode ;
 
-    })
+    });
 
   },
 
   watch: {
 
     'form.selCounty': function () {
+        this.loadDateRange();
+    },
+
+    'form.selTrxnType': function () {
+        this.loadDateRange();
+    },
+
+    'form.selSdg': function () {
         this.loadDateRange();
     },
 

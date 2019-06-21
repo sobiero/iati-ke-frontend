@@ -13,9 +13,15 @@
       <h6 slot="header" class="mb-0"><strong>Total Amount</strong></h6>
       <b-card-text>
 
-      <template v-if="data.totalAmt && data.totalAmt.total">
+      <span v-if="dashboardLoading">
+         <fa-icon icon="spinner" pulse> </fa-icon>
+      </span>
+      <template v-else-if="data.totalAmt && data.totalAmt.total">
       <span class="text-info" style="font-size:2.2em;">{{data.totalAmt.total | abbreviate }} </span>
       </template>
+      <span class="no-data" v-else>
+           No data
+       </span>
 
       </b-card-text>
     </b-card>
@@ -36,13 +42,22 @@
 
            <b-card-text>
 
-           <template v-if="data.totalAmtByCounty && data.totalAmtByCounty[0]">
+           
+            <span v-if="dashboardLoading">
+               <fa-icon icon="spinner" pulse> </fa-icon>
+            </span>
+           <template v-else-if="data.totalAmtByCounty && data.totalAmtByCounty[0]">
 
              <span class="text-default" style="font-size:1.2em;">{{data.totalAmtByCounty[0].county_name }}</span>
             <br />
             <span style="font-size:1.8em;color:#d1412c;"> {{data.totalAmtByCounty[0].total | abbreviate }}</span>
 
            </template>
+           <span class="no-data" v-else>
+               No data
+           </span>
+
+
            </b-card-text>
 
          </template>
@@ -53,13 +68,20 @@
 
            <b-card-text>
 
-           <template v-if="data.totalAmtBySdg && data.totalAmtBySdg[0]">
+            <span v-if="dashboardLoading">
+               <br /> <fa-icon icon="spinner" pulse> </fa-icon>
+            </span>
+           <template v-else-if="data.totalAmtBySdg && data.totalAmtBySdg[0]">
 
             <span style="font-size:0.75em;">{{data.totalAmtBySdg[0].sdg_id }} {{data.totalAmtBySdg[0].sdg_name }}</span>
             <br />
             <span style="font-size:1.8em;color:#d1412c;"> {{data.totalAmtBySdg[0].total | abbreviate }}</span>
 
            </template>
+           <span class="no-data" v-else>
+               No data
+           </span>
+
            </b-card-text>
 
          </template>
@@ -68,13 +90,19 @@
          <h6 slot="header" class="mb-0"><strong>Top Receiving Year</strong></h6>
           <b-card-text>
 
-          <template v-if="data.totalAmtByYear && data.totalAmtByYear[0]">
+           <span v-if="dashboardLoading">
+               <fa-icon icon="spinner" pulse> </fa-icon>
+           </span>
+          <template v-else-if="data.totalAmtByYear && data.totalAmtByYear[0]">
 
             <span class="text-default" style="font-size:1.5em;">{{data.totalAmtByYear[0].trans_year }}</span>
             <br />
             <span style="font-size:1.8em;color:#d1412c;">{{data.totalAmtByYear[0].total | abbreviate }}</span>
 
            </template>
+           <span class="no-data" v-if="!dashboardLoading && !(data.totalAmt && data.totalAmt.total)">
+             No data
+           </span>
 
           </b-card-text>
          </template>
@@ -94,12 +122,18 @@
 
       <b-card-text class="top-org">
 
-       <template v-if="data.totalAmtByPublisher && data.totalAmtByPublisher[0]">
+       <span v-if="dashboardLoading">
+           <br /><fa-icon icon="spinner" pulse> </fa-icon>
+       </span>
+       <template v-else-if="data.totalAmtByPublisher && data.totalAmtByPublisher[0]">
 
        <span style="font-size:0.7em">{{data.totalAmtByPublisher[0].publisher }} </span>
        <br /><br /><span class="text-success" style="font-size:1.8em"> {{data.totalAmtByPublisher[0].total | abbreviate }} </span>
 
        </template>
+       <span class="no-data" v-else>
+           <span><br />No data</span>
+       </span>
 
       </b-card-text>
 
@@ -119,8 +153,11 @@
            <h6 slot="header" class="mb-0"><strong>Other Transactions</strong></h6>
 
            <b-card-text>
-
-           <template v-if="data.summaryByTrxnType">
+           
+            <span v-if="dashboardLoading">
+               <fa-icon icon="spinner" pulse> </fa-icon>
+            </span>
+           <template v-else-if="data.summaryByTrxnType">
 
              <table style="width:100%;">
              <tr v-for="t in data.summaryByTrxnType">
@@ -129,8 +166,11 @@
              </tr>
              </table>
 
-
            </template>
+         <span class="no-data" v-if="!dashboardLoading && !(data.totalAmt && data.totalAmt.total)">
+           No data
+         </span>
+
 
           </b-card-text>
 
@@ -142,13 +182,19 @@
 
            <b-card-text class="top-org">
 
-           <template v-if="data.totalAmtBySdg && data.totalAmtBySdg[0]">
+            <span v-if="dashboardLoading">
+               <fa-icon icon="spinner" pulse> </fa-icon>
+            </span>
+           <template v-else-if="data.totalAmtBySdg && data.totalAmtBySdg[0]">
 
             <span style="font-size:0.75em;">{{data.totalAmtBySdg[0].sdg_id }} {{data.totalAmtBySdg[0].sdg_name }}</span>
             <br /><br />
             <span class="text-info" style="font-size:1.8em;">{{data.totalAmtBySdg[0].total | abbreviate }}</span>
 
            </template>
+           <span class="no-data" v-else>
+               No data
+           </span>
 
           </b-card-text>
 
@@ -174,7 +220,11 @@
 
            <b-card-text>
 
-           <template v-if="data.summaryByTrxnType">
+           
+            <span v-if="dashboardLoading">
+               <fa-icon icon="spinner" pulse> </fa-icon>
+            </span>
+           <template v-else-if="data.summaryByTrxnType">
 
              <table style="width:100%;" class="hover striped">
              <tr v-for="t in data.summaryByTrxnType">
@@ -184,6 +234,9 @@
              </table>
 
            </template>
+         <span class="no-data" v-if="!dashboardLoading && !(data.totalAmt && data.totalAmt.total)">
+           No data
+         </span>
 
           </b-card-text>
 
@@ -200,6 +253,8 @@
 
 <script>
 
+import EventBus from '../eventBus';
+
 export default {
   name: 'DashboardKpis',
   props: {
@@ -213,6 +268,8 @@ export default {
   },
   data() {
     return {
+
+      dashboardLoading: true,
 
     };
   },
@@ -236,6 +293,28 @@ export default {
 
   },
 
+  mounted() {
+
+    var vm = this ;
+
+    EventBus.$on('xhr-dashboard', (payload) => {
+       if ( payload == 'req' )
+       {
+         vm.dashboardLoading = true ;
+       }
+    });
+
+    EventBus.$on('xhr-dashboard', (payload) => {
+       if ( payload == 'res' )
+       {
+         vm.dashboardLoading = false;
+       }
+    });
+
+  
+  },
+
+
 };
 </script>
 
@@ -251,6 +330,11 @@ p.top-org {
   margin-top:-10px;
   margin-bottom:12px;
   line-height:1.1em;
+}
+
+span.no-data {
+   font-style:italic;
+   color:#ff3333;
 }
 
 </style>
