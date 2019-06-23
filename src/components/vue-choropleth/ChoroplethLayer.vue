@@ -1,7 +1,7 @@
 <template>
   <div>
     <l-geo-json :geojson="geojsonData.geojson" :options="geojsonOptions" ref="geolayer"></l-geo-json>
-    <slot :currentItem="currentItem" :unit="value.metric" :min="min" :max="max"></slot>
+    <slot :currentItem="currentItem" :unit="value.metric" :min="min" :max="max" :selcounty="selcounty"></slot>
   </div>
 </template>
 <script>
@@ -76,14 +76,35 @@ export default {
     currentStrokeColor: { type: String, default: '666' },
     strokeWidth: { type: Number, default: 2 },
     currentStrokeWidth: { type: Number, default: 5 },
+    selcounty: String,
   },
   mounted() {
     if (this.$parent._isMounted) {
       this.deferredMountedTo(this.$parent.mapObject);
     }
+
+    var vm = this ;
+
+    EventBus.$on('xhr-dashboard', (payload) => {
+       if ( payload == 'req' )
+       {
+         vm.dashboardLoading = true ;
+       }
+    });
+
+    EventBus.$on('xhr-dashboard', (payload) => {
+       if ( payload == 'res' )
+       {
+         vm.dashboardLoading = false;
+       }
+    });
+
   },
   data() {
     return {
+
+      dashboardLoading: true,
+
       currentItem: { name: '', value: 0 },
       geojsonOptions: {
         style: (feature) => {

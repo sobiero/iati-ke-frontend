@@ -5,11 +5,11 @@
       <router-link to="/about">About</router-link> -->
       <nav-bar></nav-bar>
     </div>
-    
-    <div class="container-fluid"> 
+
+    <div class="container-fluid">
       <div class="col-md-12">
-           <router-view></router-view> 
-      </div> 
+           <router-view></router-view>
+      </div>
     </div>
 
     <footer class="footer fixed-bottom text-center bg-info pt-2 pb-2">
@@ -17,7 +17,7 @@
     </footer>
 
     <notifications group="api-notif"></notifications>
-  
+
   </div>
 </template>
 
@@ -37,7 +37,7 @@ export default {
     }
  },
 
-}
+};
 
 </script>
 

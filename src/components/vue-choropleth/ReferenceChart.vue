@@ -1,5 +1,5 @@
 <template>
-    
+
 </template>
 <script>
 import chroma from "chroma-js"
@@ -23,7 +23,7 @@ export default {
       position: position
     })
     this.mapObject.onAdd = function(map) {
-      this._div = L.DomUtil.create("div", "info") // create a div with a class "info"
+      this._div = L.DomUtil.create("div", "info refChart") // create a div with a class "info"
       this.update({min, max, colorScale, title})
       return this._div
     }

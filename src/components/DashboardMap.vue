@@ -4,7 +4,14 @@
    <div class="col-md-12">
 
       <b-card header-tag="header" style="min-height: 520px;">
-        <h6 slot="header" class="mb-0">Map </h6>
+        <h6 slot="header" class="mb-0">
+           <span v-if="dashboardLoading">
+               <fa-icon icon="spinner" pulse> </fa-icon> <span style="font-size:0.9em;"> loading map data... </span>
+           </span>
+           <span v-else>
+              Map
+           </span>
+        </h6>
         <b-card-text>
 
           <l-map :zoom="zoom" :min-zoom="minZoom" :max-zoom="maxZoom" ref="dMap"
@@ -12,9 +19,9 @@
 
              <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
 
-             <template v-for=" l in activeCounty.pointData ">
+             <template v-for=" l in activeCounty.pointData " v-if="dashParams.selCounty != '000'">
 
-             <l-marker :lat-lng="l.marker">
+             <l-marker :lat-lng="l.marker" >
               <l-popup>
                   <table class="table bordered">
                   <tr>
@@ -34,18 +41,17 @@
             <l-choropleth-layer :data="cleanedCountyData"
                  titleKey="county_name" idKey="county_code" :value="value"
                  geojsonIdKey="COUNTY_COD"
-                 :geojson="countyGeojson" :colorScale="colorScale">
+                 :geojson="countyGeojson" :colorScale="colorScale" >
 
-              <template slot-scope="props" v-show="showInfoAndRef" >
-                <l-info-control :item="props.currentItem" :unit="props.unit"
-                title="County" placeholder="Hover over a county"/>
-                <l-reference-chart title="Activities in counties"
-                :colorScale="colorScale" :min="props.min" :max="props.max"
-                position="topright"/>
-              </template>
+               <template slot-scope="props">
+                  <l-info-control :item="props.currentItem" :unit="props.unit"
+                  title="County" placeholder="Hover over a county"></l-info-control>
+                  <l-reference-chart title="Activities in counties"
+                  :colorScale="colorScale" :min="props.min" :max="props.max"
+                  position="topright"  ></l-reference-chart>
+                </template>
 
             </l-choropleth-layer>
-
 
             <l-geo-json v-if="activeCounty.geoJson && dashParams.selCounty && dashParams.selCounty != '000' "
              :geojson="activeCounty.geoJson"
@@ -53,6 +59,8 @@
            </l-geo-json>
 
           </l-map>
+
+
 
         </b-card-text>
       </b-card>
@@ -66,6 +74,9 @@
 import InfoControl from '@/components/vue-choropleth/InfoControl.vue';
 import ReferenceChart from '@/components/vue-choropleth/ReferenceChart.vue';
 import ChoroplethLayer from '@/components/vue-choropleth/ChoroplethLayer.vue';
+
+import EventBus from '../eventBus';
+
 
 import {
   LMap, LTileLayer, LMarker, LGeoJson, LPopup,
@@ -94,6 +105,8 @@ export default {
   },
   data() {
     return {
+      dashboardLoading: true,
+
       zoom: 6,
       minZoom: 2,
       maxZoom: 15,
@@ -102,7 +115,7 @@ export default {
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       marker: L.latLng(1, 38),
       showMarker: true,
-      showInfoAndRef: true,
+      showInfoAndRef: false,
 
       value: {
         key: 'total',
@@ -115,8 +128,9 @@ export default {
       }], */
 
       countyGeojson,
-      // colorScale: ["e7d090", "e9ae7b", "de7062"],
-      colorScale: ['ddbb60', 'de893d', 'b73826'],
+       colorScale: ["6cff6c", "00b000", "005500"],
+
+      //colorScale: ['ddbb60', 'de893d', 'b73826'],
 
       cleanedCountyData: [],
 
@@ -154,6 +168,25 @@ export default {
 
     'dashParams.selCounty': function () {
       this.activeCounty.geoJson = null;
+
+      var el1 = document.getElementsByClassName("infoCtrl"); //.style.display("block");
+      el1 = el1[0];
+      var el2 = document.getElementsByClassName("refChart"); //.style.display("block");
+      el2 = el2[0];
+
+      if (this.dashParams.selCounty == '000')
+      {
+
+        el1.style.display = "block";
+        el2.style.display = "block";
+
+      } else {
+
+        el1.style.display = "none";
+        el2.style.display = "none";
+
+      }
+
     },
 
     countyLocationData() {
@@ -161,11 +194,33 @@ export default {
       this.activeCounty.pointData = m;
     },
 
+
+
   },
 
   methods: {
 
     // features . properties.COUNTY_COD
+
+  },
+
+  mounted() {
+
+    var vm = this ;
+
+    EventBus.$on('xhr-dashboard', (payload) => {
+       if ( payload == 'req' )
+       {
+         vm.dashboardLoading = true ;
+       }
+    });
+
+    EventBus.$on('xhr-dashboard', (payload) => {
+       if ( payload == 'res' )
+       {
+         vm.dashboardLoading = false;
+       }
+    });
 
   },
 

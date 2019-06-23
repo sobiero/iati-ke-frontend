@@ -261,7 +261,7 @@ export default {
 
       EventBus.$emit('xhr-dashboard', 'req');
       EventBus.$emit('xhr-daterange', 'req');
-     
+
       this.$axios.get(`${this.apiUrl}/iati/date-range`, { params: { params: this.form } })
         .then((res) => {
 
@@ -278,9 +278,9 @@ export default {
             this.form.selDateRange.to   = max;
 
             for (let y = min; y <= max; y++) {
-            
+
               tmp.push({ value: y, text: y });
-            
+
             }
 
             this.selOptions.dateRange.from = tmp;
@@ -289,7 +289,7 @@ export default {
             EventBus.$emit('xhr-dashboard', 'req');
 
             this.loadDashBoardData();
-          
+
           } else {
 
             this.$notify({
@@ -299,17 +299,17 @@ export default {
               text: 'There is no data for selected parameters!',
               duration: 8000,
               max: 1,
-              'animation-type': 'velocity', 
+              'animation-type': 'velocity',
               type: 'error',
 
             });
-          
+
             this.form.selDateRange.from = null;
             this.form.selDateRange.to = null;
 
             this.selOptions.dateRange.from = tmp;
             this.selOptions.dateRange.to = tmp;
-          
+
           }
         })
         .catch((e) => {
@@ -326,9 +326,9 @@ export default {
 
       this.$axios.get(`${this.apiUrl}/iati/dashboard-data`, { params: { params: this.form } })
         .then((res) => {
-          
+
           EventBus.$emit('xhr-dashboard', 'res');
-          
+
           vm.dashboard.kpiAndPanel.totalAmt = res.data.data.totalAmt[0] ? res.data.data.totalAmt[0] : null;
           vm.dashboard.kpiAndPanel.totalAmtByYear = res.data.data.totalAmtByYear;
           vm.dashboard.kpiAndPanel.totalAmtByPublisher = res.data.data.totalAmtByPublisher;
@@ -384,10 +384,18 @@ export default {
   mounted() {
 
     EventBus.$on('countyClicked', (payload) => {
-
         var clickedCountyCode = this.$_.padStart(payload, 3, '0');
-        this.form.selCounty = clickedCountyCode ;
+        this.form.selCounty   = clickedCountyCode ;
+    });
 
+    EventBus.$on('sdgClicked', (payload) => {
+        var clickedSdg   = payload;
+        this.form.selSdg = clickedSdg ;
+    });
+
+    EventBus.$on('trxnTypeClicked', (payload) => {
+        var clickedTrxnType   = payload;
+        this.form.selTrxnType = clickedTrxnType;
     });
 
   },

@@ -27,7 +27,11 @@
 
         <b-card-text>
 
-            <template v-if="selVisualType == 'tbl' " >
+            <span v-if="dashboardLoading">
+               <fa-icon icon="spinner" pulse> </fa-icon>
+            </span>
+
+            <template v-else-if="selVisualType == 'tbl' " >
 
                  <!-- <table v-if="tableData.rows && tableData.rows.length > 0 " style="width:100%;" class="hover striped">
                   <thead>
@@ -57,17 +61,36 @@
 
                      <template slot="table-row" slot-scope="props">
 
-                      <span v-if="props.column.field == 'col3'">
-                        <span>{{props.row.col3 | abbreviate }}</span>
+                      <span v-if="props.column.label == 'SDG Name'">
+                        <span>
+                          <b-link href="#" @click="linkClicked('sdg', props.row.col1)">{{props.row.col2}}</b-link>
+                        </span>
+                      </span>
+                      <span v-else-if="props.column.label == 'County'">
+                        <b-link href="#" @click="linkClicked('county', props.row.col1)">{{props.row.col2}}</b-link>
+                      </span>
+                      <span v-else>
+
+                          <span v-if="props.column.field == 'col3'">
+                            <span>{{props.row.col3 | abbreviate }}</span>
+                          </span>
+                          <span v-else>
+                             {{props.formattedRow[props.column.field]}}
+                          </span>
+
                       </span>
 
-                      <!-- <span v-if="props.column.label == 'SDG No'">
-                         <span>{{props.row.label + 'opuk' }}</span>
-                      </span> -->
 
                      </template>
 
                   </vue-good-table>
+
+                  <div class="text-right" v-if="!dashboardLoading && selBreakDown == 1 && dashParams && dashParams.selCounty != '000'">
+                    <b-link style="font-size:0.8em;" href="#" @click="linkClicked('county', '000')">All Counties</b-link>
+                  </div>
+                  <div class="text-right" v-else-if="!dashboardLoading && selBreakDown == 2 && dashParams && dashParams.selCounty != 0 ">
+                    <b-link style="font-size:0.8em;" href="#" @click="linkClicked('sdg', 0)">All SDGs</b-link>
+                  </div>
 
             </template>
 
@@ -88,6 +111,8 @@
 
 <script>
 
+import EventBus from '../eventBus';
+
 export default {
   name: 'DashboardUserPane',
   props: {
@@ -101,6 +126,8 @@ export default {
   },
   data() {
     return {
+
+      dashboardLoading:true,
 
       breakDownOptions: [
 
@@ -229,6 +256,23 @@ export default {
       this.pieChart.series = [{ data: dt }];
     },
 
+    linkClicked(param, val) {
+
+       switch (param)
+       {
+          case 'county':
+           EventBus.$emit('countyClicked', val);
+          break;
+
+          case 'sdg':
+           EventBus.$emit('sdgClicked', val);
+          break;
+
+          default:
+       }
+
+    },
+
   },
 
   watch: {
@@ -250,6 +294,23 @@ export default {
   mounted() {
     this.processData();
     // this.selBreakDown = 1;
+
+    var vm = this ;
+
+    EventBus.$on('xhr-dashboard', (payload) => {
+       if ( payload == 'req' )
+       {
+         vm.dashboardLoading = true ;
+       }
+    });
+
+    EventBus.$on('xhr-dashboard', (payload) => {
+       if ( payload == 'res' )
+       {
+         vm.dashboardLoading = false;
+       }
+    });
+
   },
 
   created() {
