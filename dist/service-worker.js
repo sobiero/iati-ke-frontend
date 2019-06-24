@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.6c96b51158b1442af20274fa2b6c9b19.js"
+  "/precache-manifest.dfee641778119f4d783df6f2d51b3513.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "SDG-KE"});
