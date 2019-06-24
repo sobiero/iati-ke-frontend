@@ -17,16 +17,16 @@
           <b-form-select id="selBreakDown" size="sm" v-model="selBreakDown" :options="breakDownOptions" @change="processData()" style="max-width:350px;background-color:inherit;"> </b-form-select>
         </span>
 
-        <span class='text-default col-md-2' style="display:inline-block">
-          
+        <span class='text-default col-md-2' style="display:inline-block; white-space: nowrap;">
+
           <b-link class="no-deco" v-b-tooltip.hover title="View data in tabular format">
              &nbsp;<fa-icon :class=" selVisualType == 'tbl' ? 'text-success' : 'text-mute' " @click="setVisualType('tbl')" icon="table"> </fa-icon>&nbsp;
           </b-link>
-          
+
           <b-link class="no-deco" v-b-tooltip.hover title="View data as a bar chart">
              &nbsp;<fa-icon :class=" selVisualType == 'bar' ? 'text-success' : 'text-mute' " @click="setVisualType('bar')" icon="chart-bar"> </fa-icon>&nbsp;
           </b-link>
-          
+
           <b-link class="no-deco" v-b-tooltip.hover title="View data as a pie chart">
              &nbsp;<fa-icon :class=" selVisualType == 'pie' ? 'text-success' : 'text-mute' " @click="setVisualType('pie')" icon="chart-pie"> </fa-icon>&nbsp;
           </b-link>
@@ -138,7 +138,7 @@ export default {
     return {
 
       exRate: 1,
-      
+
       dashboardLoading:true,
 
       breakDownOptions: [

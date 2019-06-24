@@ -12,9 +12,9 @@
                   label-align-sm="right"
                   label-for="nestedStreet"
                 >
-               
-                  <b-form-select style="width:88%" size="sm" v-model="form.selTrxnType" :options="selOptions.trxnType" XXXchange="loadDateRange"> </b-form-select>
-                  
+
+                  <b-form-select style="width:85%" size="sm" v-model="form.selTrxnType" :options="selOptions.trxnType" XXXchange="loadDateRange"> </b-form-select>
+
                   <b-link class="no-deco" style="display:inline-block;float:right" v-b-tooltip.hover :title="selTrxnDesc">
                     .<fa-icon  class="text-info" icon="info-circle"></fa-icon>.
                   </b-link>
@@ -179,18 +179,18 @@ export default {
   computed: {
 
     selTrxnDesc() {
-      
-      var tmp = {}; var trxTypeDesc = ''; 
+
+      var tmp = {}; var trxTypeDesc = '';
       tmp         = _.find(this.selOptions.trxnType, { value: this.form.selTrxnType });
-      trxTypeDesc = tmp ? tmp.description : '';
+      trxTypeDesc = tmp ? tmp.text +': ' + tmp.description : '';
       return trxTypeDesc;
-    
+
     },
 
     /*
     dashboardHeader() {
-      
-      
+
+
 
     }, */
 
@@ -199,7 +199,7 @@ export default {
   methods: {
 
     generateHeader() {
-      
+
       let tmp = {}; let trxTypeTxt = ''; let ctyText = ''; let sdgText = ''; let
         yrRangeTxt = '';
 
@@ -238,7 +238,7 @@ export default {
       var appendCry = false == this.form.selDateRange.from ? '' : cur ;
 
       this.dashboardHeader = `${trxTypeTxt + ctyText + sdgText + yrRangeTxt} in ` + appendCry ;
-    
+
     },
 
     loadCounty() {
@@ -322,6 +322,7 @@ export default {
 
           } else {
 
+            /*
             this.$notify({
 
               group: 'api-notif',
@@ -332,6 +333,13 @@ export default {
               'animation-type': 'velocity',
               type: 'error',
 
+            });*/
+
+            this.$bvToast.toast('There is no data for selected parameters!', {
+              title: 'Error - No Data',
+              variant: 'danger',
+              autoHideDelay: 8000,
+              solid: true
             });
 
             this.form.selDateRange.from = null;
@@ -353,6 +361,7 @@ export default {
     loadDashBoardData() {
       const vm = this;
       this.resetPanels();
+      EventBus.$emit('xhr-dashboard', 'req');
 
       this.$axios.get(`${this.apiUrl}/iati/dashboard-data`, { params: { params: this.form } })
         .then((res) => {
@@ -429,7 +438,7 @@ export default {
     });
 
     EventBus.$on('exRate', (payload) => {
-       vm.form.currency = payload.cur ;
+       this.form.currency = payload.cur ;
     });
 
 
@@ -452,9 +461,21 @@ export default {
         this.generateHeader();
     },
 
+    'form.selDateRange.from': function () {
+        //this.loadDateRange();
+        this.generateHeader();
+    },
+
+    'form.selDateRange.to': function () {
+        //this.loadDateRange();
+        this.generateHeader();
+    },
+
     'form.currency': function () {
         this.generateHeader();
     },
+
+
   },
 
 
@@ -474,6 +495,13 @@ export default {
 
 a.no-deco, a.no-deco:hover {
   text-decoration:none;
+}
+
+.navbar select {
+  font-size:0.72em;
+}
+.navbar label {
+  font-size:0.75em !important;
 }
 
 </style>

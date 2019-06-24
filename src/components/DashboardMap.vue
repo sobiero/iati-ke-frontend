@@ -30,7 +30,7 @@
                   </tr>
                   <tr>
                     <td><strong>{{labels.selTrxnType}} Amount</strong></td>
-                    <td>{{l.amount * exRate | abbreviate}} </td>
+                    <td>{{l.amount  | abbreviate}} </td>
                   </tr>
                   </table>
               </l-popup>
@@ -105,9 +105,9 @@ export default {
   },
   data() {
     return {
-      
-      exRate: 1, 
-      
+
+      exRate: 1,
+
       dashboardLoading: true,
 
       zoom: 6,
@@ -149,7 +149,7 @@ export default {
   watch: {
 
     'exRate': function() {
-       this.updateData(); 
+       this.updateData();
        this.updateLocationData();
     },
 
@@ -190,7 +190,7 @@ export default {
   methods: {
 
     updateData() {
-      
+
       const cleanedCountyData = this.$_.map(this.countyData, el => ({ county_code: parseInt(el.county_code), county_name: el.county_name, total: el.total * this.exRate }));
       this.cleanedCountyData = cleanedCountyData;
 
@@ -210,14 +210,14 @@ export default {
         this.$refs.dMap.mapObject.fitBounds(b.getBounds());
         this.showInfoAndRef = true;
       }
-    
+
     },
-    
+
     updateLocationData() {
-       
+
        const m = this.$_.map(this.countyLocationData, item => ({ location_name: item.location_name, marker: L.latLng(item.location_latitude, item.location_longitude), amount: item.total * this.exRate }));
        this.activeCounty.pointData = m;
-    
+
     },
 
 

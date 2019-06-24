@@ -12,6 +12,7 @@ import * as Vue2Leaflet from 'vue2-leaflet';
 import vueNumeralFilterInstaller from 'vue-numeral-filter';
 import VueGoodTablePlugin from 'vue-good-table';
 import Notifications from 'vue-notification';
+import FlagIcon from 'vue-flag-icon'
 
 import './registerServiceWorker';
 
@@ -51,7 +52,8 @@ Vue.use(vueNumeralFilterInstaller);
 Vue.use(VueGoodTablePlugin);
 Vue.use(UUID);
 Vue.use(Notifications);
- 
+Vue.use(FlagIcon);
+
 Vue.config.productionTip = false;
 Object.defineProperty(Vue.prototype, '$_', { value: _ });
 Object.defineProperty(Vue.prototype, '$axios', { value: axios });
