@@ -12,7 +12,13 @@
                   label-align-sm="right"
                   label-for="nestedStreet"
                 >
-                  <b-form-select size="sm" v-model="form.selTrxnType" :options="selOptions.trxnType" XXXchange="loadDateRange"> </b-form-select>
+               
+                  <b-form-select style="width:88%" size="sm" v-model="form.selTrxnType" :options="selOptions.trxnType" XXXchange="loadDateRange"> </b-form-select>
+                  
+                  <b-link class="no-deco" style="display:inline-block;float:right" v-b-tooltip.hover :title="selTrxnDesc">
+                    .<fa-icon  class="text-info" icon="info-circle"></fa-icon>.
+                  </b-link>
+
                 </b-form-group>
                 </div>
 
@@ -120,6 +126,11 @@ export default {
     return {
       apiUrl: '/api',
 
+        dashboardHeader: '',
+
+      //selTrxnDesc: 'nyawawa',
+      //trxnOpts: 'nyawawa',
+
       form: {
         selCounty: '000',
         selSdg: 0,
@@ -167,9 +178,32 @@ export default {
 
   computed: {
 
+    selTrxnDesc() {
+      
+      var tmp = {}; var trxTypeDesc = ''; 
+      tmp         = _.find(this.selOptions.trxnType, { value: this.form.selTrxnType });
+      trxTypeDesc = tmp ? tmp.description : '';
+      return trxTypeDesc;
+    
+    },
+
+    /*
     dashboardHeader() {
+      
+      
+
+    }, */
+
+  },
+
+  methods: {
+
+    generateHeader() {
+      
       let tmp = {}; let trxTypeTxt = ''; let ctyText = ''; let sdgText = ''; let
         yrRangeTxt = '';
+
+      var cur = this.form.currency ;
 
       tmp = _.find(this.selOptions.trxnType, { value: this.form.selTrxnType });
       trxTypeTxt = tmp && tmp.text ? tmp.text : '';
@@ -201,15 +235,11 @@ export default {
         yrRangeTxt = ` from ${this.form.selDateRange.from} to ${this.form.selDateRange.to}`;
       }
 
-      var appendCry = 'opuk'; //= false == this.form.selDateRange.from ? '' : this.form.currency;
+      var appendCry = false == this.form.selDateRange.from ? '' : cur ;
 
-      return `${trxTypeTxt + ctyText + sdgText + yrRangeTxt} in ` + appendCry ;
-
+      this.dashboardHeader = `${trxTypeTxt + ctyText + sdgText + yrRangeTxt} in ` + appendCry ;
+    
     },
-
-  },
-
-  methods: {
 
     loadCounty() {
       const vm = this;
@@ -247,7 +277,7 @@ export default {
         .then((res) => {
           const tmp = [];
           this.$_.forOwn(res.data.data, (v, k) => {
-            tmp.push({ value: { new: v.code, old: v.old_code }, text: v.name });
+            tmp.push({ value: { new: v.code, old: v.old_code }, text: v.name, description: v.description });
           });
           this.selOptions.trxnType = tmp;
         })
@@ -398,22 +428,33 @@ export default {
         this.form.selTrxnType = clickedTrxnType;
     });
 
+    EventBus.$on('exRate', (payload) => {
+       vm.form.currency = payload.cur ;
+    });
+
+
   },
 
   watch: {
 
     'form.selCounty': function () {
         this.loadDateRange();
+        this.generateHeader();
     },
 
     'form.selTrxnType': function () {
         this.loadDateRange();
+        this.generateHeader();
     },
 
     'form.selSdg': function () {
         this.loadDateRange();
+        this.generateHeader();
     },
 
+    'form.currency': function () {
+        this.generateHeader();
+    },
   },
 
 
@@ -430,4 +471,9 @@ export default {
   position: initial !important;
   }
 }
+
+a.no-deco, a.no-deco:hover {
+  text-decoration:none;
+}
+
 </style>

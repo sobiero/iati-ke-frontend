@@ -22,7 +22,7 @@ import 'leaflet/dist/leaflet.css';
 import 'vue-good-table/dist/vue-good-table.css';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faChartPie, faChartBar, faTable, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import _ from 'lodash';
@@ -41,7 +41,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
-library.add(faChartPie, faChartBar, faTable, faSpinner);
+library.add(faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle, faInfoCircle);
 
 Vue.component('fa-icon', FontAwesomeIcon);
 

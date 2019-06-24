@@ -18,14 +18,14 @@
           <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
         </b-nav-form>
 
-        <b-nav-item-dropdown text="Lang" right>
-          <b-dropdown-item href="#">English</b-dropdown-item>
-          <b-dropdown-item href="#">Swahili</b-dropdown-item>
+        <b-nav-item-dropdown text="Currency" right style="z-index:99999">
+          <b-dropdown-item href="#" @click="setCurrency('USD')">USD</b-dropdown-item>
+          <b-dropdown-item href="#" @click="setCurrency('KES')">KES</b-dropdown-item>
         </b-nav-item-dropdown>
 
         <b-nav-item-dropdown right>
           <!-- Using button-content slot -->
-          <template slot="button-content"><em>User</em></template>
+          <template slot="button-content" style="z-index:99999"><em>User</em></template>
           <b-dropdown-item href="#">Profile</b-dropdown-item>
           <b-dropdown-item href="#">Signout</b-dropdown-item>
         </b-nav-item-dropdown>
@@ -36,10 +36,38 @@
 </template>
 
 <script>
+
+import EventBus from '../eventBus';
+
+
 export default {
   name: 'NavBar',
   props: {
     msg: String
-  }
+  },
+
+  methods: {
+
+    setCurrency(cur) {
+      
+      var curObj = {};
+      
+      if ( cur == 'USD' )
+      {
+         
+         curObj = {cur: 'USD', rate: 1 };
+
+      }else{
+         
+         curObj = {cur: 'KES', rate: 101 };
+
+      }
+
+      EventBus.$emit('exRate', curObj );
+     
+     },
+  
+  },
+      
 }
 </script>

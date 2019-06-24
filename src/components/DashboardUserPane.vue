@@ -18,9 +18,19 @@
         </span>
 
         <span class='text-default col-md-2' style="display:inline-block">
-          <fa-icon :class=" selVisualType == 'tbl' ? 'text-success' : 'text-mute' " @click="setVisualType('tbl')" icon="table"> </fa-icon>&nbsp;
-          <fa-icon :class=" selVisualType == 'bar' ? 'text-success' : 'text-mute' " @click="setVisualType('bar')" icon="chart-bar"> </fa-icon>&nbsp;
-          <fa-icon :class=" selVisualType == 'pie' ? 'text-success' : 'text-mute' " @click="setVisualType('pie')" icon="chart-pie"> </fa-icon>
+          
+          <b-link class="no-deco" v-b-tooltip.hover title="View data in tabular format">
+             &nbsp;<fa-icon :class=" selVisualType == 'tbl' ? 'text-success' : 'text-mute' " @click="setVisualType('tbl')" icon="table"> </fa-icon>&nbsp;
+          </b-link>
+          
+          <b-link class="no-deco" v-b-tooltip.hover title="View data as a bar chart">
+             &nbsp;<fa-icon :class=" selVisualType == 'bar' ? 'text-success' : 'text-mute' " @click="setVisualType('bar')" icon="chart-bar"> </fa-icon>&nbsp;
+          </b-link>
+          
+          <b-link class="no-deco" v-b-tooltip.hover title="View data as a pie chart">
+             &nbsp;<fa-icon :class=" selVisualType == 'pie' ? 'text-success' : 'text-mute' " @click="setVisualType('pie')" icon="chart-pie"> </fa-icon>&nbsp;
+          </b-link>
+
         </span>
 
         </span>
@@ -72,7 +82,7 @@
                       <span v-else>
 
                           <span v-if="props.column.field == 'col3'">
-                            <span>{{props.row.col3 | abbreviate }}</span>
+                            <span>{{props.row.col3 * exRate | abbreviate }}</span>
                           </span>
                           <span v-else>
                              {{props.formattedRow[props.column.field]}}
@@ -127,6 +137,8 @@ export default {
   data() {
     return {
 
+      exRate: 1,
+      
       dashboardLoading:true,
 
       breakDownOptions: [
@@ -238,7 +250,7 @@ export default {
 
       _.forOwn(this.tableData.rows, (val, key) => {
         xAxis.push(val.col2);
-        yAxis.push(val.col3);
+        yAxis.push(val.col3 * this.exRate );
       });
 
       this.barChart.xAxis.categories = xAxis;
@@ -281,6 +293,10 @@ export default {
       this.processData();
     },
 
+    exRate() {
+      this.processData();
+    },
+
     data: {
       handler(val) {
         this.processData();
@@ -311,6 +327,10 @@ export default {
        }
     });
 
+    EventBus.$on('exRate', (payload) => {
+       vm.exRate = payload.rate;
+    });
+
   },
 
   created() {
@@ -323,6 +343,10 @@ export default {
 <style lang="scss">
 .card-header {
   padding: 0.5rem 1.25rem;
+}
+
+a.no-deco, a.no-deco:hover {
+  text-decoration:none;
 }
 
 #userpaneopts .card-header {

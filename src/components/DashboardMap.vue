@@ -30,7 +30,7 @@
                   </tr>
                   <tr>
                     <td><strong>{{labels.selTrxnType}} Amount</strong></td>
-                    <td>{{l.amount | abbreviate}} </td>
+                    <td>{{l.amount * exRate | abbreviate}} </td>
                   </tr>
                   </table>
               </l-popup>
@@ -105,6 +105,9 @@ export default {
   },
   data() {
     return {
+      
+      exRate: 1, 
+      
       dashboardLoading: true,
 
       zoom: 6,
@@ -128,7 +131,8 @@ export default {
       }], */
 
       countyGeojson,
-       colorScale: ["6cff6c", "00b000", "005500"],
+       //colorScale: ["6cff6c", "00b000", "005500"],
+       colorScale: ["bb86fc", "6200ee", "3700b3"],
 
       //colorScale: ['ddbb60', 'de893d', 'b73826'],
 
@@ -144,26 +148,17 @@ export default {
 
   watch: {
 
-    countyData() {
-      const cleanedCountyData = this.$_.map(this.countyData, el => ({ county_code: parseInt(el.county_code), county_name: el.county_name, total: el.total }));
-      this.cleanedCountyData = cleanedCountyData;
+    'exRate': function() {
+       this.updateData(); 
+       this.updateLocationData();
+    },
 
-      if (this.dashParams.selCounty != '000' && !this.$_.isEmpty(this.countyData)) {
-        this.showInfoAndRef = false;
+    'countyData': function() {
+       this.updateData();
+    },
 
-        const tmp = this.$_.find(this.countyGeojson.features, { properties: { COUNTY_COD: parseInt(this.dashParams.selCounty) } });
-
-        this.activeCounty.geoJson = { type: 'FeatureCollection', features: [tmp] };
-
-        var b = L.geoJson(this.activeCounty.geoJson);
-        this.$refs.dMap.mapObject.fitBounds(b.getBounds());
-      }
-
-      if (this.dashParams.selCounty == '000' && !this.$_.isEmpty(this.countyData)) {
-        var b = L.geoJson(this.countyGeojson);
-        this.$refs.dMap.mapObject.fitBounds(b.getBounds());
-        this.showInfoAndRef = true;
-      }
+    'countyLocationData': function() {
+      this.updateLocationData();
     },
 
     'dashParams.selCounty': function () {
@@ -189,16 +184,42 @@ export default {
 
     },
 
-    countyLocationData() {
-      const m = this.$_.map(this.countyLocationData, item => ({ location_name: item.location_name, marker: L.latLng(item.location_latitude, item.location_longitude), amount: item.total }));
-      this.activeCounty.pointData = m;
-    },
-
-
 
   },
 
   methods: {
+
+    updateData() {
+      
+      const cleanedCountyData = this.$_.map(this.countyData, el => ({ county_code: parseInt(el.county_code), county_name: el.county_name, total: el.total * this.exRate }));
+      this.cleanedCountyData = cleanedCountyData;
+
+      if (this.dashParams.selCounty != '000' && !this.$_.isEmpty(this.countyData)) {
+        this.showInfoAndRef = false;
+
+        const tmp = this.$_.find(this.countyGeojson.features, { properties: { COUNTY_COD: parseInt(this.dashParams.selCounty) } });
+
+        this.activeCounty.geoJson = { type: 'FeatureCollection', features: [tmp] };
+
+        var b = L.geoJson(this.activeCounty.geoJson);
+        this.$refs.dMap.mapObject.fitBounds(b.getBounds());
+      }
+
+      if (this.dashParams.selCounty == '000' && !this.$_.isEmpty(this.countyData)) {
+        var b = L.geoJson(this.countyGeojson);
+        this.$refs.dMap.mapObject.fitBounds(b.getBounds());
+        this.showInfoAndRef = true;
+      }
+    
+    },
+    
+    updateLocationData() {
+       
+       const m = this.$_.map(this.countyLocationData, item => ({ location_name: item.location_name, marker: L.latLng(item.location_latitude, item.location_longitude), amount: item.total * this.exRate }));
+       this.activeCounty.pointData = m;
+    
+    },
+
 
     // features . properties.COUNTY_COD
 
@@ -220,6 +241,11 @@ export default {
        {
          vm.dashboardLoading = false;
        }
+    });
+
+    EventBus.$on('exRate', (payload) => {
+       vm.exRate = payload.rate;
+       vm.value.metric = ' ' + payload.cur ;
     });
 
   },

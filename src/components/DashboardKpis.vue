@@ -17,7 +17,7 @@
          <fa-icon icon="spinner" pulse> </fa-icon>
       </span>
       <template v-else-if="data.totalAmt && data.totalAmt.total">
-      <span class="text-info" style="font-size:2.2em;">{{data.totalAmt.total | abbreviate }} </span>
+      <span class="text-info" style="font-size:2.2em;">{{data.totalAmt.total * exRate | abbreviate }} </span>
       </template>
       <span class="no-data" v-else>
            No data
@@ -50,7 +50,7 @@
 
              <span class="text-default" style="font-size:1.2em;">{{data.totalAmtByCounty[0].county_name }}</span>
             <br />
-            <span style="font-size:1.8em;color:#d1412c;"> {{data.totalAmtByCounty[0].total | abbreviate }}</span>
+            <span style="font-size:1.8em;color:#d1412c;"> {{data.totalAmtByCounty[0].total * exRate | abbreviate }}</span>
 
            </template>
            <span class="no-data" v-else>
@@ -75,7 +75,7 @@
 
             <span style="font-size:0.75em;">{{data.totalAmtBySdg[0].sdg_id }} {{data.totalAmtBySdg[0].sdg_name }}</span>
             <br />
-            <span style="font-size:1.8em;color:#d1412c;"> {{data.totalAmtBySdg[0].total | abbreviate }}</span>
+            <span style="font-size:1.8em;color:#d1412c;"> {{data.totalAmtBySdg[0].total * exRate | abbreviate }}</span>
 
            </template>
            <span class="no-data" v-else>
@@ -97,7 +97,7 @@
 
             <span class="text-default" style="font-size:1.5em;">{{data.totalAmtByYear[0].trans_year }}</span>
             <br />
-            <span style="font-size:1.8em;color:#d1412c;">{{data.totalAmtByYear[0].total | abbreviate }}</span>
+            <span style="font-size:1.8em;color:#d1412c;">{{data.totalAmtByYear[0].total * exRate | abbreviate }}</span>
 
            </template>
            <span class="no-data" v-if="!dashboardLoading && !(data.totalAmt && data.totalAmt.total)">
@@ -128,7 +128,7 @@
        <template v-else-if="data.totalAmtByPublisher && data.totalAmtByPublisher[0]">
 
        <span style="font-size:0.7em">{{data.totalAmtByPublisher[0].publisher }} </span>
-       <br /><br /><span class="text-success" style="font-size:1.8em"> {{data.totalAmtByPublisher[0].total | abbreviate }} </span>
+       <br /><br /><span class="text-success" style="font-size:1.8em"> {{data.totalAmtByPublisher[0].total * exRate | abbreviate }} </span>
 
        </template>
        <span class="no-data" v-else>
@@ -162,7 +162,7 @@
              <table style="width:100%;">
              <tr v-for="t in data.summaryByTrxnType">
               <td class="text-left pr-2 " style="font-size:0.7em;">{{t.name}}</td>
-              <td class="text-right"  style="font-size:0.7em;">{{t.total | abbreviate }}</td>
+              <td class="text-right"  style="font-size:0.7em;">{{t.total * exRate | abbreviate }}</td>
              </tr>
              </table>
 
@@ -189,7 +189,7 @@
 
             <span style="font-size:0.75em;">{{data.totalAmtBySdg[0].sdg_id }} {{data.totalAmtBySdg[0].sdg_name }}</span>
             <br /><br />
-            <span class="text-info" style="font-size:1.8em;">{{data.totalAmtBySdg[0].total | abbreviate }}</span>
+            <span class="text-info" style="font-size:1.8em;">{{data.totalAmtBySdg[0].total * exRate | abbreviate }}</span>
 
            </template>
            <span class="no-data" v-else>
@@ -229,7 +229,7 @@
              <table style="width:100%;" class="hover striped">
              <tr v-for="t in data.summaryByTrxnType">
               <td class="text-left pr-2 " style="font-size:0.7em;">{{t.name}}</td>
-              <td class="text-right text-info"  style="font-size:0.7em;"><strong>{{t.total | abbreviate }}</strong></td>
+              <td class="text-right text-info"  style="font-size:0.7em;"><strong>{{t.total * exRate | abbreviate }}</strong></td>
              </tr>
              </table>
 
@@ -270,6 +270,7 @@ export default {
     return {
 
       dashboardLoading: true,
+      exRate: 1,
 
     };
   },
@@ -309,6 +310,10 @@ export default {
        {
          vm.dashboardLoading = false;
        }
+    });
+
+    EventBus.$on('exRate', (payload) => {
+       vm.exRate = payload.rate;
     });
 
   
