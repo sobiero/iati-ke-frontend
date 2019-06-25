@@ -128,9 +128,6 @@ export default {
 
         dashboardHeader: '',
 
-      //selTrxnDesc: 'nyawawa',
-      //trxnOpts: 'nyawawa',
-
       form: {
         selCounty: '000',
         selSdg: 0,
@@ -321,19 +318,6 @@ export default {
             this.loadDashBoardData();
 
           } else {
-
-            /*
-            this.$notify({
-
-              group: 'api-notif',
-              title: 'Error - No Data',
-              text: 'There is no data for selected parameters!',
-              duration: 8000,
-              max: 1,
-              'animation-type': 'velocity',
-              type: 'error',
-
-            });*/
 
             this.$bvToast.toast('There is no data for selected parameters!', {
               title: 'Error - No Data',
