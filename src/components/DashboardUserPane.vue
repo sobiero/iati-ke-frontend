@@ -37,9 +37,25 @@
 
         <b-card-text>
 
+            <download-excel v-if="!dashboardLoading"
+                style="display:inline-block;"
+                class   = "pull-right"
+                :data   = "tableData.rows"
+                :fields = "jsonFields"
+                type    = "csv"
+                name    = "download_data.csv">
+
+                <b-link class="no-deco" v-b-tooltip.hover title="Download map data as CSV">
+                  <fa-icon icon="download"></fa-icon>
+                </b-link>
+
+              </download-excel>
+
             <span v-if="dashboardLoading">
                <fa-icon icon="spinner" pulse> </fa-icon>
             </span>
+
+
 
             <template v-else-if="selVisualType == 'tbl' " >
 
@@ -153,6 +169,18 @@ export default {
       selBreakDown: 1,
       selVisualType: 'tbl',
 
+      jsonFields: {
+        "County Code": "county_code",
+        "County Name": "county_name",
+        "Amount (USD)": "total",
+        "Amount (KES)": {
+          field: 'total',
+             callback: (value) => {
+                return value * 101 ;
+            }
+         }
+      },
+
       tableData: {
         columns: [],
         rows: [],
@@ -223,23 +251,83 @@ export default {
           this.tableData.columns = [{ label: 'Code', field: 'col1', type: 'number' }, { label: 'County', field: 'col2' }, { label: 'Amount', field: 'col3', type: 'number' }];
           this.tableData.rows = this.$_.map(this.data.totalAmtByCounty, item => ({ col1: item.county_code, col2: item.county_name, col3: item.total }));
 
+          this.jsonFields = {
+            "County Code": "col1",
+            "County Name": "col2",
+            "Amount (USD)": "col3",
+            "Amount (KES)": {
+              field: 'col3',
+                 callback: (value) => {
+                    return value * 101 ;
+                }
+             }
+          };
+
           break;
         case 2:
           this.tableData.columns = [{ label: 'SDG No', field: 'col1', type: 'number' }, { label: 'SDG Name', field: 'col2' }, { label: 'Amount', field: 'col3', type: 'number' }];
           this.tableData.rows = this.$_.map(this.data.totalAmtBySdg, item => ({ col1: item.sdg_id, col2: item.sdg_name, col3: item.total }));
 
+          this.jsonFields = {
+            "SDG No": "col1",
+            "SDG Name": "col2",
+            "Amount (USD)": "col3",
+            "Amount (KES)": {
+              field: 'col3',
+                 callback: (value) => {
+                    return value * 101 ;
+                }
+             }
+          };
+
           break;
         case 3:
-          this.tableData.columns = [{ label: 'Contributing organization', field: 'col2' }, { label: 'Amount', field: 'col3', type: 'number' }];
+          this.tableData.columns = [{ label: 'Contributing Organization', field: 'col2' }, { label: 'Amount', field: 'col3', type: 'number' }];
           this.tableData.rows = this.$_.map(this.data.totalAmtByPublisher, item => ({ col2: item.publisher, col3: item.total }));
+
+          this.jsonFields = {
+            "Contributing organization": "col2",
+            "Amount (USD)": "col3",
+            "Amount (KES)": {
+              field: 'col3',
+                 callback: (value) => {
+                    return value * 101 ;
+                }
+             }
+          };
+
           break;
         case 4:
           this.tableData.columns = [{ label: 'Transaction Type', field: 'col2' }, { label: 'Amount', field: 'col3', type: 'number' }];
           this.tableData.rows = this.$_.map(this.data.summaryByTrxnType, item => ({ col2: item.name, col3: item.total }));
+
+          this.jsonFields = {
+            "Transaction Type": "col2",
+            "Amount (USD)": "col3",
+            "Amount (KES)": {
+              field: 'col3',
+                 callback: (value) => {
+                    return value * 101 ;
+                }
+             }
+          };
+
           break;
         case 5:
           this.tableData.columns = [{ label: 'Year', field: 'col2', type: 'number' }, { label: 'Amount', field: 'col3', type: 'number' }];
           this.tableData.rows = this.$_.map(this.data.totalAmtByYear, item => ({ col2: item.trans_year, col3: item.total }));
+
+          this.jsonFields = {
+            "Year": "col2",
+            "Amount (USD)": "col3",
+            "Amount (KES)": {
+              field: 'col3',
+                 callback: (value) => {
+                    return value * 101 ;
+                }
+             }
+          };
+
           break;
         default:
           // code block

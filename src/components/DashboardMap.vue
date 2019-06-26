@@ -9,7 +9,22 @@
                <fa-icon icon="spinner" pulse> </fa-icon> <span style="font-size:0.9em;"> loading map data... </span>
            </span>
            <span v-else>
-              Map
+              <span class="pull-right" style="display:inline-block;"> Map
+
+              <download-excel style="display:inline-block;"
+                class   = "pull-right"
+                :data   = "countyData"
+                :fields = "jsonFields"
+                type    = "csv"
+                name    = "map_data.csv">
+
+                <b-link class="no-deco" v-b-tooltip.hover title="Download map data as CSV">
+                  <fa-icon icon="download"></fa-icon>
+                </b-link>
+
+              </download-excel>
+
+              </span>
            </span>
         </h6>
         <b-card-text>
@@ -60,11 +75,10 @@
 
           </l-map>
 
-
-
         </b-card-text>
       </b-card>
     </div>
+
  </div>
 </template>
 
@@ -106,6 +120,18 @@ export default {
   data() {
     return {
 
+      jsonFields: {
+        "County Code": "county_code",
+        "County Name": "county_name",
+        "Amount (USD)": "total",
+        "Amount (KES)": {
+          field: 'total',
+             callback: (value) => {
+                return value * 101 ;
+            }
+         }
+      },
+
       exRate: 1,
 
       dashboardLoading: true,
@@ -124,6 +150,7 @@ export default {
         key: 'total',
         metric: ' USD',
       },
+
       /*
       extraValues: [{
         key: "amount_m",
@@ -132,7 +159,7 @@ export default {
 
       countyGeojson,
        //colorScale: ["6cff6c", "00b000", "005500"],
-       colorScale: ["bb86fc", "6200ee", "3700b3"],
+      colorScale: ["bb86fc", "6200ee", "3700b3"],
 
       //colorScale: ['ddbb60', 'de893d', 'b73826'],
 

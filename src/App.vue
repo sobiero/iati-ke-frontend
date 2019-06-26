@@ -16,8 +16,6 @@
      <small class="text-white">&copy; @obierosimon 2019 </small>
     </footer>
 
-    <notifications group="api-notif"></notifications>
-
   </div>
 </template>
 

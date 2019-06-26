@@ -11,7 +11,8 @@ import UUID from 'vue-uuid';
 import * as Vue2Leaflet from 'vue2-leaflet';
 import vueNumeralFilterInstaller from 'vue-numeral-filter';
 import VueGoodTablePlugin from 'vue-good-table';
-import FlagIcon from 'vue-flag-icon'
+import FlagIcon from 'vue-flag-icon';
+import JsonExcel from 'vue-json-excel';
 
 import './registerServiceWorker';
 
@@ -22,7 +23,9 @@ import 'leaflet/dist/leaflet.css';
 import 'vue-good-table/dist/vue-good-table.css';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle, faInfoCircle, faDownload,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import _ from 'lodash';
@@ -41,9 +44,10 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
-library.add(faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle, faInfoCircle);
+library.add(faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle, faInfoCircle, faDownload);
 
 Vue.component('fa-icon', FontAwesomeIcon);
+Vue.component('downloadExcel', JsonExcel);
 
 Vue.use(BootstrapVue);
 Vue.use(HighchartsVue);

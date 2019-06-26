@@ -15,20 +15,20 @@
       <b-navbar-nav class="ml-auto">
         <b-nav-form>
           <b-form-input size="sm" class="mr-sm-2" type="text" v-model="searchTerm" placeholder="Search" />
-          <b-button size="sm" class="my-2 my-sm-0" @click="search()" type="button">Search</b-button> 
+          <b-button size="sm" class="my-2 my-sm-0" @click="search()" type="button">Search</b-button>
         </b-nav-form>
 
         <flag :iso="currencyFlag" :squared="false" style="display:inline-block;margin: 0 0 0 10px;" />
 
-        <b-nav-item-dropdown text="Currency" right style="z-index:1030"> 
-          <b-dropdown-item href="#" @click="setCurrency('USD')"><flag iso="us" :squared="false" /> USD</b-dropdown-item>
-          <b-dropdown-item href="#" @click="setCurrency('KES')"><flag iso="ke" :squared="false" /> KES</b-dropdown-item>
+        <b-nav-item-dropdown text="Currency" right style="z-index:1030">
+          <b-dropdown-item href="#" @click="setCurrency('USD', 'drop')"><flag iso="us" :squared="false" /> USD</b-dropdown-item>
+          <b-dropdown-item href="#" @click="setCurrency('KES', 'drop')"><flag iso="ke" :squared="false" /> KES</b-dropdown-item>
         </b-nav-item-dropdown>
 
         <b-nav-item-dropdown right style="z-index:1030" id="popover-reactive-1" :disabled="popoverShow">
           <!-- Using button-content slot -->
           <template slot="button-content" > User </template>
-          <b-dropdown-item href="#" @xclick="loadPreferences"  >Preferences</b-dropdown-item>
+          <b-dropdown-item href="#">Preferences</b-dropdown-item>
           <!-- <b-dropdown-item href="#" class="mute">Signout</b-dropdown-item> -->
         </b-nav-item-dropdown>
       </b-navbar-nav>
@@ -36,7 +36,7 @@
   </b-navbar>
 
 
-   <b-popover
+   <b-popover id="pref-popover"
       target="popover-reactive-1"
       triggers="click"
       :show.sync="popoverShow"
@@ -56,24 +56,24 @@
 
       <div>
       Choose defaults:
-        <b-form-group class="small"
+        <b-form-group
           label="Email"
           label-for="popover-email"
           label-cols="3"
-          
+
           class="mb-1"
           description="Email (optional)"
 
         >
-          <b-form-input class="small"
+          <b-form-input
             ref="userEmail"
             id="popover-email"
-            v-model="userEmail"
+            v-model="prefs.userEmail"
             size="sm"
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group class="small"
+        <b-form-group
           label="Currency"
           label-for="popover-currency"
           label-cols="3"
@@ -82,9 +82,9 @@
           description="Choose default Currency"
           invalid-feedback="This field is required"
         >
-          <b-form-select class="small"
+          <b-form-select
             id="popover-currency"
-            v-model="userCurrency"
+            v-model="prefs.userCurrency"
             :state="userCurrencyState"
             :options="options"
             size="sm"
@@ -96,10 +96,12 @@
           Name: <strong>{{ userEmail }}</strong><br>
           Color: <strong>{{ userCurrency }}</strong>
         </b-alert> -->
-        <duv class="pull-right">
+
+        <div class="pull-right">
         <b-button @click="onClose" size="sm" variant="danger">Cancel</b-button>&nbsp;
         <b-button @click="onOk" size="sm" variant="primary">Ok</b-button>&nbsp;
         </div>
+
       </div>
     </b-popover>
 
@@ -107,11 +109,11 @@
 
    <b-modal id="welcome" title="Welcome to IATI-SDG-KE" size="lg" >
     <p class="my-4">
-    
-    This portal is prototype to demonstrate how a country can use IATI data to show how development activities are being... 
+
+    This portal is prototype to demonstrate how a country can use IATI data to show how development activities are being...
 
     <br /> In this prototype, we are using IATI data to show Organizations publishing to IATI are contributing towards the attainment of Sustainable Development Goals in the Kenyan Counties.
-    
+
     </p>
   </b-modal>
 
@@ -130,26 +132,35 @@ export default {
   },
   data () {
     return {
+
+      currencyChanger: 'default',
       searchTerm: '',
       currencyFlag: 'us',
 
-
-      userEmail: '',
       //userEmailState: null,
-      userCurrency: '',
       userCurrencyState: null,
       options: ['USD', 'KES'],
       userEmailReturn: '',
       userCurrencyReturn: '',
-      popoverShow: false    
+      popoverShow: false,
 
-    
+      prefs: {
+        userEmail: '',
+        userCurrency: '',
+      }
+
+
     }
   },
 
   methods: {
 
-    setCurrency(cur) {
+    setCurrency(cur, emit) {
+
+      if (typeof emit != 'undefined')
+      {
+        this.currencyChanger = 'select';
+      }
 
       var curObj = {};
       if ( cur == 'USD' )
@@ -170,44 +181,65 @@ export default {
     },
 
     search() {
-     
+
          this.$bvToast.toast('Sorry, the search function is still under developement', {
               title: 'Search Function Unavailable',
               variant: 'info',
               autoHideDelay: 5000,
               solid: true
          });
-     
+
      },
-     
+
      //
-   
+
       onClose() {
         this.popoverShow = false
       },
       onOk() {
-        if (!this.userEmail) {
+
+        localStorage.prefs = JSON.stringify(this.prefs) ;
+
+        if (this.prefs.userCurrency != '')
+        {
+           this.setCurrency(this.prefs.userCurrency);
+        }
+
+        /*
+        if (!this.prefs.userEmail) {
           this.userEmailState = false
         }
         if (!this.userCurrency) {
           this.userCurrencyState = false
         }
-        if (this.userEmail && this.userCurrency) {
+        if (this.prefs.userEmail && this.prefs.userCurrency) {
           this.onClose()
           // Return our popover form results
-          this.userEmailReturn = this.userEmail
-          this.userCurrencyReturn = this.userCurrency
-        }
+          this.userEmailReturn = this.prefs.userEmail
+          this.userCurrencyReturn = this.prefs.userCurrency
+        }*/
+
       },
       onShow() {
         // This is called just before the popover is shown
         // Reset our popover form variables
-        this.userEmail = ''
-        this.userCurrency = ''
+
+        //var prefs = JSON.parse( localStorage.prefs );
+
+        if (typeof localStorage.prefs != 'undefined' && typeof (JSON.parse( localStorage.prefs )) == 'object' )
+        {
+          this.prefs = JSON.parse( localStorage.prefs ) ;
+        }
+        else
+        {
+          this.prefs.userEmail = '';
+          this.prefs.userCurrency = '';
+        }
+
         //this.userEmailState = null
-        this.userCurrencyState = null
-        this.userEmailReturn = ''
-        this.userCurrencyReturn = ''
+        //this.userCurrencyState = null
+        //this.userEmailReturn = ''
+        //this.userCurrencyReturn = ''
       },
       onShown() {
         // Called just after the popover has been shown
@@ -217,7 +249,7 @@ export default {
       onHidden() {
         // Called just after the popover has finished hiding
         // Bring focus back to the button
-        this.focusRef(this.$refs.button)
+        //this.focusRef(this.$refs.button)
       },
       focusRef(ref) {
         // Some references may be a component, functional component, or plain element
@@ -236,11 +268,30 @@ export default {
   },
 
   mounted() {
+
+     var browserId = localStorage.browserId ;
+     if (typeof browserId == 'undefined' || browserId == '' )
+     {
+       localStorage.browserId = this.$uuid.v4();
+     }
+
      this.$bvModal.show('welcome') ;
+
+     EventBus.$on('xhr-dashboard', (payload) => {
+         if ( typeof localStorage.prefs != 'undefined'
+              && typeof (JSON.parse( localStorage.prefs )) == 'object'
+              && this.currencyChanger == 'default'
+         )
+         {
+            var prefs = JSON.parse( localStorage.prefs );
+            this.setCurrency( prefs.userCurrency );
+         }
+     });
+
   },
 
   watch : {
-    
+
       userEmail(val) {
         if (val) {
           this.userEmailState = true
@@ -251,8 +302,20 @@ export default {
           this.userCurrencyState = true
         }
       }
-  
+
   }
 
 }
 </script>
+
+<style scoped>
+
+div.popover {
+  max-width:500px !important;
+}
+
+div.popover input, div.popover select {
+  font-size:0.8em;
+}
+
+</style>

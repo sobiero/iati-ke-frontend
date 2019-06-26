@@ -360,6 +360,10 @@ export default {
           vm.dashboard.totalAmtByYearMonth = res.data.data.totalAmtByYearMonth;
           vm.dashboard.totalAmtByTimeStamp = res.data.data.totalAmtByTimeStamp;
           vm.dashboard.kpiAndPanel.summaryByTrxnType = res.data.data.summaryByTrxnType;
+
+
+
+
         })
         .catch((e) => {
           this.errors.push(e);
