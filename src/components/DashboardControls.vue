@@ -13,10 +13,11 @@
                   label-for="nestedStreet"
                 >
 
-                  <b-form-select style="width:85%" size="sm" v-model="form.selTrxnType" :options="selOptions.trxnType" XXXchange="loadDateRange"> </b-form-select>
+                  <b-form-select style="width:85%" size="sm" v-model="form.selTrxnType" :options="selOptions.trxnType" @change="logSelectChange('trxn')"> </b-form-select>
 
-                  <b-link class="no-deco" style="display:inline-block;float:right" v-b-tooltip.hover :title="selTrxnDesc">
-                    .<fa-icon  class="text-info" icon="info-circle"></fa-icon>.
+                  <b-link class="no-deco" style="display:inline-block;float:right" id="trxn-info">
+                     <fa-icon  class="text-info" icon="info-circle"></fa-icon>
+                     <b-tooltip target="trxn-info">{{selTrxnDesc}}</b-tooltip>
                   </b-link>
 
                 </b-form-group>
@@ -29,7 +30,7 @@
                   label-align-sm="right"
                   label-for="nestedStreet"
                 >
-                  <b-form-select size="sm" v-model="form.selCounty" :options="selOptions.county" XXXchange="loadDateRange"> </b-form-select>
+                  <b-form-select size="sm" v-model="form.selCounty" :options="selOptions.county" @change="logSelectChange('county')"> </b-form-select>
                 </b-form-group>
                 </div>
 
@@ -40,7 +41,7 @@
                   label-align-sm="right"
                   label-for="nestedStreet"
                 >
-                  <b-form-select size="sm" v-model="form.selSdg" :options="selOptions.sdg" XXXchange="loadDateRange"> </b-form-select>
+                  <b-form-select size="sm" v-model="form.selSdg" :options="selOptions.sdg" @change="logSelectChange('sdg')"> </b-form-select>
                 </b-form-group>
                 </div>
 
@@ -55,7 +56,7 @@
                      v-model="form.selDateRange.from"
                      style="max-width:85px;"
                      :options="selOptions.dateRange.from"
-                     @change="loadDashBoardData"
+                     @change="loadDashBoardData('date-from')"
                   >
                   </b-form-select>
                   &nbsp;to&nbsp;
@@ -63,7 +64,7 @@
                      v-model="form.selDateRange.to"
                      style="max-width:85px;"
                      :options="selOptions.dateRange.to"
-                     @change="loadDashBoardData"
+                     @change="loadDashBoardData('date-to')"
                   >
                   </b-form-select>
                 </b-form-group>
@@ -112,6 +113,7 @@ import DashboardMap from '@/components/DashboardMap.vue';
 import DashboardUserPane from '@/components/DashboardUserPane.vue';
 import EventBus from '../eventBus';
 
+import _ from 'lodash';
 
 export default {
   name: 'DashboardControls',
@@ -122,6 +124,7 @@ export default {
     DashboardMap,
     DashboardUserPane,
   },
+
   data() {
     return {
       apiUrl: '/api',
@@ -342,7 +345,13 @@ export default {
 
     },
 
-    loadDashBoardData() {
+    loadDashBoardData(sel) {
+
+      if ( typeof sel != 'undefined' )
+      {
+         EventBus.$emit('interaction', {name: 'select-' + sel , type: 'select', event: 'change', data: { data: this.form }  });
+      }
+
       const vm = this;
       this.resetPanels();
       EventBus.$emit('xhr-dashboard', 'req');
@@ -360,9 +369,6 @@ export default {
           vm.dashboard.totalAmtByYearMonth = res.data.data.totalAmtByYearMonth;
           vm.dashboard.totalAmtByTimeStamp = res.data.data.totalAmtByTimeStamp;
           vm.dashboard.kpiAndPanel.summaryByTrxnType = res.data.data.summaryByTrxnType;
-
-
-
 
         })
         .catch((e) => {
@@ -393,11 +399,35 @@ export default {
       this.dashboard.kpiAndPanel.summaryByTrxnType = {};
     },
 
+    logSelectChange(sel) {
+
+       EventBus.$emit('interaction', {name: 'select-' + sel , type: 'select', event: 'change', data: { data: this.form }  });
+
+    },
+
     onCountyClicked( value ) {
 
       console.log( value );
 
     },
+
+
+    logInteractionData(data) {
+
+        this.postLogInteractionData(data, this);
+    },
+
+    postLogInteractionData: _.debounce(( data, vm ) => {
+
+        vm.$axios.post(`${vm.apiUrl}/interactions`, { params:  data  })
+        .then((res) => {
+
+        })
+        .catch((e) => {
+          vm.errors.push(e);
+        });
+
+    }, 800 ),
 
   },
 
@@ -409,6 +439,17 @@ export default {
   },
 
   mounted() {
+
+    this.$root.$on('bv::tooltip::show', bvEvent => {
+
+      //console.log('bvEvent:', bvEvent.target.attributes.id.nodeValue)
+
+      var tool = bvEvent.target.attributes.id.nodeValue;
+      EventBus.$emit('interaction', {name: 'tooltip-' + tool, type: 'tooltip', event: 'hover', data: { }});
+
+      this.logInteractionData( {name: 'tooltip-' + tool, type: 'tooltip', event: 'hover', data: { }} );
+
+    });
 
     EventBus.$on('countyClicked', (payload) => {
         var clickedCountyCode = this.$_.padStart(payload, 3, '0');
@@ -430,6 +471,12 @@ export default {
     });
 
 
+    EventBus.$on('interaction', (payload) => {
+
+        this.logInteractionData( payload );
+
+    });
+
   },
 
   watch: {
@@ -437,26 +484,33 @@ export default {
     'form.selCounty': function () {
         this.loadDateRange();
         this.generateHeader();
+
+
     },
 
     'form.selTrxnType': function () {
         this.loadDateRange();
         this.generateHeader();
+
+
     },
 
     'form.selSdg': function () {
         this.loadDateRange();
         this.generateHeader();
+
     },
 
     'form.selDateRange.from': function () {
         //this.loadDateRange();
         this.generateHeader();
+
     },
 
     'form.selDateRange.to': function () {
         //this.loadDateRange();
         this.generateHeader();
+
     },
 
     'form.currency': function () {

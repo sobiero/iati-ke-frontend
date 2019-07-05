@@ -39,6 +39,9 @@ function mouseover({ target }) {
     tempItem = { ...tempItem, extraValues: tempValues };
   }
   this.currentItem = tempItem;
+
+  EventBus.$emit('interaction', {name: 'map-geojson', type: 'geojson', event: 'hover', data: { tempItem }});
+
 }
 
 function mouseout({ target }) {
@@ -47,6 +50,9 @@ function mouseout({ target }) {
     color: `#${this.strokeColor}`,
     dashArray: '',
   });
+
+  EventBus.$emit('interaction', {name: 'map-geojson', type: 'geojson', event: 'hover-out', data: { item: this.currentItem }});
+
   this.currentItem = { name: '', value: 0 };
 }
 
@@ -56,6 +62,7 @@ function mouseclick({ target }) {
   // this.$root.$emit('countyClicked', geojsonItem.COUNTY_COD );
 
   EventBus.$emit('countyClicked', geojsonItem.COUNTY_COD);
+  EventBus.$emit('interaction', {name: 'map-geojson', type: 'geojson', event: 'click', data: { clicked: geojsonItem }});
 }
 
 export default {

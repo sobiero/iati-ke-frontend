@@ -9,7 +9,15 @@
                <fa-icon icon="spinner" pulse> </fa-icon> <span style="font-size:0.9em;"> loading map data... </span>
            </span>
            <span v-else>
-              <span class="pull-right" style="display:inline-block;"> Map
+              <span class="pull-right" style="display:inline-block;">
+
+               <template v-if="labels.selCounty == '' || labels.selCounty == 'All counties'">
+                 Map showing {{labels.selTrxnType}} accross the counties
+               </template>
+
+               <template v-else>
+                    Map showing {{labels.selTrxnType}} for {{labels.selCounty}} county
+               </template>
 
               <download-excel style="display:inline-block;"
                 class   = "pull-right"
@@ -18,8 +26,11 @@
                 type    = "csv"
                 name    = "map_data.csv">
 
-                <b-link class="no-deco" v-b-tooltip.hover title="Download map data as CSV">
-                  <fa-icon icon="download"></fa-icon>
+                <span style="display:inline-block; min-width:80px;"></span>
+
+                <b-link class="no-deco" href="#" @click="logIconClick('map-pane-download')">
+                   <fa-icon icon="download" id="map-pane-download"></fa-icon>
+                   <b-tooltip target="map-pane-download">Download map data as CSV</b-tooltip>
                 </b-link>
 
               </download-excel>
@@ -37,7 +48,7 @@
              <template v-for=" l in activeCounty.pointData " v-if="dashParams.selCounty != '000'">
 
              <l-marker :lat-lng="l.marker" >
-              <l-popup>
+              <l-popup @click="logPopupClicked">
                   <table class="table bordered">
                   <tr>
                     <td><strong>Location Name</strong></td>
@@ -90,7 +101,6 @@ import ReferenceChart from '@/components/vue-choropleth/ReferenceChart.vue';
 import ChoroplethLayer from '@/components/vue-choropleth/ChoroplethLayer.vue';
 
 import EventBus from '../eventBus';
-
 
 import {
   LMap, LTileLayer, LMarker, LGeoJson, LPopup,
@@ -215,6 +225,14 @@ export default {
   },
 
   methods: {
+
+    logIconClick(tool) {
+          EventBus.$emit('interaction', {name: 'tooltip-' + tool, type: 'tooltip', event: 'click', data: { }});
+    },
+
+    logPopupClicked() {
+          EventBus.$emit('interaction', {name: 'popup', type: 'map-popup', event: 'click', data: { }});
+    },
 
     updateData() {
 

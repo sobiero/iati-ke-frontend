@@ -19,16 +19,19 @@
 
         <span class='text-default col-md-2' style="display:inline-block; white-space: nowrap;">
 
-          <b-link class="no-deco" v-b-tooltip.hover title="View data in tabular format">
-             &nbsp;<fa-icon :class=" selVisualType == 'tbl' ? 'text-success' : 'text-mute' " @click="setVisualType('tbl')" icon="table"> </fa-icon>&nbsp;
-          </b-link>
+          <b-link class="no-deco" id="user-pane-tbl" @click="logIconClick('user-pane-tbl')">
+             <fa-icon :class=" selVisualType == 'tbl' ? 'text-success' : 'text-mute' " @click="setVisualType('tbl')" icon="table"> </fa-icon>
+             <b-tooltip target="user-pane-tbl">View data in tabular format</b-tooltip>
+          </b-link>&nbsp;
 
-          <b-link class="no-deco" v-b-tooltip.hover title="View data as a bar chart">
-             &nbsp;<fa-icon :class=" selVisualType == 'bar' ? 'text-success' : 'text-mute' " @click="setVisualType('bar')" icon="chart-bar"> </fa-icon>&nbsp;
-          </b-link>
+          <b-link class="no-deco" id="user-pane-bar" @click="logIconClick('user-pane-bar')">
+             <fa-icon :class=" selVisualType == 'bar' ? 'text-success' : 'text-mute' " @click="setVisualType('bar')" icon="chart-bar"> </fa-icon>
+             <b-tooltip target="user-pane-bar">View data as a bar chart</b-tooltip>
+          </b-link>&nbsp;
 
-          <b-link class="no-deco" v-b-tooltip.hover title="View data as a pie chart">
-             &nbsp;<fa-icon :class=" selVisualType == 'pie' ? 'text-success' : 'text-mute' " @click="setVisualType('pie')" icon="chart-pie"> </fa-icon>&nbsp;
+          <b-link class="no-deco" id="user-pane-pie"  @click="logIconClick('user-pane-pie')">
+             <fa-icon :class=" selVisualType == 'pie' ? 'text-success' : 'text-mute' " @click="setVisualType('pie')" icon="chart-pie"> </fa-icon>
+             <b-tooltip target="user-pane-pie">View data as a pie chart</b-tooltip>
           </b-link>
 
         </span>
@@ -36,6 +39,8 @@
         </span>
 
         <b-card-text>
+
+          <div class="col-md-12 text-right">
 
             <download-excel v-if="!dashboardLoading"
                 style="display:inline-block;"
@@ -45,11 +50,14 @@
                 type    = "csv"
                 name    = "download_data.csv">
 
-                <b-link class="no-deco" v-b-tooltip.hover title="Download map data as CSV">
-                  <fa-icon icon="download"></fa-icon>
+                <b-link class="no-deco">
+                   <fa-icon icon="download" id="user-pane-download"></fa-icon>
+                   <b-tooltip target="user-pane-download">Download table/chart data as CSV</b-tooltip>
                 </b-link>
 
               </download-excel>
+
+           </div>
 
             <span v-if="dashboardLoading">
                <fa-icon icon="spinner" pulse> </fa-icon>
@@ -239,6 +247,10 @@ export default {
   },
 
   methods: {
+
+    logIconClick(tool) {
+          EventBus.$emit('interaction', {name: 'tooltip-' + tool, type: 'tooltip', event: 'click', data: { }});
+    },
 
     setVisualType(v) {
       this.selVisualType = v;

@@ -1,18 +1,25 @@
 <template>
 <div>
   <b-navbar toggleable="lg" type="dark" variant="info">
-    <b-navbar-brand href="#">IATI-SDG-KE</b-navbar-brand>
+    <b-navbar-brand href="#">
+    <div class="text-left" style="line-height:99%;margin-left:25px;">
+    Open Aid Data for Kenya
+    <br><span style="font-size:0.6em;"><em>towards the attainment of the SDGs in Kenya Counties</em></span>
+    </div>
+    </b-navbar-brand>
 
     <b-navbar-toggle target="nav_collapse" />
 
     <b-collapse is-nav id="nav_collapse">
       <b-navbar-nav>
-        <!-- <b-nav-item href="#">Link</b-nav-item>
+        <!-- <b-nav-item href="#">About</b-nav-item>
         <b-nav-item href="#" disabled>Disabled</b-nav-item> -->
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
-      <b-navbar-nav class="ml-auto">
+      <b-navbar-nav class="ml-auto" style="margin-right:15px">
+        <b-nav-item href="#" @click="showWelcomeModal" xstyle="padding-right:18px;">About</b-nav-item>
+        <b-nav-item href="#" @click="showSusQuestionnaire" style="padding-right:18px;">Questionnaire</b-nav-item>
         <b-nav-form>
           <b-form-input size="sm" class="mr-sm-2" type="text" v-model="searchTerm" placeholder="Search" />
           <b-button size="sm" class="my-2 my-sm-0" @click="search()" type="button">Search</b-button>
@@ -21,8 +28,8 @@
         <flag :iso="currencyFlag" :squared="false" style="display:inline-block;margin: 0 0 0 10px;" />
 
         <b-nav-item-dropdown text="Currency" right style="z-index:1030">
-          <b-dropdown-item href="#" @click="setCurrency('USD', 'drop')"><flag iso="us" :squared="false" /> USD</b-dropdown-item>
-          <b-dropdown-item href="#" @click="setCurrency('KES', 'drop')"><flag iso="ke" :squared="false" /> KES</b-dropdown-item>
+          <b-dropdown-item href="#" @click="setCurrencyClick('USD', 'drop')"><flag iso="us" :squared="false" /> USD</b-dropdown-item>
+          <b-dropdown-item href="#" @click="setCurrencyClick('KES', 'drop')"><flag iso="ke" :squared="false" /> KES</b-dropdown-item>
         </b-nav-item-dropdown>
 
         <b-nav-item-dropdown right style="z-index:1030" id="popover-reactive-1" :disabled="popoverShow">
@@ -48,7 +55,7 @@
       @hidden="onHidden"
     >
       <template slot="title">
-        <b-button @click="onClose" class="close" aria-label="Close">
+        <b-button @click="onClose('btn-x')" class="close" aria-label="Close">
           <span class="d-inline-block" aria-hidden="true">&times;</span>
         </b-button>
         User Preferences
@@ -98,16 +105,14 @@
         </b-alert> -->
 
         <div class="pull-right">
-        <b-button @click="onClose" size="sm" variant="danger">Cancel</b-button>&nbsp;
+        <b-button @click="onClose('btn-cancel')" size="sm" variant="danger">Cancel</b-button>&nbsp;
         <b-button @click="onOk" size="sm" variant="primary">Ok</b-button>&nbsp;
         </div>
 
       </div>
     </b-popover>
 
-
-
-   <b-modal id="welcome" title="Welcome to IATI-SDG-KE" size="lg" >
+   <b-modal id="welcome" title="Welcome to Open Aid Data for Kenya website" size="lg" >
     <p class="my-4">
 
     This portal is prototype to demonstrate how a country can use IATI data to show how development activities are being...
@@ -117,19 +122,69 @@
     </p>
   </b-modal>
 
+  <b-modal id="sus-questionnaire" title="System Usability Questionnaire" size="lg" >
+
+    <sus-questionnaire></sus-questionnaire>
+
+  </b-modal>
+
+
+   <vue-cookie-accept-decline style="max-width:550px;"
+    :ref="'iati-ke'"
+    :elementId="'iati-ke'"
+    :debug="false"
+    :position="'bottom-left'"
+    :type="'floating'"
+    :disableDecline="true"
+    :transitionName="'slideFromBottom'"
+    :showPostponeButton="false"
+    @status="cookieStatus"
+    @clicked-accept="cookieClickedAccept"
+    @clicked-decline="cookieClickedDecline">
+
+    <!-- Optional -->
+    <div slot="postponeContent">
+        &times;
+    </div>
+
+    <!-- Optional -->
+    <div slot="message" style="font-size:0.85em;">
+        This website stores cookies on your computer. These cookies are used to collect information
+        about how you interact with our website and allow us to remember you. We use this information
+        in order to improve and customize your browsing experience and for analytics and metrics
+        about our visitors on this website.
+    </div>
+
+    <!-- Optional -->
+     <div slot="declineContent">
+       OPT OUT
+    </div>
+
+    <!-- Optional -->
+    <div slot="acceptContent">
+        GOT IT!
+    </div>
+</vue-cookie-accept-decline>
+
+
 </div>
 </template>
 
 <script>
 
 import EventBus from '../eventBus';
-
+import SusQuestionnaire from '@/components/SusQuestionnaire.vue';
 
 export default {
   name: 'NavBar',
   props: {
     msg: String
   },
+
+  components: {
+    SusQuestionnaire,
+  },
+
   data () {
     return {
 
@@ -149,11 +204,48 @@ export default {
         userCurrency: '',
       }
 
-
     }
   },
 
   methods: {
+
+    cookieClickedAccept() {
+
+        // alert( this.cookieStatus );
+
+    },
+    cookieClickedDecline() {
+
+       // alert( this.cookieStatus );
+
+    },
+
+    cookieStatus() {
+
+    },
+
+    showWelcomeModal()
+    {
+      this.$bvModal.show('welcome') ;
+
+      EventBus.$emit('interaction', {name: 'about', type: 'link', event: 'click', data:{} });
+
+    },
+
+    showSusQuestionnaire()
+    {
+      this.$bvModal.show('sus-questionnaire') ;
+      EventBus.$emit('interaction', {name: 'questionnaire', type: 'link', event: 'click', data:{} });
+
+    },
+
+    setCurrencyClick(cur, emit)
+    {
+
+       EventBus.$emit('interaction', {name: 'currency', type: 'link', event: 'click', data: { cur: cur} });
+       this.setCurrency(cur, emit) ;
+
+    },
 
     setCurrency(cur, emit) {
 
@@ -189,11 +281,13 @@ export default {
               solid: true
          });
 
+         EventBus.$emit('interaction', {name: 'search', type: 'button', event: 'click', data:{searchTerm: this.searchTerm } });
+
      },
 
-     //
 
-      onClose() {
+      onClose(btn) {
+        EventBus.$emit('interaction', {name: 'preference-' + btn + '-close', type: 'button', event: 'click', data: this.prefs });
         this.popoverShow = false
       },
       onOk() {
@@ -204,6 +298,8 @@ export default {
         {
            this.setCurrency(this.prefs.userCurrency);
         }
+
+        EventBus.$emit('interaction', {name: 'preference-btn-ok', type: 'button', event: 'click', data: this.prefs  });
 
         /*
         if (!this.prefs.userEmail) {
@@ -235,6 +331,8 @@ export default {
           this.prefs.userEmail = '';
           this.prefs.userCurrency = '';
         }
+
+        EventBus.$emit('interaction', {name: 'preference', type: 'link', event: 'click', data: this.prefs });
 
         //this.userEmailState = null
         //this.userCurrencyState = null
@@ -275,7 +373,7 @@ export default {
        localStorage.browserId = this.$uuid.v4();
      }
 
-     this.$bvModal.show('welcome') ;
+     this.showWelcomeModal();
 
      EventBus.$on('xhr-dashboard', (payload) => {
          if ( typeof localStorage.prefs != 'undefined'
@@ -317,5 +415,7 @@ div.popover {
 div.popover input, div.popover select {
   font-size:0.8em;
 }
+
+
 
 </style>

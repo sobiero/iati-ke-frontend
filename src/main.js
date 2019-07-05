@@ -13,14 +13,19 @@ import vueNumeralFilterInstaller from 'vue-numeral-filter';
 import VueGoodTablePlugin from 'vue-good-table';
 import FlagIcon from 'vue-flag-icon';
 import JsonExcel from 'vue-json-excel';
+import VueSlider from 'vue-slider-component';
+import VueCookieAcceptDecline from 'vue-cookie-accept-decline';
+//import VueSlideBar from 'vue-slide-bar'
 
 import './registerServiceWorker';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'leaflet/dist/leaflet.css';
+import 'vue-cookie-accept-decline/dist/vue-cookie-accept-decline.css';
 
 import 'vue-good-table/dist/vue-good-table.css';
+import 'vue-slider-component/theme/default.css';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -48,6 +53,9 @@ library.add(faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle, faInfo
 
 Vue.component('fa-icon', FontAwesomeIcon);
 Vue.component('downloadExcel', JsonExcel);
+Vue.component('VueSlider', VueSlider);
+Vue.component('vue-cookie-accept-decline', VueCookieAcceptDecline)
+//Vue.component('vue-slide-bar', VueSlideBar);
 
 Vue.use(BootstrapVue);
 Vue.use(HighchartsVue);
