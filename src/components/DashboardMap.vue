@@ -12,11 +12,11 @@
               <span class="pull-right" style="display:inline-block;">
 
                <template v-if="labels.selCounty == '' || labels.selCounty == 'All counties'">
-                 Map showing {{labels.selTrxnType}} accross the counties
+                 Map showing {{labels.selTrxnType.toLowerCase()}} accross the counties
                </template>
 
                <template v-else>
-                    Map showing {{labels.selTrxnType}} for {{labels.selCounty}} county
+                    Map showing {{labels.selTrxnType.toLowerCase()}} for {{labels.selCounty}} county
                </template>
 
               <download-excel style="display:inline-block;"

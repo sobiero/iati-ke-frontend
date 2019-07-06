@@ -129,7 +129,7 @@ export default {
     return {
       apiUrl: '/api',
 
-        dashboardHeader: '',
+      dashboardHeader: '',
 
       form: {
         selCounty: '000',
@@ -226,7 +226,9 @@ export default {
       if (this.form.selSdg == 0) {
         sdgText = ' for all the SDGs, ';
       } else {
-        sdgText = ` for SDG number ${this.form.selSdg}: ${sdgText}, `;
+        //sdgText = ` for SDG number ${this.form.selSdg}: ${sdgText}, `;
+        sdgText = ` for SDG ${sdgText}, `;
+
       }
 
       if (!this.form.selDateRange.from) {
@@ -263,7 +265,8 @@ export default {
         .then((res) => {
           const tmp = [];
           this.$_.forOwn(res.data.data, (v, k) => {
-            tmp.push({ value: v.id, text: v.sdg_name });
+            var append_sdg = v.id == 0 ? '': v.id + ' - ' ;
+            tmp.push({ value: v.id, text: append_sdg + v.sdg_name });
           });
           this.selOptions.sdg = tmp;
         })
@@ -419,7 +422,17 @@ export default {
 
     postLogInteractionData: _.debounce(( data, vm ) => {
 
-        vm.$axios.post(`${vm.apiUrl}/interactions`, { params:  data  })
+        data.extras = {};
+        data.extras.dashboardParams = vm.form;
+        data.extras.browserId       = localStorage.browserId;
+        data.extras.userPref        = {};
+
+        if (typeof localStorage.prefs != 'undefined' && typeof (JSON.parse( localStorage.prefs )) == 'object' )
+        {
+          data.extras.userPref = JSON.parse( localStorage.prefs ) ;
+        }
+
+        vm.$axios.post(`${vm.apiUrl}/user/interactions`, { params:  data  })
         .then((res) => {
 
         })

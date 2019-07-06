@@ -18,18 +18,24 @@
 
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto" style="margin-right:15px">
-        <b-nav-item href="#" @click="showWelcomeModal" xstyle="padding-right:18px;">About</b-nav-item>
-        <b-nav-item href="#" @click="showSusQuestionnaire" style="padding-right:18px;">Questionnaire</b-nav-item>
+        <b-nav-item href="#" @click="showWelcomeModal" xstyle="padding-right:18px;">
+        About</b-nav-item>
+        <b-nav-item href="#" @click="showSusQuestionnaire" style="padding-right:18px;">
+        Questionnaire</b-nav-item>
         <b-nav-form>
-          <b-form-input size="sm" class="mr-sm-2" type="text" v-model="searchTerm" placeholder="Search" />
-          <b-button size="sm" class="my-2 my-sm-0" @click="search()" type="button">Search</b-button>
+          <b-form-input size="sm" class="mr-sm-2" type="text" v-model="searchTerm"
+          placeholder="Search" />
+          <b-button size="sm" class="my-2 my-sm-0" @click="search()" type="button">
+          Search</b-button>
         </b-nav-form>
 
         <flag :iso="currencyFlag" :squared="false" style="display:inline-block;margin: 0 0 0 10px;" />
 
         <b-nav-item-dropdown text="Currency" right style="z-index:1030">
-          <b-dropdown-item href="#" @click="setCurrencyClick('USD', 'drop')"><flag iso="us" :squared="false" /> USD</b-dropdown-item>
-          <b-dropdown-item href="#" @click="setCurrencyClick('KES', 'drop')"><flag iso="ke" :squared="false" /> KES</b-dropdown-item>
+          <b-dropdown-item href="#" @click="setCurrencyClick('USD', 'drop')">
+          <flag iso="us" :squared="false" /> USD </b-dropdown-item>
+          <b-dropdown-item href="#" @click="setCurrencyClick('KES', 'drop')">
+          <flag iso="ke" :squared="false" /> KES </b-dropdown-item>
         </b-nav-item-dropdown>
 
         <b-nav-item-dropdown right style="z-index:1030" id="popover-reactive-1" :disabled="popoverShow">
@@ -105,24 +111,54 @@
         </b-alert> -->
 
         <div class="pull-right">
-        <b-button @click="onClose('btn-cancel')" size="sm" variant="danger">Cancel</b-button>&nbsp;
+        <b-button @click="onClose('btn-cancel')" size="sm" variant="danger">
+         Cancel</b-button>&nbsp;
         <b-button @click="onOk" size="sm" variant="primary">Ok</b-button>&nbsp;
         </div>
 
       </div>
     </b-popover>
 
-   <b-modal id="welcome" title="Welcome to Open Aid Data for Kenya website" size="lg" >
-    <p class="my-4">
+   <b-modal id="welcome" title="Welcome to Open Aid Data for Kenya website"
+    size="lg">
 
-    This portal is prototype to demonstrate how a country can use IATI data to show how development activities are being...
+    <p><strong>About this Website</strong></p>
 
-    <br /> In this prototype, we are using IATI data to show Organizations publishing to IATI are contributing towards the attainment of Sustainable Development Goals in the Kenyan Counties.
+    <p>This website is a prototype of an academic research project to examine
+    different visualization and user interaction techniques for exploring open
+    aid data.</p>
+
+    <p>This prototype uses open aid data from the
+    <a style="color:#004d71" target="_blank" href="https://www.iatiregistry.org/">
+    International Aid Tranasparency Initiative (IATI)</a>
+    to show how Organizations publishing to the IATI registry
+    are contributing towards the attainment of the Sustainable Development Goals
+    (SDGs) in Kenyan Counties.</p>
+
+    <p><strong>IATI data and the SDGs</strong></p>
+
+    <p>This prototype was developed in mid-2019 when much of IATI data did not have
+    clear linkages to the SDGs. We were however, able to map IATI's sectors data to the
+    SDGs using the <a target="_blank" style="color:#004d71" href="http://ap-unsdsn.org/wp-content/uploads/2017/04/Compiled-Keywords-for-SDG-Mapping_Final_17-05-10.xlsx">
+    "Compiled Keywords for SDG Mapping"</a> developed by the <a style="color:#004d71" href="http://ap-unsdsn.org/" target="_blank">
+    Sustainable Development Solutions Network </a>.
 
     </p>
+
+    <p><strong>IATI data and the Kenyan Counties</strong></p>
+
+    <p>While it is not mandatory to publish location informaton, some organizations
+    have published detailed information about the exact locations where they have
+    have carried out their development activies, including the name of the locations
+    and latitude & longitude coordinates.
+
+    </p>
+
+
   </b-modal>
 
-  <b-modal id="sus-questionnaire" title="System Usability Questionnaire" size="lg" >
+  <b-modal id="sus-questionnaire" title="System Usability Questionnaire"
+  size="lg">
 
     <sus-questionnaire></sus-questionnaire>
 

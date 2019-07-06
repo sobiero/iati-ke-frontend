@@ -14,7 +14,7 @@
             </b-dropdown> -->
 
         <span class='text-left col-md-10' style="display:inline-block;">
-          <b-form-select id="selBreakDown" size="sm" v-model="selBreakDown" :options="breakDownOptions" @change="processData()" style="max-width:350px;background-color:inherit;"> </b-form-select>
+          <b-form-select id="selBreakDown" size="sm" v-model="selBreakDown" :options="breakDownOptions" @change="processData('sel')" style="max-width:350px;background-color:inherit;"> </b-form-select>
         </span>
 
         <span class='text-default col-md-2' style="display:inline-block; white-space: nowrap;">
@@ -52,7 +52,18 @@
 
                 <b-link class="no-deco">
                    <fa-icon icon="download" id="user-pane-download"></fa-icon>
-                   <b-tooltip target="user-pane-download">Download table/chart data as CSV</b-tooltip>
+                   <b-tooltip target="user-pane-download">Download
+
+                    <template v-if="selVisualType == 'tbl'">
+                     table
+                    </template>
+                    <template v-else-if="selVisualType == 'bar'">
+                     bar chart
+                    </template>
+                    <template v-else-if="selVisualType == 'pie'">
+                     pie chart
+                    </template>
+                    data as CSV</b-tooltip>
                 </b-link>
 
               </download-excel>
@@ -62,8 +73,6 @@
             <span v-if="dashboardLoading">
                <fa-icon icon="spinner" pulse> </fa-icon>
             </span>
-
-
 
             <template v-else-if="selVisualType == 'tbl' " >
 
@@ -91,6 +100,12 @@
                     styleClass="vgt-table bordered condensed"
                     max-height="400px"
                     :fixed-header="true"
+
+                    @on-page-change="logTableInteractionPageChange"
+                    @on-per-page-change="logTableInteractionPerPageChange"
+                    @on-column-filer="logTableInteractionColumnFilter"
+                    @on-sort-change="logTableInteractionSortChange"
+
                     >
 
                      <template slot="table-row" slot-scope="props">
@@ -134,7 +149,10 @@
 
             <template v-else-if="selVisualType == 'pie' ">
                  <highcharts :options="pieChart" key="pie"></highcharts>
+
+                 <em class="text-mute"><small>Note: Pie chart only shows the top 5 items for easy interpretation. <br>Use table or bar chart to see all </small></em>
             </template>
+
 
         </b-card-text>
       </b-card>
@@ -153,7 +171,7 @@ export default {
     data: Object,
     dashParams: Object,
     selOptions: Object,
-
+    labels: Object,
   },
   components: {
 
@@ -184,7 +202,7 @@ export default {
         "Amount (KES)": {
           field: 'total',
              callback: (value) => {
-                return value * 101 ;
+                return value * this.exRate ;
             }
          }
       },
@@ -220,6 +238,18 @@ export default {
         xAxis: {
           categories: [],
         },
+
+        yAxis: {
+            min: 0,
+            title: {
+                text:   'Amount' + this.labels.selTrxnType,
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+
         series: [{
           data: [[]],
         }],
@@ -249,14 +279,36 @@ export default {
   methods: {
 
     logIconClick(tool) {
-          EventBus.$emit('interaction', {name: 'tooltip-' + tool, type: 'tooltip', event: 'click', data: { }});
+       EventBus.$emit('interaction', {name: 'tooltip-' + tool, type: 'tooltip', event: 'click', data: { }});
+    },
+
+    logTableInteractionPageChange(params){
+       this.logTableInteraction('page-change', params) ;
+    },
+
+    logTableInteractionPerPageChange(params){
+       this.logTableInteraction('per-page-change', params);
+    },
+
+    logTableInteractionColumnFilter(params){
+       this.logTableInteraction('column-filter', params);
+    },
+
+    logTableInteractionSortChange(params){
+       this.logTableInteraction('sort-change', params);
+    },
+
+    logTableInteraction(element, params) {
+       EventBus.$emit('interaction', {name: 'userpane-table-' + element , type: 'table-event', event: 'change', data: { params: params }});
     },
 
     setVisualType(v) {
       this.selVisualType = v;
+      //EventBus.$emit('interaction', {name: 'tooltip-' + tool, type: 'tooltip', event: 'hover', data: { }});
     },
 
-    processData() {
+    processData(invoker) {
+
       switch (this.selBreakDown) {
         case 1:
 
@@ -270,7 +322,7 @@ export default {
             "Amount (KES)": {
               field: 'col3',
                  callback: (value) => {
-                    return value * 101 ;
+                    return value * this.exRate ;
                 }
              }
           };
@@ -287,7 +339,7 @@ export default {
             "Amount (KES)": {
               field: 'col3',
                  callback: (value) => {
-                    return value * 101 ;
+                    return value * this.exRate ;
                 }
              }
           };
@@ -303,7 +355,7 @@ export default {
             "Amount (KES)": {
               field: 'col3',
                  callback: (value) => {
-                    return value * 101 ;
+                    return value * this.exRate ;
                 }
              }
           };
@@ -319,7 +371,7 @@ export default {
             "Amount (KES)": {
               field: 'col3',
                  callback: (value) => {
-                    return value * 101 ;
+                    return value * this.exRate ;
                 }
              }
           };
@@ -335,7 +387,7 @@ export default {
             "Amount (KES)": {
               field: 'col3',
                  callback: (value) => {
-                    return value * 101 ;
+                    return value * this.exRate ;
                 }
              }
           };
@@ -354,7 +406,7 @@ export default {
       });
 
       this.barChart.xAxis.categories = xAxis;
-      this.barChart.series = [{ data: yAxis }];
+      this.barChart.series = [{ data: yAxis, name: this.labels.selTrxnType }];
 
       const dt = []; let x = 0;
 
@@ -365,10 +417,18 @@ export default {
         x++;
       });
 
-      this.pieChart.series = [{ data: dt }];
+      this.pieChart.series = [{ data: dt, name: this.labels.selTrxnType  }];
+
+      if (invoker == 'sel' )
+      {
+          EventBus.$emit('interaction', {name: 'userpane-select', type: 'select', event: 'change', data: { sel: this.selBreakDown }});
+      }
+
     },
 
     linkClicked(param, val) {
+
+       EventBus.$emit('interaction', {name: 'userpane-table-link-' + param, type: 'link', event: 'click', data: { val: val }});
 
        switch (param)
        {
