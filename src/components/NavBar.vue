@@ -603,7 +603,7 @@ export default {
         this.prefs = JSON.parse( localStorage.prefs ) ;
       }
 
-      if ( this.prefs.welcomeMessage == 'accepted' )
+      if ( this.prefs.welcomeMessage != 'notAccepted' )
       {
           this.showWelcomeModal();
       }
