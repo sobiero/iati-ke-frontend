@@ -141,7 +141,7 @@
     <p><strong>IATI data and the SDGs</strong></p>
 
     <p>This prototype was developed in 2019 when much of IATI data did not have
-    clear linkages to the SDGs. However, we were able to map
+    clear linkages to the SDGs. However, the researcher was able to map
     <a style="color:#00699b" href="http://reference.iatistandard.org/203/codelists/SectorCategory/" target="_blank">IATI's sectors</a>
 
     data to the
@@ -156,7 +156,7 @@
     <p>While it is not mandatory to publish location informaton, some organizations
     have published detailed information about the exact locations where they
     have carried out their development activies, including latitude & longitude
-    coordinates. That's how we were able to get precise development data for
+    coordinates. That's how the researcher was able to get precise development data for
     the Kenyan Counties.
 
     </p>
