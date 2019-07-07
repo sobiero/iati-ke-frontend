@@ -122,32 +122,33 @@
     </b-popover>
 
    <b-modal id="welcome" title="Welcome to Open Aid Data for Kenya website"
-    size="lg">
+    size="xl"  >
 
     <div style="font-size:0.8em;">
-    
+
     <p><strong>About this Website</strong></p>
 
-    <p>This website is a prototype of an academic research project to examine
+    <p>This website is a prototype of an academic research project meant to examine
     different visualization and user interaction techniques for exploring open
     aid data.</p>
 
     <p>It uses open aid data from the
-    <a style="color:#004d71" target="_blank" href="https://www.iatiregistry.org/">
-    International Aid Tranasparency Initiative (IATI)</a>
-    to show how organizations publishing to the IATI registry
+    <a style="color:#00699b" target="_blank" href="https://www.iatiregistry.org/">International Aid Transparency Initiative (IATI)</a>
+    to show financial information on how organizations publishing to the IATI registry
     are contributing towards the attainment of the Sustainable Development Goals
     (SDGs) in Kenyan Counties.</p>
 
     <p><strong>IATI data and the SDGs</strong></p>
 
     <p>This prototype was developed in 2019 when much of IATI data did not have
-    clear linkages to the SDGs. However, we were able to map IATI's sectors data to the
-    SDGs using the <a target="_blank" style="color:#004d71"
-    href="http://ap-unsdsn.org/wp-content/uploads/2017/04/Compiled-Keywords-for-SDG-Mapping_Final_17-05-10.xlsx">
-    "Compiled Keywords for SDG Mapping"</a> developed by the
-    <a style="color:#004d71" href="http://ap-unsdsn.org/" target="_blank">Sustainable Development Solutions Network</a>
-    in 2017.
+    clear linkages to the SDGs. However, we were able to map
+    <a style="color:#00699b" href="http://reference.iatistandard.org/203/codelists/SectorCategory/" target="_blank">IATI's sectors</a>
+
+    data to the
+    SDGs using the <a target="_blank" style="color:#00699b"
+    href="http://ap-unsdsn.org/wp-content/uploads/2017/04/Compiled-Keywords-for-SDG-Mapping_Final_17-05-10.xlsx">"Compiled Keywords for SDG Mapping"</a> developed by the
+    <a style="color:#00699b" href="http://ap-unsdsn.org/" target="_blank">
+    Sustainable Development Solutions Network</a> in 2017.
     </p>
 
     <p><strong>IATI data and the Kenyan Counties</strong></p>
@@ -155,28 +156,49 @@
     <p>While it is not mandatory to publish location informaton, some organizations
     have published detailed information about the exact locations where they
     have carried out their development activies, including latitude & longitude
-    coordinates. That's how we were able to get development activities in the Counties.
+    coordinates. That's how we were able to get precise development data for
+    the Kenyan Counties.
 
     </p>
 
-    <p>Please feel free to interact with this prototype as much as possible</p>
+    <p>Please feel free to interact with this prototype as much as possible then provide feedback as discussed with the researcher.</p>
 
     <p><strong><em>Disclaimer</em></strong></p>
 
     <ul>
-       <li>Only a subset of IATI data that contains location information (latitude and longitude) has been used for this prototype </li>
-       <li>We used IATI data as is without verifying for accuracy </li>
+       <li>Only a subset of IATI data that contains location information (latitude & longitude)
+       was used for this prototype </li>
+       <li>The data was used as is from IATI's registry without verification for accuracy</li>
+       <li>The data was last updated in February 2019</li>
     </ul>
 
     </div>
 
     <hr>
     <p class="text-mute">
-    <small>The source code for this prototype is availabe for free on Gitub
-       <br><a style="color:#6a6a6a;" href="https://github.com/sobiero/iati-ke-frontend" target="_blank"><fa-icon :icon="['fab', 'github']"></fa-icon> The front end is developed using VueJS</a>
-       <br><a style="color:#6a6a6a;"  href="https://github.com/sobiero/iati-ke-frontend" target="_blank"><fa-icon :icon="['fab', 'github']"></fa-icon> The backed end is developed using ExpressJS</a>
+    <small>The source code for this prototype is available for free on Github
+       <br><a style="color:#6a6a6a;" href="https://github.com/sobiero/iati-ke-frontend" target="_blank">
+       <fa-icon :icon="['fab', 'github']"></fa-icon> Frontend (developed using VueJS)</a>
+       <br><a style="color:#6a6a6a;"  href="https://github.com/sobiero/iati-ke-frontend" target="_blank">
+       <fa-icon :icon="['fab', 'github']"></fa-icon> Backend (developed using ExpressJS)</a>
     </small>
     </p>
+
+    <template slot="modal-footer">
+
+      <b-form-checkbox
+      id="checkbox-1"
+      v-model="prefs.welcomeMessage"
+      name="checkbox-1"
+      value="notAccepted"
+      unchecked-value="accepted"
+      >
+      <span style="font-size:0.85em;">Do not show this welcome screen on page load again. You will still be able to access it by clicking the 'About' link from the top navigation bar. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      </b-form-checkbox>
+
+      <b-button  @click="$bvModal.hide('welcome')">Close</b-button>
+
+    </template>
 
 
   </b-modal>
@@ -185,6 +207,12 @@
   size="lg">
 
     <sus-questionnaire></sus-questionnaire>
+
+    <template slot="modal-footer">
+
+      <b-button  @click="$bvModal.hide('sus-questionnaire')">Close</b-button>
+
+    </template>
 
   </b-modal>
 
@@ -198,7 +226,7 @@
           placeholder="Search" />
           <b-button size="sm" class="my-2 my-sm-0" @click="search()" type="button">
           Search</b-button>
-          
+
           <span v-if="searchObj.isSearching">
                &nbsp;&nbsp; <fa-icon icon="spinner" pulse> </fa-icon>
            </span>
@@ -223,7 +251,7 @@
       <span v-else>
         <em>No results</em>
       </span>
-      
+
      <hr>
      <h6>Results from the SDGs</h6>
 
@@ -332,6 +360,7 @@ export default {
       prefs: {
         userEmail: '',
         userCurrency: '',
+        welcomeMessage: 'accepted',
       }
 
     }
@@ -431,20 +460,20 @@ export default {
 
       e.preventDefault();
       this.search();
-    
+
     },
 
     search() {
 
          if (this.searchTerm.trim() == '' )
          {
-         
+
            this.$bvToast.toast('Please enter text to search for', {
                 title: 'Search Error',
                 variant: 'danger',
                 autoHideDelay: 5000,
                 solid: true
-           }); 
+           });
 
            return false;
 
@@ -452,8 +481,8 @@ export default {
 
         var vm = this ;
 
-        this.$bvModal.show('search-result');   
-        
+        this.$bvModal.show('search-result');
+
         this.searchObj.isSearching = true;
 
         this.$axios.get(`${this.apiUrl}/iati/search/` + this.searchTerm , { params:  {}  })
@@ -467,7 +496,7 @@ export default {
         .catch((e) => {
 
          vm.searchObj.isSearching  = false ;
-   
+
          this.$bvToast.toast('An error occured, please ensure your search term does not have invalid characters', {
               title: 'Error Searching',
               variant: 'danger',
@@ -569,7 +598,15 @@ export default {
        localStorage.browserId = this.$uuid.v4();
      }
 
-     this.showWelcomeModal();
+      if (typeof localStorage.prefs != 'undefined' && typeof (JSON.parse( localStorage.prefs )) == 'object' )
+      {
+        this.prefs = JSON.parse( localStorage.prefs ) ;
+      }
+
+      if ( this.prefs.welcomeMessage == 'accepted' )
+      {
+          this.showWelcomeModal();
+      }
 
      EventBus.$on('xhr-dashboard', (payload) => {
          if ( typeof localStorage.prefs != 'undefined'
@@ -595,7 +632,13 @@ export default {
         if (val) {
           this.userCurrencyState = true
         }
-      }
+      },
+
+      'prefs.welcomeMessage': function () {
+
+          localStorage.prefs = JSON.stringify( this.prefs) ;
+
+    },
 
   }
 

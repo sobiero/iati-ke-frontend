@@ -184,11 +184,11 @@ export default {
   },
 
   computed: {
-    
-    refChartTitle() { 
-      
+
+    refChartTitle() {
+
       return this.labels.selTrxnType + " in " + this.dashParams.currency ;
-      
+
     },
 
   },
