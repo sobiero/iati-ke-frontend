@@ -31,6 +31,11 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle, faInfoCircle, faDownload,
 } from '@fortawesome/free-solid-svg-icons';
+
+import {
+  faGithub, faTwitter, faLinkedin, 
+} from '@fortawesome/free-brands-svg-icons';
+
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import _ from 'lodash';
@@ -49,7 +54,8 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
-library.add(faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle, faInfoCircle, faDownload);
+library.add(faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle, 
+faInfoCircle, faDownload, faGithub, faTwitter, faLinkedin );
 
 Vue.component('fa-icon', FontAwesomeIcon);
 Vue.component('downloadExcel', JsonExcel);

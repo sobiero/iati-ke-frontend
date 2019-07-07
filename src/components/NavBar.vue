@@ -18,10 +18,12 @@
 
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto" style="margin-right:15px">
-        <b-nav-item href="#" @click="showWelcomeModal" xstyle="padding-right:18px;">
+        <b-nav-item href="#" @click="showWelcomeModal" style="padding-right:20px;">
         About</b-nav-item>
-        <b-nav-item href="#" @click="showSusQuestionnaire" style="padding-right:18px;">
-        Questionnaire</b-nav-item>
+
+        <!-- <b-nav-item href="#" @click="showSusQuestionnaire" style="padding-right:25px;">
+        Questionnaire</b-nav-item> -->
+
         <b-nav-form>
           <b-form-input size="sm" class="mr-sm-2" type="text" v-model="searchTerm"
           placeholder="Search" />
@@ -128,7 +130,7 @@
     different visualization and user interaction techniques for exploring open
     aid data.</p>
 
-    <p>This prototype uses open aid data from the
+    <p>It uses open aid data from the
     <a style="color:#004d71" target="_blank" href="https://www.iatiregistry.org/">
     International Aid Tranasparency Initiative (IATI)</a>
     to show how Organizations publishing to the IATI registry
@@ -138,19 +140,20 @@
     <p><strong>IATI data and the SDGs</strong></p>
 
     <p>This prototype was developed in mid-2019 when much of IATI data did not have
-    clear linkages to the SDGs. We were however, able to map IATI's sectors data to the
-    SDGs using the <a target="_blank" style="color:#004d71" href="http://ap-unsdsn.org/wp-content/uploads/2017/04/Compiled-Keywords-for-SDG-Mapping_Final_17-05-10.xlsx">
-    "Compiled Keywords for SDG Mapping"</a> developed by the <a style="color:#004d71" href="http://ap-unsdsn.org/" target="_blank">
-    Sustainable Development Solutions Network </a>.
+    clear linkages to the SDGs. However, we were able to map IATI's sectors data to the
+    SDGs using the <a target="_blank" style="color:#004d71"
+    href="http://ap-unsdsn.org/wp-content/uploads/2017/04/Compiled-Keywords-for-SDG-Mapping_Final_17-05-10.xlsx">"Compiled Keywords for SDG Mapping"</a> developed by the
+    <a style="color:#004d71" href="http://ap-unsdsn.org/" target="_blank">Sustainable Development Solutions Network</a>
+    in 2017.
 
     </p>
 
     <p><strong>IATI data and the Kenyan Counties</strong></p>
 
     <p>While it is not mandatory to publish location informaton, some organizations
-    have published detailed information about the exact locations where they have
-    have carried out their development activies, including the name of the locations
-    and latitude & longitude coordinates.
+    have published detailed information about the exact locations where they
+    have carried out their development activies, including latitude & longitude
+    coordinates...
 
     </p>
 

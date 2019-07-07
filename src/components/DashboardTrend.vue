@@ -43,7 +43,7 @@
         </h6>
         <b-card-text>
           <highcharts :constructor-type="'stockChart'" :options="chartOptions"></highcharts>
-          {{exRate}}
+
         </b-card-text>
       </b-card>
 
