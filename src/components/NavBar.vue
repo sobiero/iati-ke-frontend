@@ -179,7 +179,7 @@
     <small>The source code for this prototype is available for free on Github
        <br><a style="color:#6a6a6a;" href="https://github.com/sobiero/iati-ke-frontend" target="_blank">
        <fa-icon :icon="['fab', 'github']"></fa-icon> Frontend (developed using VueJS)</a>
-       <br><a style="color:#6a6a6a;"  href="https://github.com/sobiero/iati-ke-frontend" target="_blank">
+       <br><a style="color:#6a6a6a;"  href="https://github.com/sobiero/iati-ke-backend" target="_blank">
        <fa-icon :icon="['fab', 'github']"></fa-icon> Backend (developed using ExpressJS)</a>
     </small>
     </p>
