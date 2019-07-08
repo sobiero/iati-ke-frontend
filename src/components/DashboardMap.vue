@@ -72,7 +72,7 @@
                <template slot-scope="props">
                   <l-info-control :item="props.currentItem" :unit="props.unit"
                   title="County" placeholder="Hover over a county"></l-info-control>
-                  <l-reference-chart title="Activities in counties"
+                  <l-reference-chart :title="refChartTitle"
                   :colorScale="colorScale" :min="props.min" :max="props.max"
                   position="topright"  ></l-reference-chart>
                 </template>
@@ -181,6 +181,16 @@ export default {
       },
 
     };
+  },
+
+  computed: {
+    
+    refChartTitle() { 
+      
+      return this.labels.selTrxnType + " in " + this.dashParams.currency ;
+      
+    },
+
   },
 
   watch: {

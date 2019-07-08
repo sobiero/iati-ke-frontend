@@ -15,14 +15,14 @@
     <footer class="footer fixed-bottom text-center bg-info pt-2 pb-2">
      <small class="text-white">&copy; 2019 Obiero Simon
 
-      &nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;
       <span class="user">
       <a href="https://www.linkedin.com/in/obierosimon/" target="_blank" title="LinkedIn"> <fa-icon :icon="['fab', 'linkedin']"></fa-icon></a>
       &nbsp;&nbsp;<a href="https://github.com/sobiero" target="_blank"> <fa-icon :icon="['fab', 'github']"></fa-icon></a>
       &nbsp;&nbsp;<a href="https://twitter.com/obierosimon" target="_blank"> <fa-icon :icon="['fab', 'twitter']"></fa-icon></a>
       </span>
-
-     <span style="display:inline-block;width:40%;" class="pull-right">
+      &nbsp;&nbsp; | &nbsp;&nbsp;
+     <span xstyle="display:inline-block;width:40%;" class="pull-right">
          <a href="https://github.com/sobiero/iati-ke-frontend" target="_blank"><fa-icon :icon="['fab', 'github']"></fa-icon> Source Code</a>
      </span>
 

@@ -437,7 +437,7 @@ export default {
 
         })
         .catch((e) => {
-          vm.errors.push(e);
+          //vm.errors.push(e);
         });
 
     }, 800 ),

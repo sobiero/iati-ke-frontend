@@ -24,7 +24,7 @@
         <!-- <b-nav-item href="#" @click="showSusQuestionnaire" style="padding-right:25px;">
         Questionnaire</b-nav-item> -->
 
-        <b-nav-form>
+        <b-nav-form @submit="submitSearch">
           <b-form-input size="sm" class="mr-sm-2" type="text" v-model="searchTerm"
           placeholder="Search" />
           <b-button size="sm" class="my-2 my-sm-0" @click="search()" type="button">
@@ -124,6 +124,8 @@
    <b-modal id="welcome" title="Welcome to Open Aid Data for Kenya website"
     size="lg">
 
+    <div style="font-size:0.8em;">
+    
     <p><strong>About this Website</strong></p>
 
     <p>This website is a prototype of an academic research project to examine
@@ -133,19 +135,19 @@
     <p>It uses open aid data from the
     <a style="color:#004d71" target="_blank" href="https://www.iatiregistry.org/">
     International Aid Tranasparency Initiative (IATI)</a>
-    to show how Organizations publishing to the IATI registry
+    to show how organizations publishing to the IATI registry
     are contributing towards the attainment of the Sustainable Development Goals
     (SDGs) in Kenyan Counties.</p>
 
     <p><strong>IATI data and the SDGs</strong></p>
 
-    <p>This prototype was developed in mid-2019 when much of IATI data did not have
+    <p>This prototype was developed in 2019 when much of IATI data did not have
     clear linkages to the SDGs. However, we were able to map IATI's sectors data to the
     SDGs using the <a target="_blank" style="color:#004d71"
-    href="http://ap-unsdsn.org/wp-content/uploads/2017/04/Compiled-Keywords-for-SDG-Mapping_Final_17-05-10.xlsx">"Compiled Keywords for SDG Mapping"</a> developed by the
+    href="http://ap-unsdsn.org/wp-content/uploads/2017/04/Compiled-Keywords-for-SDG-Mapping_Final_17-05-10.xlsx">
+    "Compiled Keywords for SDG Mapping"</a> developed by the
     <a style="color:#004d71" href="http://ap-unsdsn.org/" target="_blank">Sustainable Development Solutions Network</a>
     in 2017.
-
     </p>
 
     <p><strong>IATI data and the Kenyan Counties</strong></p>
@@ -153,8 +155,27 @@
     <p>While it is not mandatory to publish location informaton, some organizations
     have published detailed information about the exact locations where they
     have carried out their development activies, including latitude & longitude
-    coordinates...
+    coordinates. That's how we were able to get development activities in the Counties.
 
+    </p>
+
+    <p>Please feel free to interact with this prototype as much as possible</p>
+
+    <p><strong><em>Disclaimer</em></strong></p>
+
+    <ul>
+       <li>Only a subset of IATI data that contains location information (latitude and longitude) has been used for this prototype </li>
+       <li>We used IATI data as is without verifying for accuracy </li>
+    </ul>
+
+    </div>
+
+    <hr>
+    <p class="text-mute">
+    <small>The source code for this prototype is availabe for free on Gitub
+       <br><a style="color:#6a6a6a;" href="https://github.com/sobiero/iati-ke-frontend" target="_blank"><fa-icon :icon="['fab', 'github']"></fa-icon> The front end is developed using VueJS</a>
+       <br><a style="color:#6a6a6a;"  href="https://github.com/sobiero/iati-ke-frontend" target="_blank"><fa-icon :icon="['fab', 'github']"></fa-icon> The backed end is developed using ExpressJS</a>
+    </small>
     </p>
 
 
@@ -167,6 +188,68 @@
 
   </b-modal>
 
+
+    <b-modal id="search-result" title="Search Pane"
+    size="lg">
+
+      <b-nav-form @submit="submitSearch">
+      <div class="col-md-12 text-center">
+          <b-form-input size="sm" class="mr-sm-2" type="text" v-model="searchTerm"
+          placeholder="Search" />
+          <b-button size="sm" class="my-2 my-sm-0" @click="search()" type="button">
+          Search</b-button>
+          
+          <span v-if="searchObj.isSearching">
+               &nbsp;&nbsp; <fa-icon icon="spinner" pulse> </fa-icon>
+           </span>
+
+      </div>
+
+        </b-nav-form>
+
+
+     <div id="search-rs" v-if="!searchObj.isSearching" >
+
+     <p class="text-center" style="margin-top:18px;"> You searched for <em style="color:#6a3500;">{{searchTermRslt}}</em> </p>
+
+     <hr>
+     <h6>Results from Counties</h6>
+
+       <ul v-if="searchObj.result && searchObj.result.data && searchObj.result.data.county && searchObj.result.data.county.length != 0 ">
+        <li v-for="l in searchObj.result.data.county">
+          <a href="#" @click="searchResultClicked('county', l.county_code )" > {{ l.location_name }} {{ l.county_name }}, [County Code: {{ l.county_code }}] </a>
+        </li>
+      </ul>
+      <span v-else>
+        <em>No results</em>
+      </span>
+      
+     <hr>
+     <h6>Results from the SDGs</h6>
+
+      <ul v-if="searchObj.result && searchObj.result.data && searchObj.result.data.sdg && searchObj.result.data.sdg.length != 0 ">
+        <li v-for="s in searchObj.result.data.sdg">
+         <a href="#" @click="searchResultClicked('sdg', s.sdg_id )" > {{ s.sdg_id }} - {{ s.sdg_name }} </a>
+        </li>
+      </ul>
+      <span v-else>
+        <em>No results</em>
+      </span>
+
+      <hr>
+      <h6>Results from transaction types</h6>
+       <ul v-if="searchObj.result && searchObj.result.data && searchObj.result.data.trxn && searchObj.result.data.trxn.length != 0 ">
+        <li v-for="t in searchObj.result.data.trxn">
+          <a href="#" @click="searchResultClicked('trxn', { new: t.code, old: t.old_code } )" > {{ t.code }} - {{ t.name }}, {{ t.description }} </a>
+        </li>
+      </ul>
+      <span v-else>
+        <em>No results</em>
+      </span>
+
+     </div>
+
+   </b-modal>
 
    <vue-cookie-accept-decline style="max-width:550px;"
     :ref="'iati-ke'"
@@ -227,8 +310,16 @@ export default {
   data () {
     return {
 
+      searchObj: {
+        isSearching: false,
+        result: [],
+      },
+
+      apiUrl: '/api',
+
       currencyChanger: 'default',
       searchTerm: '',
+      searchTermRslt: '',
       currencyFlag: 'us',
 
       //userEmailState: null,
@@ -247,6 +338,31 @@ export default {
   },
 
   methods: {
+
+    searchResultClicked(param, val) {
+
+       EventBus.$emit('interaction', {name: 'search-pane-result-link-' + param, type: 'link', event: 'click', data: { val: val }});
+
+       this.$bvModal.hide('search-result');
+
+       switch (param)
+       {
+          case 'county':
+           EventBus.$emit('countyClicked', val);
+          break;
+
+          case 'sdg':
+           EventBus.$emit('sdgClicked', val);
+          break;
+
+          case 'trxn':
+           EventBus.$emit('trxnTypeClicked', val);
+          break;
+
+          default:
+       }
+
+    },
 
     cookieClickedAccept() {
 
@@ -302,7 +418,7 @@ export default {
 
       } else {
 
-         curObj = {cur: 'KES', rate: 101 };
+         curObj = {cur: 'KES', rate: 102.627 };
          this.currencyFlag = 'ke';
 
       }
@@ -311,14 +427,55 @@ export default {
 
     },
 
+    submitSearch(e) {
+
+      e.preventDefault();
+      this.search();
+    
+    },
+
     search() {
 
-         this.$bvToast.toast('Sorry, the search function is still under developement', {
-              title: 'Search Function Unavailable',
-              variant: 'info',
+         if (this.searchTerm.trim() == '' )
+         {
+         
+           this.$bvToast.toast('Please enter text to search for', {
+                title: 'Search Error',
+                variant: 'danger',
+                autoHideDelay: 5000,
+                solid: true
+           }); 
+
+           return false;
+
+        }
+
+        var vm = this ;
+
+        this.$bvModal.show('search-result');   
+        
+        this.searchObj.isSearching = true;
+
+        this.$axios.get(`${this.apiUrl}/iati/search/` + this.searchTerm , { params:  {}  })
+        .then((res) => {
+
+          vm.searchObj.isSearching  = false ;
+          vm.searchObj.result       = res.data;
+          vm.searchTermRslt         = vm.searchTerm ;
+
+        })
+        .catch((e) => {
+
+         vm.searchObj.isSearching  = false ;
+   
+         this.$bvToast.toast('An error occured, please ensure your search term does not have invalid characters', {
+              title: 'Error Searching',
+              variant: 'danger',
               autoHideDelay: 5000,
               solid: true
          });
+
+        });
 
          EventBus.$emit('interaction', {name: 'search', type: 'button', event: 'click', data:{searchTerm: this.searchTerm } });
 
@@ -455,6 +612,8 @@ div.popover input, div.popover select {
   font-size:0.8em;
 }
 
-
+#search-rs {
+  font-size:0.8em;
+}
 
 </style>
