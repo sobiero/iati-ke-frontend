@@ -52,6 +52,7 @@
 
 
    <b-popover id="pref-popover"
+      class="pref-popover"
       target="popover-reactive-1"
       triggers="click"
       :show.sync="popoverShow"
@@ -112,7 +113,7 @@
           Color: <strong>{{ userCurrency }}</strong>
         </b-alert> -->
 
-        <div class="pull-right">
+        <div class="pull-right text-right">
         <b-button @click="onClose('btn-cancel')" size="sm" variant="danger">
          Cancel</b-button>&nbsp;
         <b-button @click="onOk" size="sm" variant="primary">Ok</b-button>&nbsp;
@@ -147,8 +148,7 @@
     data to the
     SDGs using the <a target="_blank" style="color:#00699b"
     href="http://ap-unsdsn.org/wp-content/uploads/2017/04/Compiled-Keywords-for-SDG-Mapping_Final_17-05-10.xlsx">"Compiled Keywords for SDG Mapping"</a> developed by the
-    <a style="color:#00699b" href="http://ap-unsdsn.org/" target="_blank">
-    Sustainable Development Solutions Network</a> in 2017.
+    <a style="color:#00699b" href="http://ap-unsdsn.org/" target="_blank">Sustainable Development Solutions Network</a> in 2017.
     </p>
 
     <p><strong>IATI data and the Kenyan Counties</strong></p>
@@ -193,10 +193,10 @@
       value="notAccepted"
       unchecked-value="accepted"
       >
-      <span style="font-size:0.85em;">Do not show this welcome screen on page load again. You will still be able to access it by clicking the 'About' link from the top navigation bar. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <span style="font-size:0.85em;">Do not show this welcome screen on page load again. You will still be able to access it using the 'About' link from the top navigation bar. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
       </b-form-checkbox>
 
-      <b-button  @click="$bvModal.hide('welcome')">Close</b-button>
+      <b-button @click="$bvModal.hide('welcome')" variant="primary">Close</b-button>
 
     </template>
 
@@ -210,7 +210,7 @@
 
     <template slot="modal-footer">
 
-      <b-button  @click="$bvModal.hide('sus-questionnaire')">Close</b-button>
+      <b-button @click="$bvModal.hide('sus-questionnaire')" variant="primary">Close</b-button>
 
     </template>
 
@@ -361,6 +361,7 @@ export default {
         userEmail: '',
         userCurrency: '',
         welcomeMessage: 'accepted',
+        uid: 'anon',
       }
 
     }
@@ -526,6 +527,14 @@ export default {
 
         EventBus.$emit('interaction', {name: 'preference-btn-ok', type: 'button', event: 'click', data: this.prefs  });
 
+        this.$bvToast.toast('Your preferences have been successfully updated', {
+                title: 'User Preferences',
+                variant: 'success',
+                autoHideDelay: 4000,
+                solid: true,
+                toaster: 'b-toaster-bottom-right'
+           });
+
         /*
         if (!this.prefs.userEmail) {
           this.userEmailState = false
@@ -592,21 +601,35 @@ export default {
 
   mounted() {
 
+     //alert(this.$route.query.u);
+
+     if ( (typeof this.$route.query.u) != 'undefined' )
+     {
+       this.prefs.uid     = this.$route.query.u ;
+     }
+
      var browserId = localStorage.browserId ;
      if (typeof browserId == 'undefined' || browserId == '' )
      {
        localStorage.browserId = this.$uuid.v4();
      }
 
-      if (typeof localStorage.prefs != 'undefined' && typeof (JSON.parse( localStorage.prefs )) == 'object' )
-      {
-        this.prefs = JSON.parse( localStorage.prefs ) ;
-      }
+     if (typeof localStorage.prefs != 'undefined' && typeof (JSON.parse( localStorage.prefs )) == 'object' )
+     {
+       this.prefs = JSON.parse( localStorage.prefs ) ;
 
-      if ( this.prefs.welcomeMessage != 'notAccepted' )
-      {
-          this.showWelcomeModal();
-      }
+       if ( (typeof this.$route.query.u) != 'undefined' )
+       {
+         this.prefs.uid     = this.$route.query.u ;
+         localStorage.prefs = JSON.stringify(this.prefs);
+       }
+
+     }
+
+     if ( this.prefs.welcomeMessage != 'notAccepted' )
+     {
+       this.showWelcomeModal();
+     }
 
      EventBus.$on('xhr-dashboard', (payload) => {
          if ( typeof localStorage.prefs != 'undefined'
@@ -645,10 +668,10 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
 div.popover {
-  max-width:500px !important;
+  width:552px !important;
 }
 
 div.popover input, div.popover select {
