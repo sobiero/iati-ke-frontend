@@ -110,12 +110,12 @@
 
                      <template slot="table-row" slot-scope="props">
 
-                      <span v-if="props.column.label == 'SDG Name'">
+                      <span v-if="props.column.label == 'SDG Name' && dashParams && dashParams.selSdg == 0 ">
                         <span>
                           <b-link href="#" @click="linkClicked('sdg', props.row.col1)">{{props.row.col2}}</b-link>
                         </span>
                       </span>
-                      <span v-else-if="props.column.label == 'County'">
+                      <span v-else-if="props.column.label == 'County' && dashParams && dashParams.selCounty == '000' ">
                         <b-link href="#" @click="linkClicked('county', props.row.col1)">{{props.row.col2}}</b-link>
                       </span>
                       <span v-else>
@@ -130,6 +130,8 @@
                       </span>
 
 
+
+
                      </template>
 
                   </vue-good-table>
@@ -137,7 +139,7 @@
                   <div class="text-right" v-if="!dashboardLoading && selBreakDown == 1 && dashParams && dashParams.selCounty != '000'">
                     <b-link style="font-size:0.8em;" href="#" @click="linkClicked('county', '000')">All Counties</b-link>
                   </div>
-                  <div class="text-right" v-else-if="!dashboardLoading && selBreakDown == 2 && dashParams && dashParams.selCounty != 0 ">
+                  <div class="text-right" v-else-if="!dashboardLoading && selBreakDown == 2 && dashParams && dashParams.selSdg != 0 ">
                     <b-link style="font-size:0.8em;" href="#" @click="linkClicked('sdg', 0)">All SDGs</b-link>
                   </div>
 
@@ -150,8 +152,10 @@
             <template v-else-if="selVisualType == 'pie' ">
                  <highcharts :options="pieChart" key="pie"></highcharts>
 
-                 <em class="text-mute"><small>Note: Pie chart only shows the top 5 items for easy interpretation. <br>Use table or bar chart to see all </small></em>
+                 <em class="text-mute"><small>Note: Pie chart only shows the top 5 records for easy interpretation. <br>Please use table or bar chart to see all records </small></em>
             </template>
+
+
 
 
         </b-card-text>
