@@ -2,7 +2,13 @@
 
   <div class="row">
     <div class="col-md-12">
-       <table class="table table-striped">
+
+       <div class="text-center col-md-12" style="font-size:2em;" v-if="questionnaire.genAnswered == 1 ">
+             Completed <fa-icon class="text-success" icon="check"></fa-icon>
+       </div>
+
+
+       <table v-else class="table table-striped">
        <thead>
        <tr>
         <th style="width:15px;">#</th>
@@ -15,12 +21,11 @@
        <tr>
         <td>1</td>
         <td class="g g1" :class="[genQ.qs.g1 != '' ? 'text-success' : '' ]">
-          The  
-
+          The
           <b-link class="no-deco" id="over-det">
-            'Overview+Details' 
+            'Overview+Details'
           </b-link> <b-tooltip target="over-det"> i.e. simultaneously displaying both an overview and a detailed view of the data, each in a distinct panel </b-tooltip>
-          
+
           visualization approach made it easier for me to explore the data</td>
         <td class="slider g1" :class="[genQ.qs.g1 != '' ? 'text-success' : '' ]">
 
@@ -37,10 +42,10 @@
        </tr>
        <tr>
         <td>2</td>
-        <td class="g g2" :class="[genQ.qs.g2 != '' ? 'text-success' : '' ]">The 
+        <td class="g g2" :class="[genQ.qs.g2 != '' ? 'text-success' : '' ]">The
         <b-link class="no-deco" id="multi-rep">
-        'multiple representation' 
-        </b-link> <b-tooltip target="multi-rep"> E.g. representing the same data on a map, table, pie chart, bar chart etc... </b-tooltip>
+        'multiple representation'
+        </b-link> <b-tooltip target="multi-rep"> i.e. simultaneously representing the same dataset on a map, table, pie chart, bar chart etc... </b-tooltip>
         visualization technique in the web application helped me to extract different types of information from the same dataset</td>
         <td class="slider g2" :class="[genQ.qs.g2 != '' ? 'text-success' : '' ]">
 
@@ -138,7 +143,11 @@
          </td>
        </tr>
        <tr>
-         <td colspan="3"  class="text-right"> <b-button variant="primary" size="sm" @click="SubmitGenSurveyResponse">Submit Response</b-button> </td>
+         <td colspan="3"  class="text-right">
+
+         <b-button variant="primary" size="sm" @click="SubmitGenSurveyResponse">Submit Response</b-button>
+
+         </td>
        </tr>
        </tbody>
        </table>
@@ -162,6 +171,11 @@ export default {
   },
   data() {
     return {
+
+       questionnaire: {
+           susAnswered: 0,
+           genAnswered: 0,
+       },
 
        apiUrl: '/api',
 
@@ -247,29 +261,24 @@ export default {
         this.$axios.post(`${this.apiUrl}/user/gen-questionnaire`, { params:  data  })
         .then((res) => {
 
-          if ( res.data.msg == 'ok' && res.data.data && res.data.data.name != 'error' )
+          if ( res.data.msg == 'ok' && res.data['http-status'] == 200 )
           {
-
-               this.$bvToast.toast('Thank you for your feedback', {
-                    title: 'Feedback Saved',
-                    variant: 'success',
-                    autoHideDelay: 5000,
-                    solid: true
-               });
-
                EventBus.$emit('gen-ans-saved', res ) ;
+               this.questionnaire.genAnswered = 1 ;
+
+               //alert('hi');
 
           } else {
 
-            
+
             this.$bvToast.toast( res.data.data.detail, {
                 title: 'An Error Occured',
                 variant: 'danger',
                 autoHideDelay: 5000,
                 solid: true
             });
-          
-          
+
+
           }
 
 
@@ -300,6 +309,11 @@ export default {
   },
 
   mounted() {
+
+     if (typeof localStorage.questionnaire != 'undefined' && typeof (JSON.parse( localStorage.questionnaire )) == 'object' )
+     {
+       this.questionnaire = JSON.parse( localStorage.questionnaire ) ;
+     }
 
 
   },

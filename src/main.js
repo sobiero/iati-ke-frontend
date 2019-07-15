@@ -29,7 +29,8 @@ import 'vue-slider-component/theme/default.css';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
-  faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle, faInfoCircle, faDownload, faSmile, faFrown,
+  faCheck, faTimes, faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle,
+    faInfoCircle, faDownload, faSmile, faFrown,
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -54,7 +55,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
-library.add(faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle, 
+library.add(faCheck, faTimes, faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle, 
 faInfoCircle, faDownload, faSmile, faFrown, faGithub, faTwitter, faLinkedin );
 
 Vue.component('fa-icon', FontAwesomeIcon);

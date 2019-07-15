@@ -2,7 +2,12 @@
 
   <div class="row">
     <div class="col-md-12">
-       <table class="table table-striped">
+
+       <div class="text-center col-md-12" style="font-size:2em;" v-if="questionnaire.susAnswered == 1 ">
+             Completed <fa-icon class="text-success" icon="check"></fa-icon>
+       </div>
+
+       <table v-else class="table table-striped">
        <thead>
        <tr>
         <th style="width:15px;">#</th>
@@ -196,7 +201,11 @@
          </td>
        </tr> -->
        <tr>
-         <td colspan="3" class="text-right"> <b-button variant="primary" size="sm" @click="SubmitSusSurveyResponse">Submit Response</b-button> </td>
+         <td colspan="3" class="text-right">
+
+            <b-button variant="primary" size="sm" @click="SubmitSusSurveyResponse">Submit Response</b-button>
+
+         </td>
        </tr>
        </tbody>
        </table>
@@ -220,6 +229,11 @@ export default {
   },
   data() {
     return {
+
+       questionnaire: {
+           susAnswered: 0,
+           genAnswered: 0,
+       },
 
        apiUrl: '/api',
 
@@ -309,29 +323,23 @@ export default {
         this.$axios.post(`${this.apiUrl}/user/sus-questionnaire`, { params:  data  })
         .then((res) => {
 
-          if ( res.data.msg == 'ok'  && res.data.data && res.data.data.name != 'error' )
+          if ( res.data.msg == 'ok' && res.data['http-status'] == 200  )
           {
 
-               this.$bvToast.toast('Thank you for your feedback, please now fill the general questionnaire', {
-                    title: 'Feedback Saved',
-                    variant: 'success',
-                    autoHideDelay: 5000,
-                    solid: true
-               });
-
                EventBus.$emit('sus-ans-saved', res ) ;
+               this.questionnaire.susAnswered = 1 ;
 
           } else {
 
-            
+
             this.$bvToast.toast( res.data.data.detail, {
                 title: 'An Error Occured',
                 variant: 'danger',
                 autoHideDelay: 5000,
                 solid: true
             });
-          
-          
+
+
           }
 
 
@@ -363,6 +371,11 @@ export default {
   },
 
   mounted() {
+
+     if (typeof localStorage.questionnaire != 'undefined' && typeof (JSON.parse( localStorage.questionnaire )) == 'object' )
+     {
+       this.questionnaire = JSON.parse( localStorage.questionnaire ) ;
+     }
 
 
   },

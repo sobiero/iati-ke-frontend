@@ -198,7 +198,8 @@
 
     <hr>
     <p class="text-mute">
-    <small>The source code for this prototype is available for free on Github
+    <small>The source code for this prototype is available for free under the <a style="color:#00699b"
+    target="_blank" href="https://opensource.org/licenses/MIT">MIT Licence </a> on Github
        <br><a style="color:#6a6a6a;" href="https://github.com/sobiero/iati-ke-frontend" target="_blank">
        <fa-icon :icon="['fab', 'github']"></fa-icon> Frontend (developed using VueJS)</a>
        <br><a style="color:#6a6a6a;"  href="https://github.com/sobiero/iati-ke-backend" target="_blank">
@@ -225,21 +226,41 @@
 
   </b-modal>
 
-  <b-modal id="survey" title="System Usability Questionnaire"
+  <b-modal id="survey" title="Survey Questions"
   size="xl">
 
-    
+    <p>Thank you for agreeing to take part in this important survey to evaluate
+    the usability of this website.
+    <!-- Today we will be gaining your thoughts and opinions on the best visualization
+    and user interaction techniques for exploring open aid data. -->
+    This survey should only take approximately 2 minutes to complete.
+    Please be assured that all answers will be kept in strictest confidentiality. </p>
 
-    <p>Please answer the System Usability and General Questions below (Approx 2 minutes) </p>
-    
     <b-tabs content-class="mt-2" v-model="tabIndex" >
 
-      <b-tab title="Page 1: System Usability Questions" active>
-        <p>Page 1 of 2</p>
+      <b-tab active>
+
+        <template slot="title">
+          Page 1: System Usability Questions
+          <fa-icon v-if="questionnaire.susAnswered == 1 " class="text-success" icon="check"></fa-icon>
+          <fa-icon v-if="questionnaire.susAnswered == 0 " class="text-danger" icon="times"></fa-icon>
+
+        </template>
+
+        <p><strong>Page 1 of 2</strong></p>
         <sus-questionnaire></sus-questionnaire>
       </b-tab>
-      <b-tab title="Page 2: General Questions">
-        <p>Page 2 of 2</p>
+
+      <b-tab>
+
+        <template slot="title">
+          Page 2: General Questions
+          <fa-icon v-if="questionnaire.genAnswered == 1 " class="text-success" icon="check"></fa-icon>
+          <fa-icon v-if="questionnaire.genAnswered == 0 " class="text-danger" icon="times"></fa-icon>
+
+        </template>
+
+        <p><strong>Page 2 of 2</strong></p>
         <gen-questionnaire></gen-questionnaire>
       </b-tab>
     </b-tabs>
@@ -465,10 +486,10 @@ export default {
 
     showSurvey()
     {
-      
+
         if (this.questionnaire.susAnswered == 1 && this.questionnaire.genAnswered == 1 )
         {
-            
+
            this.$bvToast.toast('You have already taken the survey', {
                 title: 'Survey already taken',
                 variant: 'info',
@@ -485,9 +506,9 @@ export default {
 
             this.$bvModal.show('survey') ;
         }
-      
-      
-      
+
+
+
         EventBus.$emit('interaction', {name: 'questionnaire', type: 'link', event: 'click', data:{} });
 
     },
@@ -710,22 +731,50 @@ export default {
          }
      });
 
-
      if (typeof localStorage.questionnaire != 'undefined' && typeof (JSON.parse( localStorage.questionnaire )) == 'object' )
      {
        this.questionnaire = JSON.parse( localStorage.questionnaire ) ;
-     
-     } 
+     }
 
      EventBus.$on('sus-ans-saved', (payload) => {
        this.questionnaire.susAnswered = 1 ;
-       this.tabIndex = 1;
        localStorage.questionnaire = JSON.stringify(this.questionnaire);
+
+       var msg = '';
+       if ( this.questionnaire.genAnswered == 0)
+       {
+         msg = 'Please also make sure to complete the General Questions on Page 2';
+         this.tabIndex = 1;
+       }
+
+       this.$bvToast.toast('Thank you for your feedback. ' + msg, {
+          title: 'Feedback Saved',
+          variant: 'success',
+          autoHideDelay: 5000,
+          solid: true
+       });
+
+
      });
 
      EventBus.$on('gen-ans-saved', (payload) => {
         this.questionnaire.genAnswered = 1 ;
         localStorage.questionnaire = JSON.stringify(this.questionnaire);
+
+        var msg = '';
+        if ( this.questionnaire.susAnswered == 0)
+        {
+          msg = 'Please also make sure to complete the System Usability Questions on Page 1';
+          this.tabIndex = 0;
+        }
+
+        this.$bvToast.toast('Thank you for your feedback. ' + msg, {
+          title: 'Feedback Saved',
+          variant: 'success',
+          autoHideDelay: 5000,
+          solid: true
+       });
+
      });
 
   },
@@ -733,21 +782,21 @@ export default {
   watch : {
 
       tabIndex(){
-        
+
         if ( this.tabIndex == 1 && this.questionnaire.susAnswered != 1 )
         {
-            
-           this.$bvToast.toast('Please fill the System Usability Questions on page 1 first', {
-                title: 'Complete page 1 first',
+
+           this.$bvToast.toast('Please also make sure to complete the System Usability Questions on Page 1', {
+                title: 'Complete Questions on Page 1',
                 variant: 'danger',
                 autoHideDelay: 5000,
                 solid: true
            });
-           
-           this.tabIndex = 0 ;
+
+           //this.tabIndex = 0 ;
 
         }
-      
+
       },
 
       userEmail(val) {
