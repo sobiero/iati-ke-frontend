@@ -14,7 +14,7 @@
        <tbody>
        <tr>
         <td>1</td>
-        <td class="q1" :class="[susQ.qs.q1 != '' ? 'text-success' : '' ]">I think that I would like to use this website frequently  </td>
+        <td class="s q1" :class="[susQ.qs.q1 != '' ? 'text-success' : '' ]">I think that I would like to use this website frequently  </td>
         <td class="slider q1" :class="[susQ.qs.q1 != '' ? 'text-success' : '' ]">
 
            <vue-slider v-model="susQ.qs.q1"
@@ -30,7 +30,7 @@
        </tr>
        <tr>
         <td>2</td>
-        <td class="q2" :class="[susQ.qs.q2 != '' ? 'text-success' : '' ]">I found the website unnecessarily complex</td>
+        <td class="s q2" :class="[susQ.qs.q2 != '' ? 'text-success' : '' ]">I found the website unnecessarily complex</td>
         <td class="slider q2" :class="[susQ.qs.q2 != '' ? 'text-success' : '' ]">
 
            <vue-slider v-model="susQ.qs.q2"
@@ -47,7 +47,7 @@
        </tr>
        <tr>
         <td>3</td>
-        <td class="q3" :class="[susQ.qs.q3 != '' ? 'text-success' : '' ]">I thought the website was easy to use</td>
+        <td class="s q3" :class="[susQ.qs.q3 != '' ? 'text-success' : '' ]">I thought the website was easy to use</td>
         <td class="slider q3" :class="[susQ.qs.q3 != '' ? 'text-success' : '' ]">
 
            <vue-slider v-model="susQ.qs.q3"
@@ -64,8 +64,8 @@
        </tr>
        <tr>
         <td>4</td>
-        <td class="q4" :class="[susQ.qs.q4 != '' ? 'text-success' : '' ]">
-        I  think  that  I  would  need  the  support  of  a  technical <br>person to be able to use this website</td>
+        <td class="s q4" :class="[susQ.qs.q4 != '' ? 'text-success' : '' ]">
+        I  think  that  I  would  need  the  support  of  a  technical person to be able to use this website</td>
         <td class="slider q4" :class="[susQ.qs.q4 != '' ? 'text-success' : '' ]">
 
            <vue-slider v-model="susQ.qs.q4"
@@ -82,7 +82,7 @@
        </tr>
        <tr>
         <td>5</td>
-        <td class="q5" :class="[susQ.qs.q5 != '' ? 'text-success' : '' ]">I found the various functions in this website were well <br>integrated</td>
+        <td class="s q5" :class="[susQ.qs.q5 != '' ? 'text-success' : '' ]">I found the various functions in this website were well integrated</td>
         <td class="slider q5" :class="[susQ.qs.q5 != '' ? 'text-success' : '' ]">
 
            <vue-slider v-model="susQ.qs.q5"
@@ -99,7 +99,7 @@
        </tr>
        <tr>
         <td>6</td>
-        <td class="q6" :class="[susQ.qs.q6 != '' ? 'text-success' : '' ]">I  thought there  was  too  much  inconsistency  in  this website</td>
+        <td class="s q6" :class="[susQ.qs.q6 != '' ? 'text-success' : '' ]">I  thought there  was  too  much  inconsistency  in  this website</td>
         <td class="slider q6" :class="[susQ.qs.q6 != '' ? 'text-success' : '' ]">
 
            <vue-slider v-model="susQ.qs.q6"
@@ -116,7 +116,7 @@
        </tr>
        <tr>
        <td>7</td>
-        <td class="q7" :class="[susQ.qs.q7 != '' ? 'text-success' : '' ]">I  would imagine  that  most  people  would  learn  to  use this<br> website very quickly</td>
+        <td class="s q7" :class="[susQ.qs.q7 != '' ? 'text-success' : '' ]">I  would imagine  that  most  people  would  learn  to  use this website very quickly</td>
         <td class="slider q7" :class="[susQ.qs.q7 != '' ? 'text-success' : '' ]">
 
            <vue-slider v-model="susQ.qs.q7"
@@ -133,7 +133,7 @@
        </tr>
        <tr>
        <td>8</td>
-        <td class="q8" :class="[susQ.qs.q8 != '' ? 'text-success' : '' ]">I found the website very cumbersome to use</td>
+        <td class="s q8" :class="[susQ.qs.q8 != '' ? 'text-success' : '' ]">I found the website very cumbersome to use</td>
         <td class="slider q8" :class="[susQ.qs.q8 != '' ? 'text-success' : '' ]">
 
            <vue-slider v-model="susQ.qs.q8"
@@ -150,7 +150,7 @@
        </tr>
        <tr>
        <td>9</td>
-        <td class="q9" :class="[susQ.qs.q9 != '' ? 'text-success' : '' ]">I felt very confident using the website</td>
+        <td class="s q9" :class="[susQ.qs.q9 != '' ? 'text-success' : '' ]">I felt very confident using the website</td>
         <td class="slider q9" :class="[susQ.qs.q9 != '' ? 'text-success' : '' ]">
 
            <vue-slider v-model="susQ.qs.q9"
@@ -167,7 +167,7 @@
        </tr>
        <tr>
        <td>10</td>
-        <td class="q10" :class="[susQ.qs.q10 != '' ? 'text-success' : '' ]">I needed to learn  a  lot  of  things  before  I  could<br>  get going with this website</td>
+        <td class="s q10" :class="[susQ.qs.q10 != '' ? 'text-success' : '' ]">I needed to learn  a  lot  of  things  before  I  could get going with this website</td>
         <td class="slider q10" :class="[susQ.qs.q10 != '' ? 'text-success' : '' ]">
 
            <vue-slider v-model="susQ.qs.q10"
@@ -182,7 +182,7 @@
 
         </td>
        </tr>
-       <tr>
+       <!-- <tr>
          <td colspan="3">
           Comments (Optional)
           <b-form-textarea
@@ -194,9 +194,9 @@
           ></b-form-textarea>
 
          </td>
-       </tr>
+       </tr> -->
        <tr>
-         <td colspan="3"> <b-button variant="primary" size="sm" @click="SubmitSurveyResponse">Submit Response</b-button> </td>
+         <td colspan="3" class="text-right"> <b-button variant="primary" size="sm" @click="SubmitSusSurveyResponse">Submit Response</b-button> </td>
        </tr>
        </tbody>
        </table>
@@ -259,7 +259,7 @@ export default {
       this.rangeValue = val ;
     },
 
-    SubmitSurveyResponse() {
+    SubmitSusSurveyResponse() {
 
       var errors = false;
 
@@ -309,17 +309,32 @@ export default {
         this.$axios.post(`${this.apiUrl}/user/sus-questionnaire`, { params:  data  })
         .then((res) => {
 
-          if ( res.data.msg == 'ok' )
+          if ( res.data.msg == 'ok'  && res.data.data && res.data.data.name != 'error' )
           {
 
-               this.$bvToast.toast('Thank you for your feedback', {
+               this.$bvToast.toast('Thank you for your feedback, please now fill the general questionnaire', {
                     title: 'Feedback Saved',
                     variant: 'success',
                     autoHideDelay: 5000,
                     solid: true
                });
 
+               EventBus.$emit('sus-ans-saved', res ) ;
+
+          } else {
+
+            
+            this.$bvToast.toast( res.data.data.detail, {
+                title: 'An Error Occured',
+                variant: 'danger',
+                autoHideDelay: 5000,
+                solid: true
+            });
+          
+          
           }
+
+
 
         })
         .catch((e) => {

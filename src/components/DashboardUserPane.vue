@@ -185,8 +185,8 @@ export default {
 
       breakDownOptions: [
 
-        { value: 1, text: 'View break down by Recepient Counties' },
-        { value: 2, text: 'View break down by Recepient SDGs' },
+        { value: 1, text: 'View break down by Recipient Counties' },
+        { value: 2, text: 'View break down by Recipient SDGs' },
         { value: 3, text: 'View break down by Contributing Organizations' },
         { value: 4, text: 'View break down by Transaction Types' },
         { value: 5, text: 'View break down by Years' },

@@ -38,7 +38,7 @@
 
           <template v-if="dashParams.selCounty == '000' ">
 
-          <h6 slot="header" class="mb-0"><strong style="color:#d1412c;">Top Receipient County</strong></h6>
+          <h6 slot="header" class="mb-0"><strong style="color:#d1412c;">Top Recipient County</strong></h6>
 
            <b-card-text>
 
@@ -64,7 +64,7 @@
 
          <template v-else-if="dashParams.selSdg == 0 ">
 
-          <h6 slot="header" class="mb-0"><strong style="color:#d1412c;">Top Receipient SDG</strong></h6>
+          <h6 slot="header" class="mb-0"><strong style="color:#d1412c;">Top Recipient SDG</strong></h6>
 
            <b-card-text>
 
@@ -178,7 +178,7 @@
 
         <template v-else-if="dashParams.selCounty == '000' && dashParams.selSdg == 0 ">
 
-           <h6 slot="header" class="mb-0"><strong>Top Receipient SDG</strong></h6>
+           <h6 slot="header" class="mb-0"><strong>Top Recipient SDG</strong></h6>
 
            <b-card-text class="top-org">
 

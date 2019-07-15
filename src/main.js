@@ -29,7 +29,7 @@ import 'vue-slider-component/theme/default.css';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
-  faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle, faInfoCircle, faDownload,
+  faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle, faInfoCircle, faDownload, faSmile, faFrown,
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -55,7 +55,7 @@ L.Icon.Default.mergeOptions({
 });
 
 library.add(faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle, 
-faInfoCircle, faDownload, faGithub, faTwitter, faLinkedin );
+faInfoCircle, faDownload, faSmile, faFrown, faGithub, faTwitter, faLinkedin );
 
 Vue.component('fa-icon', FontAwesomeIcon);
 Vue.component('downloadExcel', JsonExcel);

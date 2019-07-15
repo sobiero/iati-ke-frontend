@@ -12,6 +12,28 @@
 
     <b-collapse is-nav id="nav_collapse">
       <b-navbar-nav>
+
+        <b-nav-item href="#" @click="showSurvey" style="margin-left:35px;white-space:nowrap;color:#f0f0f0;">
+           <strong>Survey</strong>
+          ( <span style="color:#ffff64;font-size:0.8em;">
+          <span v-if="questionnaire.susAnswered == 1 && questionnaire.genAnswered == 1 ">
+           <!-- ☺  --> <fa-icon style="font-size:1.1em;" icon="smile"> </fa-icon> Completed.
+          </span>
+          <span v-else-if="( questionnaire.susAnswered == 1 && questionnaire.genAnswered == 0) || (questionnaire.susAnswered == 0 && questionnaire.genAnswered == 1) ">
+           <!-- ☺ --> <fa-icon style="font-size:1.1em;" icon="frown"> </fa-icon> In progress. Complete...
+          </span>
+
+          <span v-else-if="questionnaire.susAnswered == 0 && questionnaire.genAnswered == 0 ">
+           <!-- ☹ --> <fa-icon style="font-size:1.1em;" icon="frown"> </fa-icon>  Not Taken. Take...
+          </span>
+          </span> )
+
+        </b-nav-item>
+
+        <i class="far fa-smile"></i>
+        <i class="far fa-frown"></i>
+
+
         <!-- <b-nav-item href="#">About</b-nav-item>
         <b-nav-item href="#" disabled>Disabled</b-nav-item> -->
       </b-navbar-nav>
@@ -203,14 +225,29 @@
 
   </b-modal>
 
-  <b-modal id="sus-questionnaire" title="System Usability Questionnaire"
-  size="lg">
+  <b-modal id="survey" title="System Usability Questionnaire"
+  size="xl">
 
-    <sus-questionnaire></sus-questionnaire>
+    
+
+    <p>Please answer the System Usability and General Questions below (Approx 2 minutes) </p>
+    
+    <b-tabs content-class="mt-2" v-model="tabIndex" >
+
+      <b-tab title="Page 1: System Usability Questions" active>
+        <p>Page 1 of 2</p>
+        <sus-questionnaire></sus-questionnaire>
+      </b-tab>
+      <b-tab title="Page 2: General Questions">
+        <p>Page 2 of 2</p>
+        <gen-questionnaire></gen-questionnaire>
+      </b-tab>
+    </b-tabs>
+
 
     <template slot="modal-footer">
 
-      <b-button @click="$bvModal.hide('sus-questionnaire')" variant="primary">Close</b-button>
+      <b-button @click="$bvModal.hide('survey')" variant="primary">Close</b-button>
 
     </template>
 
@@ -324,6 +361,7 @@
 
 import EventBus from '../eventBus';
 import SusQuestionnaire from '@/components/SusQuestionnaire.vue';
+import GenQuestionnaire from '@/components/GenQuestionnaire.vue';
 
 export default {
   name: 'NavBar',
@@ -333,10 +371,18 @@ export default {
 
   components: {
     SusQuestionnaire,
+    GenQuestionnaire,
   },
 
   data () {
     return {
+
+      questionnaire: {
+         susAnswered: 0,
+         genAnswered: 0,
+      },
+
+      tabIndex: 0,
 
       searchObj: {
         isSearching: false,
@@ -417,10 +463,32 @@ export default {
 
     },
 
-    showSusQuestionnaire()
+    showSurvey()
     {
-      this.$bvModal.show('sus-questionnaire') ;
-      EventBus.$emit('interaction', {name: 'questionnaire', type: 'link', event: 'click', data:{} });
+      
+        if (this.questionnaire.susAnswered == 1 && this.questionnaire.genAnswered == 1 )
+        {
+            
+           this.$bvToast.toast('You have already taken the survey', {
+                title: 'Survey already taken',
+                variant: 'info',
+                autoHideDelay: 5000,
+                solid: true
+           });
+
+        } else {
+
+            if (this.questionnaire.susAnswered == 1)
+            {
+               this.tabIndex = 1;
+            }
+
+            this.$bvModal.show('survey') ;
+        }
+      
+      
+      
+        EventBus.$emit('interaction', {name: 'questionnaire', type: 'link', event: 'click', data:{} });
 
     },
 
@@ -642,9 +710,45 @@ export default {
          }
      });
 
+
+     if (typeof localStorage.questionnaire != 'undefined' && typeof (JSON.parse( localStorage.questionnaire )) == 'object' )
+     {
+       this.questionnaire = JSON.parse( localStorage.questionnaire ) ;
+     
+     } 
+
+     EventBus.$on('sus-ans-saved', (payload) => {
+       this.questionnaire.susAnswered = 1 ;
+       this.tabIndex = 1;
+       localStorage.questionnaire = JSON.stringify(this.questionnaire);
+     });
+
+     EventBus.$on('gen-ans-saved', (payload) => {
+        this.questionnaire.genAnswered = 1 ;
+        localStorage.questionnaire = JSON.stringify(this.questionnaire);
+     });
+
   },
 
   watch : {
+
+      tabIndex(){
+        
+        if ( this.tabIndex == 1 && this.questionnaire.susAnswered != 1 )
+        {
+            
+           this.$bvToast.toast('Please fill the System Usability Questions on page 1 first', {
+                title: 'Complete page 1 first',
+                variant: 'danger',
+                autoHideDelay: 5000,
+                solid: true
+           });
+           
+           this.tabIndex = 0 ;
+
+        }
+      
+      },
 
       userEmail(val) {
         if (val) {
