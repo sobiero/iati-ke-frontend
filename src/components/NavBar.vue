@@ -24,7 +24,7 @@
           </span>
 
           <span v-else-if="questionnaire.susAnswered == 0 && questionnaire.genAnswered == 0 ">
-           <!-- ☹ --> <fa-icon style="font-size:1.1em;" icon="frown"> </fa-icon>  Not Taken. Take...
+           <!-- ☹ --> <fa-icon style="font-size:1.1em;" icon="frown"> </fa-icon>  Not taken. Take...
           </span>
           </span> )
 
