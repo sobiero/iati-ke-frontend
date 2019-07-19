@@ -175,9 +175,9 @@
 
     <p><strong>IATI data and the Kenyan Counties</strong></p>
 
-    <p>While it is not mandatory to publish location informaton, some organizations
+    <p>While it is not mandatory to publish location information, some organizations
     have published detailed information about the exact locations where they
-    have carried out their development activies, including latitude & longitude
+    have carried out their development activities, including latitude & longitude
     coordinates. That's how the researcher was able to get precise development data for
     the Kenyan Counties.
 
