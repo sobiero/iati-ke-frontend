@@ -1,4 +1,4 @@
-# app
+# IATI - Kenya 
 
 ## Project setup
 ```
