@@ -359,7 +359,7 @@ export default {
       this.resetPanels();
       EventBus.$emit('xhr-dashboard', 'req');
 
-      this.$axios.get(`${this.apiUrl}/iati/dashboard-data`, { params: { params: this.form } })
+      this.$axios.get(`${this.apiUrl}/iati/dashboard-data`, { params: { params: this.form } , headers: { browser_uuid: localStorage.browserId }} )
         .then((res) => {
 
           EventBus.$emit('xhr-dashboard', 'res');
