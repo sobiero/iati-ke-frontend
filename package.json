@@ -1,5 +1,5 @@
 {
-  "name": "SDG-KE",
+  "name": "iati-ke-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,6 +9,8 @@
     "test:e2e": "vue-cli-service test:e2e",
     "test:unit": "vue-cli-service test:unit"
   },
+  "author": "obierosimon@gmail.com",
+  "license": "MIT",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.15",
     "@fortawesome/free-brands-svg-icons": "^5.9.0",
