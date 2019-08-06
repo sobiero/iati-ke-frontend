@@ -4,7 +4,7 @@
     <b-navbar-brand href="#">
     <div class="text-left" style="line-height:99%;margin-left:25px;">
     Open Aid Data for Kenya
-    <br><span style="font-size:0.6em;"><em>towards the attainment of the SDGs in Kenya Counties</em></span>
+    <br><span style="font-size:0.6em;"><em>towards the attainment of the SDGs in Counties of Kenya</em></span>
     </div>
     </b-navbar-brand>
 

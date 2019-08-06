@@ -31,18 +31,17 @@
 
       <b-card header-tag="header"
       text-variant="default"
-      header-text-variant="warning"
-      border-variant="warning"
+      :header-text-variant="countyOrSdg"
+      :border-variant="countyOrSdg"
       >
-
 
           <template v-if="dashParams.selCounty == '000' ">
 
-          <h6 slot="header" class="mb-0"><strong style="color:#d1412c;">Top Recipient County</strong></h6>
+          <h6 slot="header" class="mb-0"><strong style="color:#8e5eff;">Top Recipient County</strong></h6>
 
            <b-card-text>
 
-           
+
             <span v-if="dashboardLoading">
                <fa-icon icon="spinner" pulse> </fa-icon>
             </span>
@@ -50,7 +49,7 @@
 
              <span class="text-default" style="font-size:1.2em;">{{data.totalAmtByCounty[0].county_name }}</span>
             <br />
-            <span style="font-size:1.8em;color:#d1412c;"> {{data.totalAmtByCounty[0].total * exRate | abbreviate }}</span>
+            <span style="font-size:1.8em;color:#8855ff;"> {{data.totalAmtByCounty[0].total * exRate | abbreviate }}</span>
 
            </template>
            <span class="no-data" v-else>
@@ -64,18 +63,18 @@
 
          <template v-else-if="dashParams.selSdg == 0 ">
 
-          <h6 slot="header" class="mb-0"><strong style="color:#d1412c;">Top Recipient SDG</strong></h6>
+          <h6 slot="header" class="mb-0"><strong style="color:#28a745;">Top Recipient SDG</strong></h6>
 
            <b-card-text>
 
             <span v-if="dashboardLoading">
-               <br /> <fa-icon icon="spinner" pulse> </fa-icon>
+               <fa-icon icon="spinner" pulse> </fa-icon>
             </span>
            <template v-else-if="data.totalAmtBySdg && data.totalAmtBySdg[0]">
 
             <span style="font-size:0.75em;">{{data.totalAmtBySdg[0].sdg_id }} {{data.totalAmtBySdg[0].sdg_name }}</span>
             <br />
-            <span style="font-size:1.8em;color:#d1412c;"> {{data.totalAmtBySdg[0].total * exRate | abbreviate }}</span>
+            <span style="font-size:1.8em;color:#28a745;"> {{data.totalAmtBySdg[0].total * exRate | abbreviate }}</span>
 
            </template>
            <span class="no-data" v-else>
@@ -153,7 +152,7 @@
            <h6 slot="header" class="mb-0"><strong>Other Transactions</strong></h6>
 
            <b-card-text>
-           
+
             <span v-if="dashboardLoading">
                <fa-icon icon="spinner" pulse> </fa-icon>
             </span>
@@ -220,7 +219,7 @@
 
            <b-card-text>
 
-           
+
             <span v-if="dashboardLoading">
                <fa-icon icon="spinner" pulse> </fa-icon>
             </span>
@@ -269,6 +268,8 @@ export default {
   data() {
     return {
 
+      countyOrSdg: this.dashParams.selCounty == '000' ? 'purple' : 'success',
+
       dashboardLoading: true,
       exRate: 1,
 
@@ -276,6 +277,14 @@ export default {
   },
 
   watch: {
+
+    'dashParams.selCounty': {
+      handler(val){
+       this.countyOrSdg = dashParams.selCounty == '000' ? 'purple' : 'success' ;
+     },
+     deep: true
+
+    },
 
     labels() {
       // console.log(this.labels);
@@ -316,7 +325,7 @@ export default {
        vm.exRate = payload.rate;
     });
 
-  
+
   },
 
 
@@ -340,6 +349,9 @@ p.top-org {
 span.no-data {
    font-style:italic;
    color:#ff3333;
+}
+.border-purple {
+ border-color:#8855ff;
 }
 
 </style>

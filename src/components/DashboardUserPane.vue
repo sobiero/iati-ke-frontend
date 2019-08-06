@@ -116,7 +116,7 @@
                         </span>
                       </span>
                       <span v-else-if="props.column.label == 'County' && dashParams && dashParams.selCounty == '000' ">
-                        <b-link href="#" @click="linkClicked('county', props.row.col1)">{{props.row.col2}}</b-link>
+                        <b-link class="county-link" href="#" @click="linkClicked('county', props.row.col1)">{{props.row.col2}}</b-link>
                       </span>
                       <span v-else>
 
@@ -137,7 +137,7 @@
                   </vue-good-table>
 
                   <div class="text-right" v-if="!dashboardLoading && selBreakDown == 1 && dashParams && dashParams.selCounty != '000'">
-                    <b-link style="font-size:0.8em;" href="#" @click="linkClicked('county', '000')">All Counties</b-link>
+                    <b-link class="county-link" style="font-size:0.8em;" href="#" @click="linkClicked('county', '000')">All Counties</b-link>
                   </div>
                   <div class="text-right" v-else-if="!dashboardLoading && selBreakDown == 2 && dashParams && dashParams.selSdg != 0 ">
                     <b-link style="font-size:0.8em;" href="#" @click="linkClicked('sdg', 0)">All SDGs</b-link>
@@ -545,4 +545,8 @@ table.vgt-table th {
 table.vgt-table.condensed td {
   padding: .15em 1.5em;
 }
+a.county-link:hover {
+  color:#7337ff;
+}
+
 </style>
