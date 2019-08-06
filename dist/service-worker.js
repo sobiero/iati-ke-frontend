@@ -14,10 +14,10 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.ed9e345cfc324e50123ad48929eaa95e.js"
+  "/precache-manifest.137d09c6523d8332ea16af766bc0f364.js"
 );
 
-workbox.core.setCacheNameDetails({prefix: "SDG-KE"});
+workbox.core.setCacheNameDetails({prefix: "iati-ke-app"});
 
 /**
  * The workboxSW.precacheAndRoute() method efficiently caches and responds to
