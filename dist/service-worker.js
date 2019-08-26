@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.e73a5dac44cdb934ab58fafa3aed9c1c.js"
+  "/precache-manifest.75a2de4514f605eac95a1e43b648c27e.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "iati-ke-app"});
