@@ -179,17 +179,14 @@ export default {
   computed: {
 
     selTrxnDesc() {
-
-      var tmp = {}; var trxTypeDesc = '';
-      tmp         = _.find(this.selOptions.trxnType, { value: this.form.selTrxnType });
-      trxTypeDesc = tmp ? tmp.text +': ' + tmp.description : '';
+      let tmp = {}; let trxTypeDesc = '';
+      tmp = _.find(this.selOptions.trxnType, { value: this.form.selTrxnType });
+      trxTypeDesc = tmp ? `${tmp.text}: ${tmp.description}` : '';
       return trxTypeDesc;
-
     },
 
     /*
     dashboardHeader() {
-
 
 
     }, */
@@ -199,11 +196,10 @@ export default {
   methods: {
 
     generateHeader() {
-
       let tmp = {}; let trxTypeTxt = ''; let ctyText = ''; let sdgText = ''; let
         yrRangeTxt = '';
 
-      var cur = this.form.currency ;
+      const cur = this.form.currency;
 
       tmp = _.find(this.selOptions.trxnType, { value: this.form.selTrxnType });
       trxTypeTxt = tmp && tmp.text ? tmp.text : '';
@@ -226,9 +222,8 @@ export default {
       if (this.form.selSdg == 0) {
         sdgText = ' for all the SDGs, ';
       } else {
-        //sdgText = ` for SDG number ${this.form.selSdg}: ${sdgText}, `;
+        // sdgText = ` for SDG number ${this.form.selSdg}: ${sdgText}, `;
         sdgText = ` for SDG ${sdgText}, `;
-
       }
 
       if (!this.form.selDateRange.from) {
@@ -237,10 +232,9 @@ export default {
         yrRangeTxt = ` from ${this.form.selDateRange.from} to ${this.form.selDateRange.to}`;
       }
 
-      var appendCry = false == this.form.selDateRange.from ? '' : cur ;
+      const appendCry = this.form.selDateRange.from == false ? '' : cur;
 
-      this.dashboardHeader = `${trxTypeTxt + ctyText + sdgText + yrRangeTxt} in ` + appendCry ;
-
+      this.dashboardHeader = `${trxTypeTxt + ctyText + sdgText + yrRangeTxt} in ${appendCry}`;
     },
 
     loadCounty() {
@@ -265,7 +259,7 @@ export default {
         .then((res) => {
           const tmp = [];
           this.$_.forOwn(res.data.data, (v, k) => {
-            var append_sdg = v.id == 0 ? '': v.id + ' - ' ;
+            const append_sdg = v.id == 0 ? '' : `${v.id} - `;
             tmp.push({ value: v.id, text: append_sdg + v.sdg_name });
           });
           this.selOptions.sdg = tmp;
@@ -297,7 +291,6 @@ export default {
 
       this.$axios.get(`${this.apiUrl}/iati/date-range`, { params: { params: this.form } })
         .then((res) => {
-
           EventBus.$emit('xhr-dashboard', 'res');
           EventBus.$emit('xhr-daterange', 'res');
 
@@ -308,28 +301,24 @@ export default {
             const max = res.data.data[1].trans_date;
 
             this.form.selDateRange.from = min;
-            this.form.selDateRange.to   = max;
+            this.form.selDateRange.to = max;
 
             for (let y = min; y <= max; y++) {
-
               tmp.push({ value: y, text: y });
-
             }
 
             this.selOptions.dateRange.from = tmp;
-            this.selOptions.dateRange.to   = tmp;
+            this.selOptions.dateRange.to = tmp;
 
             EventBus.$emit('xhr-dashboard', 'req');
 
             this.loadDashBoardData();
-
           } else {
-
             this.$bvToast.toast('There is no data for selected parameters!', {
               title: 'Error - No Data',
               variant: 'danger',
               autoHideDelay: 8000,
-              solid: true
+              solid: true,
             });
 
             this.form.selDateRange.from = null;
@@ -337,31 +326,28 @@ export default {
 
             this.selOptions.dateRange.from = tmp;
             this.selOptions.dateRange.to = tmp;
-
           }
         })
         .catch((e) => {
           this.errors.push(e);
         });
 
-      //console.log( this.form.selCounty );
-
+      // console.log( this.form.selCounty );
     },
 
     loadDashBoardData(sel) {
-
-      if ( typeof sel != 'undefined' )
-      {
-         EventBus.$emit('interaction', {name: 'select-' + sel , type: 'select', event: 'change', data: { data: this.form }  });
+      if (typeof sel !== 'undefined') {
+        EventBus.$emit('interaction', {
+          name: `select-${sel}`, type: 'select', event: 'change', data: { data: this.form },
+        });
       }
 
       const vm = this;
       this.resetPanels();
       EventBus.$emit('xhr-dashboard', 'req');
 
-      this.$axios.get(`${this.apiUrl}/iati/dashboard-data`, { params: { params: this.form } , headers: { browser_uuid: localStorage.browserId }} )
+      this.$axios.get(`${this.apiUrl}/iati/dashboard-data`, { params: { params: this.form }, headers: { browser_uuid: localStorage.browserId } })
         .then((res) => {
-
           EventBus.$emit('xhr-dashboard', 'res');
 
           vm.dashboard.kpiAndPanel.totalAmt = res.data.data.totalAmt[0] ? res.data.data.totalAmt[0] : null;
@@ -372,7 +358,6 @@ export default {
           vm.dashboard.totalAmtByYearMonth = res.data.data.totalAmtByYearMonth;
           vm.dashboard.totalAmtByTimeStamp = res.data.data.totalAmtByTimeStamp;
           vm.dashboard.kpiAndPanel.summaryByTrxnType = res.data.data.summaryByTrxnType;
-
         })
         .catch((e) => {
           this.errors.push(e);
@@ -387,11 +372,9 @@ export default {
             this.errors.push(e);
           });
       }
-
     },
 
     resetPanels() {
-
       this.dashboard.kpiAndPanel.totalAmt = {};
       this.dashboard.kpiAndPanel.totalAmtByYear = {};
       this.dashboard.kpiAndPanel.totalAmtByPublisher = {};
@@ -403,44 +386,38 @@ export default {
     },
 
     logSelectChange(sel) {
-
-       EventBus.$emit('interaction', {name: 'select-' + sel , type: 'select', event: 'change', data: { data: this.form }  });
-
+      EventBus.$emit('interaction', {
+        name: `select-${sel}`, type: 'select', event: 'change', data: { data: this.form },
+      });
     },
 
-    onCountyClicked( value ) {
-
-      console.log( value );
-
+    onCountyClicked(value) {
+      console.log(value);
     },
 
 
     logInteractionData(data) {
-
-        this.postLogInteractionData(data, this);
+      this.postLogInteractionData(data, this);
     },
 
-    postLogInteractionData: _.debounce(( data, vm ) => {
+    postLogInteractionData: _.debounce((data, vm) => {
+      data.extras = {};
+      data.extras.dashboardParams = vm.form;
+      data.extras.browserId = localStorage.browserId;
+      data.extras.userPref = {};
 
-        data.extras = {};
-        data.extras.dashboardParams = vm.form;
-        data.extras.browserId       = localStorage.browserId;
-        data.extras.userPref        = {};
+      if (typeof localStorage.prefs !== 'undefined' && typeof (JSON.parse(localStorage.prefs)) === 'object') {
+        data.extras.userPref = JSON.parse(localStorage.prefs);
+      }
 
-        if (typeof localStorage.prefs != 'undefined' && typeof (JSON.parse( localStorage.prefs )) == 'object' )
-        {
-          data.extras.userPref = JSON.parse( localStorage.prefs ) ;
-        }
-
-        vm.$axios.post(`${vm.apiUrl}/user/interactions`, { params:  data  })
+      vm.$axios.post(`${vm.apiUrl}/user/interactions`, { params: data })
         .then((res) => {
 
         })
         .catch((e) => {
-          //vm.errors.push(e);
+          // vm.errors.push(e);
         });
-
-    }, 800 ),
+    }, 800),
 
   },
 
@@ -452,82 +429,73 @@ export default {
   },
 
   mounted() {
+    this.$root.$on('bv::tooltip::show', (bvEvent) => {
+      // console.log('bvEvent:', bvEvent.target.attributes.id.nodeValue)
 
-    this.$root.$on('bv::tooltip::show', bvEvent => {
+      const tool = bvEvent.target.attributes.id.nodeValue;
+      EventBus.$emit('interaction', {
+        name: `tooltip-${tool}`, type: 'tooltip', event: 'hover', data: { },
+      });
 
-      //console.log('bvEvent:', bvEvent.target.attributes.id.nodeValue)
-
-      var tool = bvEvent.target.attributes.id.nodeValue;
-      EventBus.$emit('interaction', {name: 'tooltip-' + tool, type: 'tooltip', event: 'hover', data: { }});
-
-      this.logInteractionData( {name: 'tooltip-' + tool, type: 'tooltip', event: 'hover', data: { }} );
-
+      this.logInteractionData({
+        name: `tooltip-${tool}`, type: 'tooltip', event: 'hover', data: { },
+      });
     });
 
     EventBus.$on('countyClicked', (payload) => {
-        var clickedCountyCode = this.$_.padStart(payload, 3, '0');
-        this.form.selCounty   = clickedCountyCode ;
+      const clickedCountyCode = this.$_.padStart(payload, 3, '0');
+      this.form.selCounty = clickedCountyCode;
     });
 
     EventBus.$on('sdgClicked', (payload) => {
-        var clickedSdg   = payload;
-        this.form.selSdg = clickedSdg ;
+      const clickedSdg = payload;
+      this.form.selSdg = clickedSdg;
     });
 
     EventBus.$on('trxnTypeClicked', (payload) => {
-        var clickedTrxnType   = payload;
-        this.form.selTrxnType = clickedTrxnType;
+      const clickedTrxnType = payload;
+      this.form.selTrxnType = clickedTrxnType;
     });
 
     EventBus.$on('exRate', (payload) => {
-       this.form.currency = payload.cur ;
+      this.form.currency = payload.cur;
     });
 
 
     EventBus.$on('interaction', (payload) => {
-
-        this.logInteractionData( payload );
-
+      this.logInteractionData(payload);
     });
-
   },
 
   watch: {
 
     'form.selCounty': function () {
-        this.loadDateRange();
-        this.generateHeader();
-
-
+      this.loadDateRange();
+      this.generateHeader();
     },
 
     'form.selTrxnType': function () {
-        this.loadDateRange();
-        this.generateHeader();
-
-
+      this.loadDateRange();
+      this.generateHeader();
     },
 
     'form.selSdg': function () {
-        this.loadDateRange();
-        this.generateHeader();
-
+      this.loadDateRange();
+      this.generateHeader();
     },
 
     'form.selDateRange.from': function () {
-        //this.loadDateRange();
-        this.generateHeader();
-
+      // this.loadDateRange();
+      this.generateHeader();
     },
 
     'form.selDateRange.to': function () {
-        //this.loadDateRange();
-        this.generateHeader();
-
+      // this.loadDateRange();
+      this.generateHeader();
     },
 
     'form.currency': function () {
-        this.generateHeader();
+      this.generateHeader();
     },
 
 

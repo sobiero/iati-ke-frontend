@@ -1,9 +1,8 @@
 module.exports = {
 
-    app: {
-       mongodb: {
-         apiUrl: '/api',
-       },
+  app: {
+    mongodb: {
+      apiUrl: '/api',
     },
-}
-
+  },
+};

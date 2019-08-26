@@ -279,10 +279,10 @@ export default {
   watch: {
 
     'dashParams.selCounty': {
-      handler(val){
-       this.countyOrSdg = dashParams.selCounty == '000' ? 'purple' : 'success' ;
-     },
-     deep: true
+      handler(val) {
+        this.countyOrSdg = dashParams.selCounty == '000' ? 'purple' : 'success';
+      },
+      deep: true,
 
     },
 
@@ -304,28 +304,23 @@ export default {
   },
 
   mounted() {
-
-    var vm = this ;
+    const vm = this;
 
     EventBus.$on('xhr-dashboard', (payload) => {
-       if ( payload == 'req' )
-       {
-         vm.dashboardLoading = true ;
-       }
+      if (payload == 'req') {
+        vm.dashboardLoading = true;
+      }
     });
 
     EventBus.$on('xhr-dashboard', (payload) => {
-       if ( payload == 'res' )
-       {
-         vm.dashboardLoading = false;
-       }
+      if (payload == 'res') {
+        vm.dashboardLoading = false;
+      }
     });
 
     EventBus.$on('exRate', (payload) => {
-       vm.exRate = payload.rate;
+      vm.exRate = payload.rate;
     });
-
-
   },
 
 

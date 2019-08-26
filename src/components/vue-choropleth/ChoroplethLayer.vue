@@ -40,8 +40,9 @@ function mouseover({ target }) {
   }
   this.currentItem = tempItem;
 
-  EventBus.$emit('interaction', {name: 'map-geojson', type: 'geojson', event: 'hover', data: { tempItem }});
-
+  EventBus.$emit('interaction', {
+    name: 'map-geojson', type: 'geojson', event: 'hover', data: { tempItem },
+  });
 }
 
 function mouseout({ target }) {
@@ -51,7 +52,9 @@ function mouseout({ target }) {
     dashArray: '',
   });
 
-  EventBus.$emit('interaction', {name: 'map-geojson', type: 'geojson', event: 'hover-out', data: { item: this.currentItem }});
+  EventBus.$emit('interaction', {
+    name: 'map-geojson', type: 'geojson', event: 'hover-out', data: { item: this.currentItem },
+  });
 
   this.currentItem = { name: '', value: 0 };
 }
@@ -62,7 +65,9 @@ function mouseclick({ target }) {
   // this.$root.$emit('countyClicked', geojsonItem.COUNTY_COD );
 
   EventBus.$emit('countyClicked', geojsonItem.COUNTY_COD);
-  EventBus.$emit('interaction', {name: 'map-geojson', type: 'geojson', event: 'click', data: { clicked: geojsonItem }});
+  EventBus.$emit('interaction', {
+    name: 'map-geojson', type: 'geojson', event: 'click', data: { clicked: geojsonItem },
+  });
 }
 
 export default {
@@ -90,22 +95,19 @@ export default {
       this.deferredMountedTo(this.$parent.mapObject);
     }
 
-    var vm = this ;
+    const vm = this;
 
     EventBus.$on('xhr-dashboard', (payload) => {
-       if ( payload == 'req' )
-       {
-         vm.dashboardLoading = true ;
-       }
+      if (payload == 'req') {
+        vm.dashboardLoading = true;
+      }
     });
 
     EventBus.$on('xhr-dashboard', (payload) => {
-       if ( payload == 'res' )
-       {
-         vm.dashboardLoading = false;
-       }
+      if (payload == 'res') {
+        vm.dashboardLoading = false;
+      }
     });
-
   },
   data() {
     return {

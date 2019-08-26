@@ -131,15 +131,13 @@ export default {
     return {
 
       jsonFields: {
-        "County Code": "county_code",
-        "County Name": "county_name",
-        "Amount (USD)": "total",
-        "Amount (KES)": {
+        'County Code': 'county_code',
+        'County Name': 'county_name',
+        'Amount (USD)': 'total',
+        'Amount (KES)': {
           field: 'total',
-             callback: (value) => {
-                return value * 101 ;
-            }
-         }
+          callback: value => value * 101,
+        },
       },
 
       exRate: 1,
@@ -168,10 +166,10 @@ export default {
       }], */
 
       countyGeojson,
-       //colorScale: ["6cff6c", "00b000", "005500"],
-      colorScale: ["bb86fc", "6200ee", "3700b3"],
+      // colorScale: ["6cff6c", "00b000", "005500"],
+      colorScale: ['bb86fc', '6200ee', '3700b3'],
 
-      //colorScale: ['ddbb60', 'de893d', 'b73826'],
+      // colorScale: ['ddbb60', 'de893d', 'b73826'],
 
       cleanedCountyData: [],
 
@@ -186,49 +184,41 @@ export default {
   computed: {
 
     refChartTitle() {
-
-      return this.labels.selTrxnType + " in " + this.dashParams.currency ;
-
+      return `${this.labels.selTrxnType} in ${this.dashParams.currency}`;
     },
 
   },
 
   watch: {
 
-    'exRate': function() {
-       this.updateData();
-       this.updateLocationData();
+    exRate() {
+      this.updateData();
+      this.updateLocationData();
     },
 
-    'countyData': function() {
-       this.updateData();
+    countyData() {
+      this.updateData();
     },
 
-    'countyLocationData': function() {
+    countyLocationData() {
       this.updateLocationData();
     },
 
     'dashParams.selCounty': function () {
       this.activeCounty.geoJson = null;
 
-      var el1 = document.getElementsByClassName("infoCtrl"); //.style.display("block");
+      let el1 = document.getElementsByClassName('infoCtrl'); // .style.display("block");
       el1 = el1[0];
-      var el2 = document.getElementsByClassName("refChart"); //.style.display("block");
+      let el2 = document.getElementsByClassName('refChart'); // .style.display("block");
       el2 = el2[0];
 
-      if (this.dashParams.selCounty == '000')
-      {
-
-        el1.style.display = "block";
-        el2.style.display = "block";
-
+      if (this.dashParams.selCounty == '000') {
+        el1.style.display = 'block';
+        el2.style.display = 'block';
       } else {
-
-        el1.style.display = "none";
-        el2.style.display = "none";
-
+        el1.style.display = 'none';
+        el2.style.display = 'none';
       }
-
     },
 
 
@@ -237,15 +227,18 @@ export default {
   methods: {
 
     logIconClick(tool) {
-          EventBus.$emit('interaction', {name: 'tooltip-' + tool, type: 'tooltip', event: 'click', data: { }});
+      EventBus.$emit('interaction', {
+        name: `tooltip-${tool}`, type: 'tooltip', event: 'click', data: { },
+      });
     },
 
     logPopupClicked() {
-          EventBus.$emit('interaction', {name: 'popup', type: 'map-popup', event: 'click', data: { }});
+      EventBus.$emit('interaction', {
+        name: 'popup', type: 'map-popup', event: 'click', data: { },
+      });
     },
 
     updateData() {
-
       const cleanedCountyData = this.$_.map(this.countyData, el => ({ county_code: parseInt(el.county_code), county_name: el.county_name, total: el.total * this.exRate }));
       this.cleanedCountyData = cleanedCountyData;
 
@@ -265,14 +258,11 @@ export default {
         this.$refs.dMap.mapObject.fitBounds(b.getBounds());
         this.showInfoAndRef = true;
       }
-
     },
 
     updateLocationData() {
-
-       const m = this.$_.map(this.countyLocationData, item => ({ location_name: item.location_name, marker: L.latLng(item.location_latitude, item.location_longitude), amount: item.total * this.exRate }));
-       this.activeCounty.pointData = m;
-
+      const m = this.$_.map(this.countyLocationData, item => ({ location_name: item.location_name, marker: L.latLng(item.location_latitude, item.location_longitude), amount: item.total * this.exRate }));
+      this.activeCounty.pointData = m;
     },
 
 
@@ -281,28 +271,24 @@ export default {
   },
 
   mounted() {
-
-    var vm = this ;
+    const vm = this;
 
     EventBus.$on('xhr-dashboard', (payload) => {
-       if ( payload == 'req' )
-       {
-         vm.dashboardLoading = true ;
-       }
+      if (payload == 'req') {
+        vm.dashboardLoading = true;
+      }
     });
 
     EventBus.$on('xhr-dashboard', (payload) => {
-       if ( payload == 'res' )
-       {
-         vm.dashboardLoading = false;
-       }
+      if (payload == 'res') {
+        vm.dashboardLoading = false;
+      }
     });
 
     EventBus.$on('exRate', (payload) => {
-       vm.exRate = payload.rate;
-       vm.value.metric = ' ' + payload.cur ;
+      vm.exRate = payload.rate;
+      vm.value.metric = ` ${payload.cur}`;
     });
-
   },
 
   created() {

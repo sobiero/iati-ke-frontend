@@ -172,133 +172,108 @@ export default {
   data() {
     return {
 
-       questionnaire: {
-           susAnswered: 0,
-           genAnswered: 0,
-       },
+      questionnaire: {
+        susAnswered: 0,
+        genAnswered: 0,
+      },
 
-       apiUrl: '/api',
+      apiUrl: '/api',
 
-       genQ: {
-          data:
-            ['1', '2', '3', '4', '5']
-          ,
-          qs: {
-            g1: '',
-            g2: '',
-            g3: '',
-            g4: '',
-            g5: '',
-            g6: '',
-            comments: '',
-          },
-          marks:
+      genQ: {
+        data:
+            ['1', '2', '3', '4', '5'],
+        qs: {
+          g1: '',
+          g2: '',
+          g3: '',
+          g4: '',
+          g5: '',
+          g6: '',
+          comments: '',
+        },
+        marks:
             {
-              '1' : 'Strongly Disagree',
-              '2' : '',
-              '3' : 'Neutral',
-              '4' : '',
-              '5' : 'Strongly Agree'
-            }
-       },
+              1: 'Strongly Disagree',
+              2: '',
+              3: 'Neutral',
+              4: '',
+              5: 'Strongly Agree',
+            },
+      },
 
     };
   },
 
   methods: {
 
-    callbackRange (val) {
-      this.rangeValue = val ;
+    callbackRange(val) {
+      this.rangeValue = val;
     },
 
     SubmitGenSurveyResponse() {
+      let errors = false;
 
-      var errors = false;
-
-      this.$_.forOwn( this.genQ.qs , function(v, k) {
-
-        if (k != 'comments' )
-        {
-          if ( v.trim() == '')
-          {
-            document.getElementsByClassName(k)[0].classList.add("text-danger");
-            document.getElementsByClassName(k)[1].classList.add("text-danger");
-            errors = true ;
+      this.$_.forOwn(this.genQ.qs, (v, k) => {
+        if (k != 'comments') {
+          if (v.trim() == '') {
+            document.getElementsByClassName(k)[0].classList.add('text-danger');
+            document.getElementsByClassName(k)[1].classList.add('text-danger');
+            errors = true;
           } else {
-            document.getElementsByClassName(k)[0].classList.remove("text-danger");
-            document.getElementsByClassName(k)[1].classList.remove("text-danger");
+            document.getElementsByClassName(k)[0].classList.remove('text-danger');
+            document.getElementsByClassName(k)[1].classList.remove('text-danger');
           }
         }
-
       });
 
-      if (errors)
-      {
-         this.$bvToast.toast('Please answer all the questions highlighted in red', {
-              title: 'Some questions are not answered',
-              variant: 'danger',
-              autoHideDelay: 5000,
-              solid: true
-         });
-
+      if (errors) {
+        this.$bvToast.toast('Please answer all the questions highlighted in red', {
+          title: 'Some questions are not answered',
+          variant: 'danger',
+          autoHideDelay: 5000,
+          solid: true,
+        });
       } else {
+        const data = {};
 
-
-        var data = {};
-
-        data.qs = this.genQ.qs ;
+        data.qs = this.genQ.qs;
 
         data.extras = {};
         data.extras.dashboardParams = this.form;
-        data.extras.browserId       = localStorage.browserId;
-        data.extras.userPref        = {};
+        data.extras.browserId = localStorage.browserId;
+        data.extras.userPref = {};
 
-        if (typeof localStorage.prefs != 'undefined' && typeof (JSON.parse( localStorage.prefs )) == 'object' )
-        {
-          data.extras.userPref = JSON.parse( localStorage.prefs ) ;
+        if (typeof localStorage.prefs !== 'undefined' && typeof (JSON.parse(localStorage.prefs)) === 'object') {
+          data.extras.userPref = JSON.parse(localStorage.prefs);
         }
 
-        this.$axios.post(`${this.apiUrl}/user/gen-questionnaire`, { params:  data  })
-        .then((res) => {
+        this.$axios.post(`${this.apiUrl}/user/gen-questionnaire`, { params: data })
+          .then((res) => {
+            if (res.data.msg == 'ok' && res.data['http-status'] == 200) {
+              EventBus.$emit('gen-ans-saved', res);
+              this.questionnaire.genAnswered = 1;
 
-          if ( res.data.msg == 'ok' && res.data['http-status'] == 200 )
-          {
-               EventBus.$emit('gen-ans-saved', res ) ;
-               this.questionnaire.genAnswered = 1 ;
-
-               //alert('hi');
-
-          } else {
-
-
-            this.$bvToast.toast( res.data.data.detail, {
+              // alert('hi');
+            } else {
+              this.$bvToast.toast(res.data.data.detail, {
                 title: 'An Error Occured',
                 variant: 'danger',
                 autoHideDelay: 5000,
-                solid: true
+                solid: true,
+              });
+            }
+          })
+          .catch((e) => {
+            // this.errors.push(e);
+            console.log(e);
+            this.$bvToast.toast(e, {
+              title: 'An Error Occured',
+              variant: 'danger',
+              autoHideDelay: 5000,
+              solid: true,
             });
-
-
-          }
-
-
-        })
-        .catch((e) => {
-           //this.errors.push(e);
-           console.log(e);
-           this.$bvToast.toast( e, {
-                title: 'An Error Occured',
-                variant: 'danger',
-                autoHideDelay: 5000,
-                solid: true
-           });
-
-        });
-
-
+          });
       }
-
-
     },
 
   },
@@ -309,13 +284,9 @@ export default {
   },
 
   mounted() {
-
-     if (typeof localStorage.questionnaire != 'undefined' && typeof (JSON.parse( localStorage.questionnaire )) == 'object' )
-     {
-       this.questionnaire = JSON.parse( localStorage.questionnaire ) ;
-     }
-
-
+    if (typeof localStorage.questionnaire !== 'undefined' && typeof (JSON.parse(localStorage.questionnaire)) === 'object') {
+      this.questionnaire = JSON.parse(localStorage.questionnaire);
+    }
   },
 
   created() {

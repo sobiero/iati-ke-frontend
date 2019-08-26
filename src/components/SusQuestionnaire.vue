@@ -230,137 +230,110 @@ export default {
   data() {
     return {
 
-       questionnaire: {
-           susAnswered: 0,
-           genAnswered: 0,
-       },
+      questionnaire: {
+        susAnswered: 0,
+        genAnswered: 0,
+      },
 
-       apiUrl: '/api',
+      apiUrl: '/api',
 
-       susQ: {
-          data:
-            ['1', '2', '3', '4', '5']
-          ,
-          qs: {
-            q1: '',
-            q2: '',
-            q3: '',
-            q4: '',
-            q5: '',
-            q6: '',
-            q7: '',
-            q8: '',
-            q9: '',
-            q10: '',
-            comments: '',
-          },
-          marks:
+      susQ: {
+        data:
+            ['1', '2', '3', '4', '5'],
+        qs: {
+          q1: '',
+          q2: '',
+          q3: '',
+          q4: '',
+          q5: '',
+          q6: '',
+          q7: '',
+          q8: '',
+          q9: '',
+          q10: '',
+          comments: '',
+        },
+        marks:
             {
-              '1' : 'Strongly Disagree',
-              '2' : '',
-              '3' : 'Neutral',
-              '4' : '',
-              '5' : 'Strongly Agree'
-            }
-       },
+              1: 'Strongly Disagree',
+              2: '',
+              3: 'Neutral',
+              4: '',
+              5: 'Strongly Agree',
+            },
+      },
 
     };
   },
 
   methods: {
 
-    callbackRange (val) {
-      this.rangeValue = val ;
+    callbackRange(val) {
+      this.rangeValue = val;
     },
 
     SubmitSusSurveyResponse() {
+      let errors = false;
 
-      var errors = false;
-
-      this.$_.forOwn( this.susQ.qs , function(v, k) {
-
-        if (k != 'comments' )
-        {
-          if ( v.trim() == '')
-          {
-            document.getElementsByClassName(k)[0].classList.add("text-danger");
-            document.getElementsByClassName(k)[1].classList.add("text-danger");
-            errors = true ;
+      this.$_.forOwn(this.susQ.qs, (v, k) => {
+        if (k != 'comments') {
+          if (v.trim() == '') {
+            document.getElementsByClassName(k)[0].classList.add('text-danger');
+            document.getElementsByClassName(k)[1].classList.add('text-danger');
+            errors = true;
           } else {
-            document.getElementsByClassName(k)[0].classList.remove("text-danger");
-            document.getElementsByClassName(k)[1].classList.remove("text-danger");
+            document.getElementsByClassName(k)[0].classList.remove('text-danger');
+            document.getElementsByClassName(k)[1].classList.remove('text-danger');
           }
         }
-
       });
 
-      if (errors)
-      {
-         this.$bvToast.toast('Please answer all the questions highlighted in red', {
-              title: 'Some questions are not answered',
-              variant: 'danger',
-              autoHideDelay: 5000,
-              solid: true
-         });
-
+      if (errors) {
+        this.$bvToast.toast('Please answer all the questions highlighted in red', {
+          title: 'Some questions are not answered',
+          variant: 'danger',
+          autoHideDelay: 5000,
+          solid: true,
+        });
       } else {
+        const data = {};
 
-
-        var data = {};
-
-        data.qs = this.susQ.qs ;
+        data.qs = this.susQ.qs;
 
         data.extras = {};
         data.extras.dashboardParams = this.form;
-        data.extras.browserId       = localStorage.browserId;
-        data.extras.userPref        = {};
+        data.extras.browserId = localStorage.browserId;
+        data.extras.userPref = {};
 
-        if (typeof localStorage.prefs != 'undefined' && typeof (JSON.parse( localStorage.prefs )) == 'object' )
-        {
-          data.extras.userPref = JSON.parse( localStorage.prefs ) ;
+        if (typeof localStorage.prefs !== 'undefined' && typeof (JSON.parse(localStorage.prefs)) === 'object') {
+          data.extras.userPref = JSON.parse(localStorage.prefs);
         }
 
-        this.$axios.post(`${this.apiUrl}/user/sus-questionnaire`, { params:  data  })
-        .then((res) => {
-
-          if ( res.data.msg == 'ok' && res.data['http-status'] == 200  )
-          {
-
-               EventBus.$emit('sus-ans-saved', res ) ;
-               this.questionnaire.susAnswered = 1 ;
-
-          } else {
-
-
-            this.$bvToast.toast( res.data.data.detail, {
+        this.$axios.post(`${this.apiUrl}/user/sus-questionnaire`, { params: data })
+          .then((res) => {
+            if (res.data.msg == 'ok' && res.data['http-status'] == 200) {
+              EventBus.$emit('sus-ans-saved', res);
+              this.questionnaire.susAnswered = 1;
+            } else {
+              this.$bvToast.toast(res.data.data.detail, {
                 title: 'An Error Occured',
                 variant: 'danger',
                 autoHideDelay: 5000,
-                solid: true
+                solid: true,
+              });
+            }
+          })
+          .catch((e) => {
+            // this.errors.push(e);
+            console.log(e);
+            this.$bvToast.toast(e, {
+              title: 'An Error Occured',
+              variant: 'danger',
+              autoHideDelay: 5000,
+              solid: true,
             });
-
-
-          }
-
-
-
-        })
-        .catch((e) => {
-           //this.errors.push(e);
-           console.log(e);
-           this.$bvToast.toast( e, {
-                title: 'An Error Occured',
-                variant: 'danger',
-                autoHideDelay: 5000,
-                solid: true
-           });
-
-        });
-
-
+          });
       }
-
-
     },
 
   },
@@ -371,13 +344,9 @@ export default {
   },
 
   mounted() {
-
-     if (typeof localStorage.questionnaire != 'undefined' && typeof (JSON.parse( localStorage.questionnaire )) == 'object' )
-     {
-       this.questionnaire = JSON.parse( localStorage.questionnaire ) ;
-     }
-
-
+    if (typeof localStorage.questionnaire !== 'undefined' && typeof (JSON.parse(localStorage.questionnaire)) === 'object') {
+      this.questionnaire = JSON.parse(localStorage.questionnaire);
+    }
   },
 
   created() {

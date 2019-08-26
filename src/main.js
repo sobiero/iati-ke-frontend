@@ -15,7 +15,7 @@ import FlagIcon from 'vue-flag-icon';
 import JsonExcel from 'vue-json-excel';
 import VueSlider from 'vue-slider-component';
 import VueCookieAcceptDecline from 'vue-cookie-accept-decline';
-//import VueSlideBar from 'vue-slide-bar'
+// import VueSlideBar from 'vue-slide-bar'
 
 import './registerServiceWorker';
 
@@ -30,11 +30,11 @@ import 'vue-slider-component/theme/default.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faCheck, faTimes, faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle,
-    faInfoCircle, faDownload, faSmile, faFrown,
+  faInfoCircle, faDownload, faSmile, faFrown,
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
-  faGithub, faTwitter, faLinkedin, 
+  faGithub, faTwitter, faLinkedin,
 } from '@fortawesome/free-brands-svg-icons';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -55,14 +55,14 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
-library.add(faCheck, faTimes, faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle, 
-faInfoCircle, faDownload, faSmile, faFrown, faGithub, faTwitter, faLinkedin );
+library.add(faCheck, faTimes, faChartPie, faChartBar, faTable, faSpinner, faQuestionCircle,
+  faInfoCircle, faDownload, faSmile, faFrown, faGithub, faTwitter, faLinkedin);
 
 Vue.component('fa-icon', FontAwesomeIcon);
 Vue.component('downloadExcel', JsonExcel);
 Vue.component('VueSlider', VueSlider);
-Vue.component('vue-cookie-accept-decline', VueCookieAcceptDecline)
-//Vue.component('vue-slide-bar', VueSlideBar);
+Vue.component('vue-cookie-accept-decline', VueCookieAcceptDecline);
+// Vue.component('vue-slide-bar', VueSlideBar);
 
 Vue.use(BootstrapVue);
 Vue.use(HighchartsVue);

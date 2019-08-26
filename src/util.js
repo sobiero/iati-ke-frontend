@@ -1,5 +1,3 @@
-import _ from "lodash";
+import _ from 'lodash';
 
-export const titleCase = str => {
-  return _.map(str.split(' '), _.upperFirst).join(' ');
-}
+export const titleCase = str => _.map(str.split(' '), _.upperFirst).join(' ');

@@ -387,7 +387,7 @@ import GenQuestionnaire from '@/components/GenQuestionnaire.vue';
 export default {
   name: 'NavBar',
   props: {
-    msg: String
+    msg: String,
   },
 
   components: {
@@ -395,12 +395,12 @@ export default {
     GenQuestionnaire,
   },
 
-  data () {
+  data() {
     return {
 
       questionnaire: {
-         susAnswered: 0,
-         genAnswered: 0,
+        susAnswered: 0,
+        genAnswered: 0,
       },
 
       tabIndex: 0,
@@ -417,7 +417,7 @@ export default {
       searchTermRslt: '',
       currencyFlag: 'us',
 
-      //userEmailState: null,
+      // userEmailState: null,
       userCurrencyState: null,
       options: ['USD', 'KES'],
       userEmailReturn: '',
@@ -429,46 +429,45 @@ export default {
         userCurrency: '',
         welcomeMessage: 'accepted',
         uid: 'anon',
-      }
+      },
 
-    }
+    };
   },
 
   methods: {
 
     searchResultClicked(param, val) {
+      EventBus.$emit('interaction', {
+        name: `search-pane-result-link-${param}`, type: 'link', event: 'click', data: { val },
+      });
 
-       EventBus.$emit('interaction', {name: 'search-pane-result-link-' + param, type: 'link', event: 'click', data: { val: val }});
+      this.$bvModal.hide('search-result');
 
-       this.$bvModal.hide('search-result');
-
-       switch (param)
-       {
-          case 'county':
-           EventBus.$emit('countyClicked', val);
+      switch (param) {
+        case 'county':
+          EventBus.$emit('countyClicked', val);
           break;
 
-          case 'sdg':
-           EventBus.$emit('sdgClicked', val);
+        case 'sdg':
+          EventBus.$emit('sdgClicked', val);
           break;
 
-          case 'trxn':
-           EventBus.$emit('trxnTypeClicked', val);
+        case 'trxn':
+          EventBus.$emit('trxnTypeClicked', val);
           break;
 
-          default:
-       }
-
+        default:
+      }
     },
 
     cookieClickedAccept() {
 
-        // alert( this.cookieStatus );
+      // alert( this.cookieStatus );
 
     },
     cookieClickedDecline() {
 
-       // alert( this.cookieStatus );
+      // alert( this.cookieStatus );
 
     },
 
@@ -476,155 +475,132 @@ export default {
 
     },
 
-    showWelcomeModal()
-    {
-      this.$bvModal.show('welcome') ;
+    showWelcomeModal() {
+      this.$bvModal.show('welcome');
 
-      EventBus.$emit('interaction', {name: 'about', type: 'link', event: 'click', data:{} });
-
+      EventBus.$emit('interaction', {
+        name: 'about', type: 'link', event: 'click', data: {},
+      });
     },
 
-    showSurvey()
-    {
-
-        if (this.questionnaire.susAnswered == 1 && this.questionnaire.genAnswered == 1 )
-        {
-
-           this.$bvToast.toast('You have already taken the survey', {
-                title: 'Survey already taken',
-                variant: 'info',
-                autoHideDelay: 5000,
-                solid: true
-           });
-
-        } else {
-
-            if (this.questionnaire.susAnswered == 1)
-            {
-               this.tabIndex = 1;
-            }
-
-            this.$bvModal.show('survey') ;
+    showSurvey() {
+      if (this.questionnaire.susAnswered == 1 && this.questionnaire.genAnswered == 1) {
+        this.$bvToast.toast('You have already taken the survey', {
+          title: 'Survey already taken',
+          variant: 'info',
+          autoHideDelay: 5000,
+          solid: true,
+        });
+      } else {
+        if (this.questionnaire.susAnswered == 1) {
+          this.tabIndex = 1;
         }
 
+        this.$bvModal.show('survey');
+      }
 
 
-        EventBus.$emit('interaction', {name: 'questionnaire', type: 'link', event: 'click', data:{} });
-
+      EventBus.$emit('interaction', {
+        name: 'questionnaire', type: 'link', event: 'click', data: {},
+      });
     },
 
-    setCurrencyClick(cur, emit)
-    {
-
-       EventBus.$emit('interaction', {name: 'currency', type: 'link', event: 'click', data: { cur: cur} });
-       this.setCurrency(cur, emit) ;
-
+    setCurrencyClick(cur, emit) {
+      EventBus.$emit('interaction', {
+        name: 'currency', type: 'link', event: 'click', data: { cur },
+      });
+      this.setCurrency(cur, emit);
     },
 
     setCurrency(cur, emit) {
-
-      if (typeof emit != 'undefined')
-      {
+      if (typeof emit !== 'undefined') {
         this.currencyChanger = 'select';
       }
 
-      var curObj = {};
-      if ( cur == 'USD' )
-      {
-
-         curObj = {cur: 'USD', rate: 1 };
-         this.currencyFlag = 'us';
-
+      let curObj = {};
+      if (cur == 'USD') {
+        curObj = { cur: 'USD', rate: 1 };
+        this.currencyFlag = 'us';
       } else {
-
-         curObj = {cur: 'KES', rate: 102.627 };
-         this.currencyFlag = 'ke';
-
+        curObj = { cur: 'KES', rate: 102.627 };
+        this.currencyFlag = 'ke';
       }
 
-      EventBus.$emit('exRate', curObj );
-
+      EventBus.$emit('exRate', curObj);
     },
 
     submitSearch(e) {
-
       e.preventDefault();
       this.search();
-
     },
 
     search() {
-
-         if (this.searchTerm.trim() == '' )
-         {
-
-           this.$bvToast.toast('Please enter text to search for', {
-                title: 'Search Error',
-                variant: 'danger',
-                autoHideDelay: 5000,
-                solid: true
-           });
-
-           return false;
-
-        }
-
-        var vm = this ;
-
-        this.$bvModal.show('search-result');
-
-        this.searchObj.isSearching = true;
-
-        this.$axios.get(`${this.apiUrl}/iati/search/` + this.searchTerm , { params:  {}  })
-        .then((res) => {
-
-          vm.searchObj.isSearching  = false ;
-          vm.searchObj.result       = res.data;
-          vm.searchTermRslt         = vm.searchTerm ;
-
-        })
-        .catch((e) => {
-
-         vm.searchObj.isSearching  = false ;
-
-         this.$bvToast.toast('An error occured, please ensure your search term does not have invalid characters', {
-              title: 'Error Searching',
-              variant: 'danger',
-              autoHideDelay: 5000,
-              solid: true
-         });
-
+      if (this.searchTerm.trim() == '') {
+        this.$bvToast.toast('Please enter text to search for', {
+          title: 'Search Error',
+          variant: 'danger',
+          autoHideDelay: 5000,
+          solid: true,
         });
 
-         EventBus.$emit('interaction', {name: 'search', type: 'button', event: 'click', data:{searchTerm: this.searchTerm } });
+        return false;
+      }
 
-     },
+      const vm = this;
+
+      this.$bvModal.show('search-result');
+
+      this.searchObj.isSearching = true;
+
+      this.$axios.get(`${this.apiUrl}/iati/search/${this.searchTerm}`, { params: {} })
+        .then((res) => {
+          vm.searchObj.isSearching = false;
+          vm.searchObj.result = res.data;
+          vm.searchTermRslt = vm.searchTerm;
+        })
+        .catch((e) => {
+          vm.searchObj.isSearching = false;
+
+          this.$bvToast.toast('An error occured, please ensure your search term does not have invalid characters', {
+            title: 'Error Searching',
+            variant: 'danger',
+            autoHideDelay: 5000,
+            solid: true,
+          });
+        });
+
+      EventBus.$emit('interaction', {
+        name: 'search', type: 'button', event: 'click', data: { searchTerm: this.searchTerm },
+      });
+    },
 
 
-      onClose(btn) {
-        EventBus.$emit('interaction', {name: 'preference-' + btn + '-close', type: 'button', event: 'click', data: this.prefs });
-        this.popoverShow = false
-      },
-      onOk() {
+    onClose(btn) {
+      EventBus.$emit('interaction', {
+        name: `preference-${btn}-close`, type: 'button', event: 'click', data: this.prefs,
+      });
+      this.popoverShow = false;
+    },
+    onOk() {
+      localStorage.prefs = JSON.stringify(this.prefs);
 
-        localStorage.prefs = JSON.stringify(this.prefs) ;
+      if (this.prefs.userCurrency != '') {
+        this.setCurrency(this.prefs.userCurrency);
+      }
 
-        if (this.prefs.userCurrency != '')
-        {
-           this.setCurrency(this.prefs.userCurrency);
-        }
+      EventBus.$emit('interaction', {
+        name: 'preference-btn-ok', type: 'button', event: 'click', data: this.prefs,
+      });
 
-        EventBus.$emit('interaction', {name: 'preference-btn-ok', type: 'button', event: 'click', data: this.prefs  });
+      this.$bvToast.toast('Your preferences have been successfully updated', {
+        title: 'User Preferences',
+        variant: 'success',
+        autoHideDelay: 4000,
+        solid: true,
+        toaster: 'b-toaster-bottom-right',
+      });
 
-        this.$bvToast.toast('Your preferences have been successfully updated', {
-                title: 'User Preferences',
-                variant: 'success',
-                autoHideDelay: 4000,
-                solid: true,
-                toaster: 'b-toaster-bottom-right'
-           });
-
-        /*
+      /*
         if (!this.prefs.userEmail) {
           this.userEmailState = false
         }
@@ -636,189 +612,165 @@ export default {
           // Return our popover form results
           this.userEmailReturn = this.prefs.userEmail
           this.userCurrencyReturn = this.prefs.userCurrency
-        }*/
+        } */
+    },
+    onShow() {
+      // This is called just before the popover is shown
+      // Reset our popover form variables
 
-      },
-      onShow() {
-        // This is called just before the popover is shown
-        // Reset our popover form variables
+      // var prefs = JSON.parse( localStorage.prefs );
 
-        //var prefs = JSON.parse( localStorage.prefs );
-
-        if (typeof localStorage.prefs != 'undefined' && typeof (JSON.parse( localStorage.prefs )) == 'object' )
-        {
-          this.prefs = JSON.parse( localStorage.prefs ) ;
-        }
-        else
-        {
-          this.prefs.userEmail = '';
-          this.prefs.userCurrency = '';
-        }
-
-        EventBus.$emit('interaction', {name: 'preference', type: 'link', event: 'click', data: this.prefs });
-
-        //this.userEmailState = null
-        //this.userCurrencyState = null
-        //this.userEmailReturn = ''
-        //this.userCurrencyReturn = ''
-      },
-      onShown() {
-        // Called just after the popover has been shown
-        // Transfer focus to the first input
-        this.focusRef(this.$refs.userEmail)
-      },
-      onHidden() {
-        // Called just after the popover has finished hiding
-        // Bring focus back to the button
-        //this.focusRef(this.$refs.button)
-      },
-      focusRef(ref) {
-        // Some references may be a component, functional component, or plain element
-        // This handles that check before focusing, assuming a `focus()` method exists
-        // We do this in a double `$nextTick()` to ensure components have
-        // updated & popover positioned first
-        this.$nextTick(() => {
-          this.$nextTick(() => {
-            ;(ref.$el || ref).focus()
-          })
-        })
+      if (typeof localStorage.prefs !== 'undefined' && typeof (JSON.parse(localStorage.prefs)) === 'object') {
+        this.prefs = JSON.parse(localStorage.prefs);
+      } else {
+        this.prefs.userEmail = '';
+        this.prefs.userCurrency = '';
       }
 
-     //
+      EventBus.$emit('interaction', {
+        name: 'preference', type: 'link', event: 'click', data: this.prefs,
+      });
+
+      // this.userEmailState = null
+      // this.userCurrencyState = null
+      // this.userEmailReturn = ''
+      // this.userCurrencyReturn = ''
+    },
+    onShown() {
+      // Called just after the popover has been shown
+      // Transfer focus to the first input
+      this.focusRef(this.$refs.userEmail);
+    },
+    onHidden() {
+      // Called just after the popover has finished hiding
+      // Bring focus back to the button
+      // this.focusRef(this.$refs.button)
+    },
+    focusRef(ref) {
+      // Some references may be a component, functional component, or plain element
+      // This handles that check before focusing, assuming a `focus()` method exists
+      // We do this in a double `$nextTick()` to ensure components have
+      // updated & popover positioned first
+      this.$nextTick(() => {
+        this.$nextTick(() => {
+          (ref.$el || ref).focus();
+        });
+      });
+    },
+
+    //
 
   },
 
   mounted() {
+    // alert(this.$route.query.u);
 
-     //alert(this.$route.query.u);
+    if ((typeof this.$route.query.u) !== 'undefined') {
+      this.prefs.uid = this.$route.query.u;
+    }
 
-     if ( (typeof this.$route.query.u) != 'undefined' )
-     {
-       this.prefs.uid     = this.$route.query.u ;
-     }
+    const { browserId } = localStorage;
+    if (typeof browserId === 'undefined' || browserId == '') {
+      localStorage.browserId = this.$uuid.v4();
+    }
 
-     var browserId = localStorage.browserId ;
-     if (typeof browserId == 'undefined' || browserId == '' )
-     {
-       localStorage.browserId = this.$uuid.v4();
-     }
+    if (typeof localStorage.prefs !== 'undefined' && typeof (JSON.parse(localStorage.prefs)) === 'object') {
+      this.prefs = JSON.parse(localStorage.prefs);
 
-     if (typeof localStorage.prefs != 'undefined' && typeof (JSON.parse( localStorage.prefs )) == 'object' )
-     {
-       this.prefs = JSON.parse( localStorage.prefs ) ;
+      if ((typeof this.$route.query.u) !== 'undefined') {
+        this.prefs.uid = this.$route.query.u;
+        localStorage.prefs = JSON.stringify(this.prefs);
+      }
+    }
 
-       if ( (typeof this.$route.query.u) != 'undefined' )
-       {
-         this.prefs.uid     = this.$route.query.u ;
-         localStorage.prefs = JSON.stringify(this.prefs);
-       }
+    if (this.prefs.welcomeMessage != 'notAccepted') {
+      this.showWelcomeModal();
+    }
 
-     }
-
-     if ( this.prefs.welcomeMessage != 'notAccepted' )
-     {
-       this.showWelcomeModal();
-     }
-
-     EventBus.$on('xhr-dashboard', (payload) => {
-         if ( typeof localStorage.prefs != 'undefined'
-              && typeof (JSON.parse( localStorage.prefs )) == 'object'
+    EventBus.$on('xhr-dashboard', (payload) => {
+      if (typeof localStorage.prefs !== 'undefined'
+              && typeof (JSON.parse(localStorage.prefs)) === 'object'
               && this.currencyChanger == 'default'
-         )
-         {
-            var prefs = JSON.parse( localStorage.prefs );
-            this.setCurrency( prefs.userCurrency );
-         }
-     });
+      ) {
+        const prefs = JSON.parse(localStorage.prefs);
+        this.setCurrency(prefs.userCurrency);
+      }
+    });
 
-     if (typeof localStorage.questionnaire != 'undefined' && typeof (JSON.parse( localStorage.questionnaire )) == 'object' )
-     {
-       this.questionnaire = JSON.parse( localStorage.questionnaire ) ;
-     }
+    if (typeof localStorage.questionnaire !== 'undefined' && typeof (JSON.parse(localStorage.questionnaire)) === 'object') {
+      this.questionnaire = JSON.parse(localStorage.questionnaire);
+    }
 
-     EventBus.$on('sus-ans-saved', (payload) => {
-       this.questionnaire.susAnswered = 1 ;
-       localStorage.questionnaire = JSON.stringify(this.questionnaire);
+    EventBus.$on('sus-ans-saved', (payload) => {
+      this.questionnaire.susAnswered = 1;
+      localStorage.questionnaire = JSON.stringify(this.questionnaire);
 
-       var msg = '';
-       if ( this.questionnaire.genAnswered == 0)
-       {
-         msg = 'Please also make sure to complete the General Questions on Page 2';
-         this.tabIndex = 1;
-       }
+      let msg = '';
+      if (this.questionnaire.genAnswered == 0) {
+        msg = 'Please also make sure to complete the General Questions on Page 2';
+        this.tabIndex = 1;
+      }
 
-       this.$bvToast.toast('Thank you for your feedback. ' + msg, {
-          title: 'Feedback Saved',
-          variant: 'success',
+      this.$bvToast.toast(`Thank you for your feedback. ${msg}`, {
+        title: 'Feedback Saved',
+        variant: 'success',
+        autoHideDelay: 5000,
+        solid: true,
+      });
+    });
+
+    EventBus.$on('gen-ans-saved', (payload) => {
+      this.questionnaire.genAnswered = 1;
+      localStorage.questionnaire = JSON.stringify(this.questionnaire);
+
+      let msg = '';
+      if (this.questionnaire.susAnswered == 0) {
+        msg = 'Please also make sure to complete the System Usability Questions on Page 1';
+        this.tabIndex = 0;
+      }
+
+      this.$bvToast.toast(`Thank you for your feedback. ${msg}`, {
+        title: 'Feedback Saved',
+        variant: 'success',
+        autoHideDelay: 5000,
+        solid: true,
+      });
+    });
+  },
+
+  watch: {
+
+    tabIndex() {
+      if (this.tabIndex == 1 && this.questionnaire.susAnswered != 1) {
+        this.$bvToast.toast('Please also make sure to complete the System Usability Questions on Page 1', {
+          title: 'Complete Questions on Page 1',
+          variant: 'danger',
           autoHideDelay: 5000,
-          solid: true
-       });
+          solid: true,
+        });
 
+        // this.tabIndex = 0 ;
+      }
+    },
 
-     });
+    userEmail(val) {
+      if (val) {
+        this.userEmailState = true;
+      }
+    },
+    userCurrency(val) {
+      if (val) {
+        this.userCurrencyState = true;
+      }
+    },
 
-     EventBus.$on('gen-ans-saved', (payload) => {
-        this.questionnaire.genAnswered = 1 ;
-        localStorage.questionnaire = JSON.stringify(this.questionnaire);
-
-        var msg = '';
-        if ( this.questionnaire.susAnswered == 0)
-        {
-          msg = 'Please also make sure to complete the System Usability Questions on Page 1';
-          this.tabIndex = 0;
-        }
-
-        this.$bvToast.toast('Thank you for your feedback. ' + msg, {
-          title: 'Feedback Saved',
-          variant: 'success',
-          autoHideDelay: 5000,
-          solid: true
-       });
-
-     });
+    'prefs.welcomeMessage': function () {
+      localStorage.prefs = JSON.stringify(this.prefs);
+    },
 
   },
 
-  watch : {
-
-      tabIndex(){
-
-        if ( this.tabIndex == 1 && this.questionnaire.susAnswered != 1 )
-        {
-
-           this.$bvToast.toast('Please also make sure to complete the System Usability Questions on Page 1', {
-                title: 'Complete Questions on Page 1',
-                variant: 'danger',
-                autoHideDelay: 5000,
-                solid: true
-           });
-
-           //this.tabIndex = 0 ;
-
-        }
-
-      },
-
-      userEmail(val) {
-        if (val) {
-          this.userEmailState = true
-        }
-      },
-      userCurrency(val) {
-        if (val) {
-          this.userCurrencyState = true
-        }
-      },
-
-      'prefs.welcomeMessage': function () {
-
-          localStorage.prefs = JSON.stringify( this.prefs) ;
-
-    },
-
-  }
-
-}
+};
 </script>
 
 <style>

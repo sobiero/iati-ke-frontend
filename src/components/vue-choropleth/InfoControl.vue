@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import numeral from "numeral"
+import numeral from 'numeral';
 
 export default {
   props: {
@@ -11,73 +11,76 @@ export default {
     unit: String,
     placeholder: {
       type: String,
-      default: ""
+      default: '',
     },
     title: String,
     position: {
       type: String,
-      default: "bottomleft"
-    }
+      default: 'bottomleft',
+    },
   },
   mounted() {
-    const { unit, title, placeholder, position } = this
+    const {
+      unit, title, placeholder, position,
+    } = this;
 
     this.mapObject = L.control({
-      position: position
-    })
-    this.mapObject.onAdd = function(map) {
-      this._div = L.DomUtil.create("div", "info infoCtrl") // create a div with a class "info"
-      this.update({ name: "", value: 0, unit, placeholder, title })
-      return this._div
-    }
-    this.mapObject.update = function({
+      position,
+    });
+    this.mapObject.onAdd = function (map) {
+      this._div = L.DomUtil.create('div', 'info infoCtrl'); // create a div with a class "info"
+      this.update({
+        name: '', value: 0, unit, placeholder, title,
+      });
+      return this._div;
+    };
+    this.mapObject.update = function ({
       name,
       value,
       extraValues = undefined,
       unit,
       title,
-      placeholder
+      placeholder,
     }) {
       if (name.length > 0) {
         this._div.innerHTML = `<h5> ${title} </h5>
-                    <b> ${name} </b><br /> ${ numeral(value).format('0.0a') } ${unit} `
+                    <b> ${name} </b><br /> ${numeral(value).format('0.0a')} ${unit} `;
         if (extraValues) {
-          for (let x of extraValues) {
-            this._div.innerHTML =
-              this._div.innerHTML + `<br /> ${x.value} ${x.metric}`
+          for (const x of extraValues) {
+            this._div.innerHTML = `${this._div.innerHTML}<br /> ${x.value} ${x.metric}`;
           }
         }
       } else {
-        this._div.innerHTML = `<h4> ${title} </h4> <b> ${placeholder} </b>`
+        this._div.innerHTML = `<h4> ${title} </h4> <b> ${placeholder} </b>`;
       }
-    }
+    };
 
     if (this.$parent._isMounted) {
-      this.deferredMountedTo(this.$parent.mapObject)
+      this.deferredMountedTo(this.$parent.mapObject);
     }
   },
   methods: {
     deferredMountedTo(parent) {
-      this.parent = parent
-      this.mapObject.addTo(parent)
-    }
+      this.parent = parent;
+      this.mapObject.addTo(parent);
+    },
   },
   watch: {
-    item: function(newValue) {
+    item(newValue) {
       this.mapObject.update({
         ...newValue,
         unit: this.unit,
         title: this.title,
-        placeholder: this.placeholder
-      })
-    }
+        placeholder: this.placeholder,
+      });
+    },
   },
   beforeDestroy() {
     if (this.parent) {
-      this.parent.removeLayer(this.mapObject)
+      this.parent.removeLayer(this.mapObject);
     }
-  }
-}
+  },
+};
 </script>
 <style>
 .info {

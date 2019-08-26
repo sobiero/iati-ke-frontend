@@ -130,8 +130,6 @@
                       </span>
 
 
-
-
                      </template>
 
                   </vue-good-table>
@@ -154,8 +152,6 @@
 
                  <em class="text-mute"><small>Note: Pie chart only shows the top 5 records for easy interpretation. <br>Please use table or bar chart to see all records </small></em>
             </template>
-
-
 
 
         </b-card-text>
@@ -185,7 +181,7 @@ export default {
 
       exRate: 1,
 
-      dashboardLoading:true,
+      dashboardLoading: true,
 
       breakDownOptions: [
 
@@ -200,15 +196,13 @@ export default {
       selVisualType: 'tbl',
 
       jsonFields: {
-        "County Code": "county_code",
-        "County Name": "county_name",
-        "Amount (USD)": "total",
-        "Amount (KES)": {
+        'County Code': 'county_code',
+        'County Name': 'county_name',
+        'Amount (USD)': 'total',
+        'Amount (KES)': {
           field: 'total',
-             callback: (value) => {
-                return value * this.exRate ;
-            }
-         }
+          callback: value => value * this.exRate,
+        },
       },
 
       tableData: {
@@ -244,14 +238,14 @@ export default {
         },
 
         yAxis: {
-            min: 0,
-            title: {
-                text:   'Amount' + this.labels.selTrxnType,
-                align: 'high'
-            },
-            labels: {
-                overflow: 'justify'
-            }
+          min: 0,
+          title: {
+            text: `Amount${this.labels.selTrxnType}`,
+            align: 'high',
+          },
+          labels: {
+            overflow: 'justify',
+          },
         },
 
         series: [{
@@ -283,36 +277,39 @@ export default {
   methods: {
 
     logIconClick(tool) {
-       EventBus.$emit('interaction', {name: 'tooltip-' + tool, type: 'tooltip', event: 'click', data: { }});
+      EventBus.$emit('interaction', {
+        name: `tooltip-${tool}`, type: 'tooltip', event: 'click', data: { },
+      });
     },
 
-    logTableInteractionPageChange(params){
-       this.logTableInteraction('page-change', params) ;
+    logTableInteractionPageChange(params) {
+      this.logTableInteraction('page-change', params);
     },
 
-    logTableInteractionPerPageChange(params){
-       this.logTableInteraction('per-page-change', params);
+    logTableInteractionPerPageChange(params) {
+      this.logTableInteraction('per-page-change', params);
     },
 
-    logTableInteractionColumnFilter(params){
-       this.logTableInteraction('column-filter', params);
+    logTableInteractionColumnFilter(params) {
+      this.logTableInteraction('column-filter', params);
     },
 
-    logTableInteractionSortChange(params){
-       this.logTableInteraction('sort-change', params);
+    logTableInteractionSortChange(params) {
+      this.logTableInteraction('sort-change', params);
     },
 
     logTableInteraction(element, params) {
-       EventBus.$emit('interaction', {name: 'userpane-table-' + element , type: 'table-event', event: 'change', data: { params: params }});
+      EventBus.$emit('interaction', {
+        name: `userpane-table-${element}`, type: 'table-event', event: 'change', data: { params },
+      });
     },
 
     setVisualType(v) {
       this.selVisualType = v;
-      //EventBus.$emit('interaction', {name: 'tooltip-' + tool, type: 'tooltip', event: 'hover', data: { }});
+      // EventBus.$emit('interaction', {name: 'tooltip-' + tool, type: 'tooltip', event: 'hover', data: { }});
     },
 
     processData(invoker) {
-
       switch (this.selBreakDown) {
         case 1:
 
@@ -320,15 +317,13 @@ export default {
           this.tableData.rows = this.$_.map(this.data.totalAmtByCounty, item => ({ col1: item.county_code, col2: item.county_name, col3: item.total }));
 
           this.jsonFields = {
-            "County Code": "col1",
-            "County Name": "col2",
-            "Amount (USD)": "col3",
-            "Amount (KES)": {
+            'County Code': 'col1',
+            'County Name': 'col2',
+            'Amount (USD)': 'col3',
+            'Amount (KES)': {
               field: 'col3',
-                 callback: (value) => {
-                    return value * this.exRate ;
-                }
-             }
+              callback: value => value * this.exRate,
+            },
           };
 
           break;
@@ -337,15 +332,13 @@ export default {
           this.tableData.rows = this.$_.map(this.data.totalAmtBySdg, item => ({ col1: item.sdg_id, col2: item.sdg_name, col3: item.total }));
 
           this.jsonFields = {
-            "SDG No": "col1",
-            "SDG Name": "col2",
-            "Amount (USD)": "col3",
-            "Amount (KES)": {
+            'SDG No': 'col1',
+            'SDG Name': 'col2',
+            'Amount (USD)': 'col3',
+            'Amount (KES)': {
               field: 'col3',
-                 callback: (value) => {
-                    return value * this.exRate ;
-                }
-             }
+              callback: value => value * this.exRate,
+            },
           };
 
           break;
@@ -354,14 +347,12 @@ export default {
           this.tableData.rows = this.$_.map(this.data.totalAmtByPublisher, item => ({ col2: item.publisher, col3: item.total }));
 
           this.jsonFields = {
-            "Contributing organization": "col2",
-            "Amount (USD)": "col3",
-            "Amount (KES)": {
+            'Contributing organization': 'col2',
+            'Amount (USD)': 'col3',
+            'Amount (KES)': {
               field: 'col3',
-                 callback: (value) => {
-                    return value * this.exRate ;
-                }
-             }
+              callback: value => value * this.exRate,
+            },
           };
 
           break;
@@ -370,14 +361,12 @@ export default {
           this.tableData.rows = this.$_.map(this.data.summaryByTrxnType, item => ({ col2: item.name, col3: item.total }));
 
           this.jsonFields = {
-            "Transaction Type": "col2",
-            "Amount (USD)": "col3",
-            "Amount (KES)": {
+            'Transaction Type': 'col2',
+            'Amount (USD)': 'col3',
+            'Amount (KES)': {
               field: 'col3',
-                 callback: (value) => {
-                    return value * this.exRate ;
-                }
-             }
+              callback: value => value * this.exRate,
+            },
           };
 
           break;
@@ -386,14 +375,12 @@ export default {
           this.tableData.rows = this.$_.map(this.data.totalAmtByYear, item => ({ col2: item.trans_year, col3: item.total }));
 
           this.jsonFields = {
-            "Year": "col2",
-            "Amount (USD)": "col3",
-            "Amount (KES)": {
+            Year: 'col2',
+            'Amount (USD)': 'col3',
+            'Amount (KES)': {
               field: 'col3',
-                 callback: (value) => {
-                    return value * this.exRate ;
-                }
-             }
+              callback: value => value * this.exRate,
+            },
           };
 
           break;
@@ -406,7 +393,7 @@ export default {
 
       _.forOwn(this.tableData.rows, (val, key) => {
         xAxis.push(val.col2);
-        yAxis.push(val.col3 * this.exRate );
+        yAxis.push(val.col3 * this.exRate);
       });
 
       this.barChart.xAxis.categories = xAxis;
@@ -421,32 +408,31 @@ export default {
         x++;
       });
 
-      this.pieChart.series = [{ data: dt, name: this.labels.selTrxnType  }];
+      this.pieChart.series = [{ data: dt, name: this.labels.selTrxnType }];
 
-      if (invoker == 'sel' )
-      {
-          EventBus.$emit('interaction', {name: 'userpane-select', type: 'select', event: 'change', data: { sel: this.selBreakDown }});
+      if (invoker == 'sel') {
+        EventBus.$emit('interaction', {
+          name: 'userpane-select', type: 'select', event: 'change', data: { sel: this.selBreakDown },
+        });
       }
-
     },
 
     linkClicked(param, val) {
+      EventBus.$emit('interaction', {
+        name: `userpane-table-link-${param}`, type: 'link', event: 'click', data: { val },
+      });
 
-       EventBus.$emit('interaction', {name: 'userpane-table-link-' + param, type: 'link', event: 'click', data: { val: val }});
-
-       switch (param)
-       {
-          case 'county':
-           EventBus.$emit('countyClicked', val);
+      switch (param) {
+        case 'county':
+          EventBus.$emit('countyClicked', val);
           break;
 
-          case 'sdg':
-           EventBus.$emit('sdgClicked', val);
+        case 'sdg':
+          EventBus.$emit('sdgClicked', val);
           break;
 
-          default:
-       }
-
+        default:
+      }
     },
 
   },
@@ -475,26 +461,23 @@ export default {
     this.processData();
     // this.selBreakDown = 1;
 
-    var vm = this ;
+    const vm = this;
 
     EventBus.$on('xhr-dashboard', (payload) => {
-       if ( payload == 'req' )
-       {
-         vm.dashboardLoading = true ;
-       }
+      if (payload == 'req') {
+        vm.dashboardLoading = true;
+      }
     });
 
     EventBus.$on('xhr-dashboard', (payload) => {
-       if ( payload == 'res' )
-       {
-         vm.dashboardLoading = false;
-       }
+      if (payload == 'res') {
+        vm.dashboardLoading = false;
+      }
     });
 
     EventBus.$on('exRate', (payload) => {
-       vm.exRate = payload.rate;
+      vm.exRate = payload.rate;
     });
-
   },
 
   created() {

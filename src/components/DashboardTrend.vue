@@ -75,8 +75,8 @@ export default {
       detailedData: [],
 
       jsonFields: {
-        "Transaction Date":"trans_ts" ,
-        "Amount (USD)":"total",
+        'Transaction Date': 'trans_ts',
+        'Amount (USD)': 'total',
       },
 
       dashboardLoading: true,
@@ -84,25 +84,24 @@ export default {
 
       chartOptions: {
         chart: {
-          height:220,
+          height: 220,
         },
-        xAxis:{
-          type:'datetime'
+        xAxis: {
+          type: 'datetime',
         },
         series: [{
           data: [[]],
-        }]
-      }
+        }],
+      },
     };
-
   },
 
   watch: {
 
-    data: function () {
+    data() {
       this.processChartData();
     },
-    'exRate': function () {
+    exRate() {
       this.processChartData();
     },
 
@@ -111,58 +110,50 @@ export default {
   methods: {
 
     logIconClick(tool) {
-      EventBus.$emit('interaction', {name: 'tooltip-' + tool, type: 'tooltip', event: 'click', data: { }});
+      EventBus.$emit('interaction', {
+        name: `tooltip-${tool}`, type: 'tooltip', event: 'click', data: { },
+      });
     },
 
     processChartData() {
+      const vm = this;
 
-      var vm = this ;
+      const chartData = this.$_.map(this.data, el => [parseInt(el.trans_ts) * 1000, el.total * vm.exRate]);
 
-      var chartData = this.$_.map(this.data, function(el) {
-          return [ parseInt(el.trans_ts)*1000, el.total * vm.exRate ];
+      let dt;
+
+      const detailedData = this.$_.map(this.data, (el) => {
+        dt = new Date(parseInt(el.trans_ts) * 1000);
+        dt = dt.toISOString().slice(0, 10);
+        return { trans_ts: dt, total: el.total * vm.exRate };
       });
 
-      var dt;
+      this.detailedData = detailedData;
 
-      var detailedData = this.$_.map(this.data, function(el) {
-
-          dt = new Date( parseInt(el.trans_ts) * 1000 );
-          dt = dt.toISOString().slice(0,10);
-          return { trans_ts: dt, total: el.total * vm.exRate };
-
-      });
-
-      this.detailedData = detailedData ;
-
-      this.chartOptions.series = [ {data: chartData, name: this.labels.selTrxnType } ] ;
-
+      this.chartOptions.series = [{ data: chartData, name: this.labels.selTrxnType }];
     },
 
   },
 
   mounted() {
-
-    var vm = this ;
+    const vm = this;
 
     EventBus.$on('xhr-dashboard', (payload) => {
-       if ( payload == 'req' )
-       {
-         vm.dashboardLoading = true ;
-       }
+      if (payload == 'req') {
+        vm.dashboardLoading = true;
+      }
     });
 
     EventBus.$on('xhr-dashboard', (payload) => {
-       if ( payload == 'res' )
-       {
-         vm.dashboardLoading = false;
-       }
+      if (payload == 'res') {
+        vm.dashboardLoading = false;
+      }
     });
 
     EventBus.$on('exRate', (payload) => {
-       vm.exRate = payload.rate;
-       //vm.value.metric = ' ' + payload.cur ;
+      vm.exRate = payload.rate;
+      // vm.value.metric = ' ' + payload.cur ;
     });
-
   },
 
   created() {
